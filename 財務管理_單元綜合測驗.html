@@ -1,0 +1,1778 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>財務管理 — 單元綜合模擬試卷 (DSE Paper 2B 標準格式)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 財務管理單元專屬配色：翡翠深綠 (Emerald) × 深海藍 (Ocean Navy) × 琥珀金 (Amber Gold) */
+      --bg: #f2f6f4;
+      --card: #ffffff;
+      --surface: #f7faf8;
+      --ink: #0f1f18;
+      --ink-sec: #2d4239;
+      --mute: #5c7267;
+      --line: #d8e4dd;
+      --primary: #065f46;
+      --primary-dark: #064e3b;
+      --primary-light: #ecfdf5;
+      --primary-border: #a7f3d0;
+      --teal: #0369a1;
+      --teal-light: #f0f9ff;
+      --teal-border: #bae6fd;
+      --purple: #0f766e;
+      --purple-light: #f0fdfa;
+      --purple-border: #99f6e4;
+      --amber: #b45309;
+      --amber-light: #fffbeb;
+      --green: #15803d;
+      --green-light: #f0fdf4;
+      --red: #be123c;
+      --red-light: #fff1f2;
+      --radius: 16px;
+      --shadow: 0 4px 20px -2px rgba(6, 78, 59, 0.06), 0 2px 6px -1px rgba(6, 78, 59, 0.04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.75;
+      padding-bottom: 60px;
+      font-size: 17.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4 { margin: 0; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1.35; }
+
+    /* Header & Exam Controls */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      flex-wrap: wrap;
+    }
+    .home-link {
+      text-decoration: none;
+      color: var(--ink-sec);
+      font-weight: 600;
+      font-size: 14.5px;
+      padding: 7px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      transition: all 0.2s;
+    }
+    .home-link:hover { color: var(--primary); border-color: var(--primary-border); background: var(--primary-light); }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 18.5px; font-weight: 800; color: var(--primary-dark); }
+    .brand-badge {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      font-size: 13px;
+      padding: 3px 10px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .exam-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      flex-wrap: wrap;
+    }
+    .timer-input {
+      width: 56px;
+      padding: 4px 6px;
+      border-radius: 8px;
+      border: 1.5px solid var(--primary);
+      font: 800 14px 'Inter', sans-serif;
+      color: var(--primary);
+      text-align: center;
+      background: var(--card);
+    }
+    .timer-txt { font-family: 'Inter', monospace; font-size: 16px; font-weight: 800; color: var(--primary); min-width: 54px; text-align: center; }
+    .timer-btn {
+      border: 0;
+      background: var(--primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .timer-btn:hover { opacity: 0.9; }
+
+    .mode-switch-btn {
+      border: 1.5px solid var(--teal);
+      background: var(--teal-light);
+      color: var(--teal);
+      font: 700 14px 'Noto Sans TC', sans-serif;
+      padding: 7px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-switch-btn.paper-on { background: var(--teal); color: #fff; }
+
+    .tabs {
+      margin-left: auto;
+      display: flex;
+      gap: 5px;
+      background: #dfe9e3;
+      padding: 5px;
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+    .tabs button {
+      border: 0;
+      background: none;
+      padding: 8px 14px;
+      border-radius: 9px;
+      font: 700 14.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tabs button:hover { color: var(--ink); }
+    .tabs button.on {
+      background: var(--card);
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(6, 78, 59, 0.1);
+    }
+
+    /* Views & Banners */
+    .view { display: none; max-width: 1160px; margin: 0 auto; padding: 26px 24px; animation: fadeIn 0.25s ease; }
+    .view.on { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .sec-banner {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow);
+    }
+    .sec-banner h1 { font-size: 24px; margin: 6px 0 8px; }
+    .sec-banner p { margin: 0; color: var(--ink-sec); font-size: 16px; max-width: 700px; }
+    .hero-kpis { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-kpi {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 12px 16px;
+      border-radius: 12px;
+      text-align: center;
+      min-width: 110px;
+    }
+    .hero-kpi b { display: block; font-size: 20px; color: var(--primary); }
+    .hero-kpi span { font-size: 13px; color: var(--mute); font-weight: 600; }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+    /* Badges & Chips */
+    .badge {
+      display: inline-block;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-right: 8px;
+    }
+    .b-blue { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border); }
+    .b-teal { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
+    .b-purple { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); }
+    .b-amber { background: var(--amber-light); color: var(--amber); border: 1px solid #fde68a; }
+    .b-green { background: var(--green-light); color: var(--green); border: 1px solid #bbf7d0; }
+    .b-red { background: var(--red-light); color: var(--red); border: 1px solid #fecdd3; }
+
+    .chips { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0; }
+    .chip {
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      padding: 9px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font: 700 15px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      transition: all 0.2s;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .chip.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(6, 95, 70, 0.2);
+    }
+
+    .btn {
+      border: 0;
+      background: var(--primary);
+      color: #fff;
+      font: 700 15.5px 'Noto Sans TC', sans-serif;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-green { background: var(--green); }
+    .btn-green:hover { background: #166534; }
+    .btn-teal { background: var(--teal); }
+    .btn-teal:hover { background: #075985; }
+    .btn-purple { background: var(--purple); }
+    .btn-purple:hover { background: #115e59; }
+    .btn-amber { background: var(--amber); }
+    .btn-outline { background: var(--card); color: var(--primary); border: 1.5px solid var(--primary); }
+    .btn-outline:hover { background: var(--primary-light); }
+
+    /* Builder Options & Stages */
+    .opt-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      width: 100%;
+      text-align: left;
+      padding: 14px 18px;
+      margin: 9px 0;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      font: 500 16.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1.65;
+    }
+    .opt-card:hover { border-color: var(--primary); background: var(--surface); }
+    .opt-card.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
+    .opt-card.graded-best { border-color: var(--green); background: var(--green-light); color: #064e3b; }
+    .opt-card.graded-partial { border-color: var(--amber); background: var(--amber-light); color: #78350f; }
+    .opt-card.graded-wrong { border-color: var(--red); background: var(--red-light); color: #881337; }
+    .opt-letter {
+      display: inline-grid;
+      place-items: center;
+      min-width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #eaf1ed;
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 14.5px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .opt-card.selected .opt-letter { background: var(--primary); color: #fff; }
+
+    .builder-stage {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 14px;
+      background: var(--card);
+    }
+    .point-group-box {
+      background: var(--surface);
+      border: 1.5px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+    }
+    .assembled-box {
+      background: var(--card);
+      border: 2px solid var(--primary);
+      border-radius: 16px;
+      padding: 22px 26px;
+      margin-top: 18px;
+      box-shadow: var(--shadow);
+    }
+    .paper-box {
+      background: var(--surface);
+      border: 2px dashed var(--teal);
+      border-radius: 16px;
+      padding: 22px 26px;
+      margin-top: 16px;
+    }
+    .ms-box {
+      background: var(--green-light);
+      border: 1.5px solid var(--green);
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-top: 16px;
+    }
+    .score-pill {
+      border: 1.5px solid var(--teal);
+      background: var(--card);
+      color: var(--teal);
+      font: 700 14.5px 'Noto Sans TC', sans-serif;
+      padding: 7px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .score-pill:hover { background: var(--teal-light); }
+    .score-pill.picked { background: var(--teal); color: #fff; }
+
+    .hl-s1 { background: #d1fae5; color: #065f46; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s2 { background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s3 { background: #e0f2fe; color: #075985; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+
+    .critique-item {
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-left: 5px solid var(--line);
+      background: var(--card);
+    }
+    .critique-item.c-best { border-left-color: var(--green); background: var(--green-light); }
+    .critique-item.c-partial { border-left-color: var(--amber); background: var(--amber-light); }
+    .critique-item.c-wrong { border-left-color: var(--red); background: var(--red-light); }
+
+    /* Report Progress Meters & Tables */
+    .meter-wrap { margin-bottom: 14px; }
+    .meter-label { display: flex; justify-content: space-between; font-size: 15.5px; font-weight: 700; margin-bottom: 6px; }
+    .meter-bg { height: 14px; background: #dfe9e3; border-radius: 999px; overflow: hidden; }
+    .meter-fill { height: 100%; border-radius: 999px; transition: width 0.4s ease; }
+
+    table.cutoff-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 15px; }
+    table.cutoff-table th, table.cutoff-table td { padding: 11px 14px; border-bottom: 1px solid var(--line); text-align: center; }
+    table.cutoff-table th { background: var(--surface); font-weight: 800; }
+    table.cutoff-table tr.active-grade-row { background: var(--green-light); font-weight: 800; border: 2px solid var(--green); }
+
+    @media (max-width: 860px) {
+      .grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+      header { padding: 12px 16px; }
+      .tabs { width: 100%; margin-top: 8px; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="財務管理_目錄.html" class="home-link">返回單元目錄</a>
+  <div class="brand">
+    <span>財務管理模擬試卷</span>
+    <span class="brand-badge">DSE Paper 2B 標準格式 (72分)</span>
+  </div>
+  <select onchange="if(this.value) location.href=this.value" style="padding:6px 10px;border-radius:8px;border:1.5px solid var(--primary-border);background:var(--primary-light);color:var(--primary-dark);font:700 13.5px 'Noto Sans TC',sans-serif;cursor:pointer">
+    <option value="">快速跳轉至各課室...</option>
+    <option value="財務管理_目錄.html">返回單元總目錄</option>
+    <option value="財務分析.html">第 1 課：財務分析</option>
+    <option value="預算編製.html">第 2 課：預算編製</option>
+    <option value="融資方式.html">第 3 課：融資方式</option>
+    <option value="資本投資評估.html">第 4 課：資本投資評估</option>
+    <option value="營運資金管理.html">第 5 課：營運資金管理</option>
+    <option value="風險管理.html">第 6 課：風險管理</option>
+  </select>
+
+  <!-- 自由設定時限計時器 -->
+  <div class="exam-bar">
+    <span>時限(分)：</span>
+    <input type="number" id="customMinInput" class="timer-input" value="60" min="1" max="180" onchange="applyCustomTime()">
+    <button class="timer-btn" style="background:var(--teal)" onclick="applyCustomTime()">套用</button>
+    <span class="timer-txt" id="timerDisplay">60:00</span>
+    <button class="timer-btn" id="timerBtn" onclick="toggleTimer()">開始</button>
+    <button class="timer-btn" style="background:var(--mute)" onclick="resetTimer()">重置</button>
+    <span style="margin-left:4px;padding-left:10px;border-left:1.5px solid var(--line);color:var(--green)" id="liveTotalBadge">總分：0 / 72</span>
+  </div>
+
+  <!-- 全局切換：互動建構模式 vs 紙筆練習模式（隱藏組合選項） -->
+  <button class="mode-switch-btn" id="globalModeBtn" onclick="togglePaperMode()">
+    切換為：隱藏選項（紙筆寫作練習模式）
+  </button>
+
+  <nav class="tabs" id="mainTabs">
+    <button class="on" data-tab="sec-sa">甲部：短答題 (24分)</button>
+    <button data-tab="sec-case">乙部：商業個案分析題 (24分)</button>
+    <button data-tab="sec-essay">丙部：進階論述題 (24分)</button>
+    <button data-tab="sec-report" onclick="renderReport()">丁部：成績單與診斷</button>
+  </nav>
+</header>
+
+<!-- ==================== 甲部：短答題 (Section A · 6題 · 24分) ==================== -->
+<section class="view on" id="sec-sa">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">甲部 · 短答題（Section A：共 6 題，每題 4 分，合共 24 分）</span>
+      <h1>DSE「2 分一論點」標準結構：1 分指出單一重點／算式 ＋ 1 分情境解說／結果</h1>
+      <p>本部共設 6 道必答短答題（嚴格按照教科書第 1 至 6 課用詞，全面涵蓋財務分析、預算編製、融資方式、資本投資評估、營運資金管理及風險管理），每題滿分 4 分（包含 2 個獨立的 2 分論點）。</p>
+    </div>
+    <div class="hero-kpis">
+      <div class="hero-kpi"><b id="saScoreHero">0 / 24</b><span>甲部目前得分</span></div>
+      <div class="hero-kpi"><b>2 分一論點</b><span>1分重點 ＋ 1分解說</span></div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:18px 22px">
+    <div style="font-size:15px;color:var(--mute);font-weight:700;margin-bottom:8px">點選甲部短答題（共 6 題，每題 4 分）：</div>
+    <div class="chips" id="saNavChips" style="margin:0"></div>
+  </div>
+
+  <div id="saWorkspace"></div>
+</section>
+
+<!-- ==================== 乙部：商業個案分析題 (Section B · 單一整合個案 · 24分) ==================== -->
+<section class="view" id="sec-case">
+  <div class="sec-banner" style="border-left-color:var(--teal)">
+    <div>
+      <span class="badge b-teal">乙部 · 商業個案分析題（Section B：單一整合個案，共 4 道分題，合共 24 分）</span>
+      <h1>商業個案分析：「綠源純素雪糕及急凍甜品有限公司 (GreenGelato Ltd.)」</h1>
+      <p>請細閱下方單一整合商業個案資料，然後回答 (a) 至 (d) 四道分題（每題 6 分，合共 24 分）。每個論點嚴格遵循「1 分指出單一概念／算式 ＋ 1 分扣連個案事實解說／結果 ＝ 2 分」的評分模式。</p>
+    </div>
+    <div class="hero-kpis">
+      <div class="hero-kpi"><b id="caseScoreHero" style="color:var(--teal)">0 / 24</b><span>乙部目前得分</span></div>
+      <div class="hero-kpi"><b style="color:var(--teal)">單一整合個案</b><span>4 道分題 × 6 分</span></div>
+    </div>
+  </div>
+
+  <!-- 單一整合商業個案閱讀卡 -->
+  <div class="card" style="border:1.5px solid var(--teal);background:var(--surface)">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+      <span class="badge b-teal">乙部單一商業個案資料</span>
+      <span style="font-size:14px;color:var(--mute);font-weight:600">請細閱以下個案，並回答分題 (a) 至 (d)</span>
+    </div>
+    <h3 style="color:var(--teal);font-size:20.5px;margin-bottom:10px">個案：「綠源純素雪糕及急凍甜品有限公司 (GreenGelato Ltd.)」的財務決策</h3>
+    <div style="font-size:16.5px;line-height:1.85;color:var(--ink)">
+      <p style="margin:0">
+        「綠源純素雪糕及急凍甜品有限公司」是一家在香港註冊的<b>私人有限公司</b>，在荃灣設有一個大型中央冷凍生產工場及冷庫，並在銅鑼灣、尖沙咀及沙田經營三間甜品堂食專門店，同時向全港餐廳及超市以<b>貿易賒帳</b>方式批發低卡純素豆乳雪糕。在審視今年的財務報告時，行政總裁陳先生進行了<b>「時序分析（趨勢分析）」</b>，發現公司的<b>「應收貨款周轉率」卻由去年的 12.00 次大幅下跌至今年的 5.00 次</b>；此外，由於公司前年曾借入大筆按揭貸款購置廠房，導致公司目前的<b>「槓桿比率 (Gearing Ratio)」已高達 72%</b>，而且公司帳面上的<b>留存利潤（內部資金）及手頭現金極少</b>。為提升生產力及減省電費開支，陳總裁計劃斥資 <b>$1,200,000</b>（初期資本投資）引進一條全新的「液態氮極速急凍雪糕生產線」（預計投資期／使用年限為 3 年，無期末剩餘價值），該生產線預計在第 1 至第 3 年每年年底可為公司帶來相等的<b>每年額外淨現金流入 $500,000</b>；財務主任按公司 8% 的資本成本（所需回報率／貼現率）計算出該生產線項目的<b>淨現值 (NPV) 為 +$88,550</b>，並提議向銀行再借入一筆五年期長期貸款（舉債融資）來支付這 $1,200,000 的投資成本，惟陳總裁對此融資提議表示反對。另一方面，陳總裁鑑於中央冷庫存放了價值不菲的急凍雪糕存貨，且三間堂食專門店每日有大量公眾人士及食客出入，要求管理層制定<b>「風險減少（避免損失與減少損失）」</b>措施，並購買合適的<b>「商業保險（風險轉移）」</b>以保障公司財產與營運責任風險。
+      </p>
+    </div>
+  </div>
+
+  <div class="card" style="padding:18px 22px">
+    <div style="font-size:15px;color:var(--mute);font-weight:700;margin-bottom:8px">點選乙部個案分析分題（共 4 題，每題 6 分）：</div>
+    <div class="chips" id="caseNavChips" style="margin:0"></div>
+  </div>
+
+  <div id="caseWorkspace"></div>
+</section>
+
+<!-- ==================== 丙部：進階論述題 (Section C · 2大題 · 24分) ==================== -->
+<section class="view" id="sec-essay">
+  <div class="sec-banner" style="border-left-color:var(--purple)">
+    <div>
+      <span class="badge b-purple">丙部 · 進階論述題（Section C：共 2 道大題，每題 12 分，合共 24 分）</span>
+      <h1>12 分長問答實戰：4 個獨立重點段落 × 3 步深度建構</h1>
+      <p>每道 12 分論述題均要求建構 4 個獨立重點段落（每段滿分 3 分：第 1 步指出單一概念／比率類別／預算控制用途［1分］➔ 第 2 步設定具體商業例子解說［1分］➔ 第 3 步深化至企業決策或財務影響［1分］）。</p>
+    </div>
+    <div class="hero-kpis">
+      <div class="hero-kpi"><b id="essayScoreHero" style="color:var(--purple)">0 / 24</b><span>丙部目前得分</span></div>
+      <div class="hero-kpi"><b style="color:var(--purple)">3 分一段落</b><span>1分概念＋1分例子＋1分影響</span></div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:18px 22px">
+    <div style="font-size:15px;color:var(--mute);font-weight:700;margin-bottom:6px">1. 先選擇丙部論述大題（共 2 道大題，每題 12 分）：</div>
+    <div class="chips" id="essayTopicChips" style="margin:0 0 14px"></div>
+    <div style="border-top:1px solid var(--line);padding-top:12px">
+      <div style="font-size:15px;color:var(--mute);font-weight:700;margin-bottom:6px">2. 點選該題的 4 個獨立重點段落（每段 3 分，4 段合共 12 分）：</div>
+      <div class="chips" id="essayParaChips" style="margin:0"></div>
+    </div>
+  </div>
+
+  <div id="essayWorkspace"></div>
+</section>
+
+<!-- ==================== 丁部：成績單與弱項診斷 ==================== -->
+<section class="view" id="sec-report">
+  <div class="sec-banner" style="border-left-color:var(--green)">
+    <div>
+      <span class="badge b-green">丁部 · DSE Paper 2B 雙軌等級換算與六課強弱項診斷</span>
+      <h1>《財務管理》選修單元模擬試卷成績單</h1>
+      <p>系統已自動匯總你在甲部（短答題 24 分）、乙部（商業個案分析題 24 分）及丙部（進階論述題 24 分）的得分，並根據你的作答模式套用 DSE 商管組雙軌等級換算標準（細分 Level 1 至 Level 5**）。</p>
+    </div>
+    <div class="hero-kpis">
+      <div class="hero-kpi"><b id="repTotalScore" style="color:var(--green)">0 / 72</b><span>試卷總得分</span></div>
+      <div class="hero-kpi"><b id="repPct" style="color:var(--green)">0%</b><span>總得分率</span></div>
+      <div class="hero-kpi"><b id="repGrade" style="color:var(--green)">待完成</b><span>預計 DSE 等級</span></div>
+    </div>
+  </div>
+
+  <div id="reportContent"></div>
+</section>
+
+<script>
+  // ====== 頂部 Tab 切換 ======
+  document.querySelectorAll('#mainTabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#mainTabs button').forEach(b => b.classList.remove('on'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+      btn.classList.add('on');
+      document.getElementById(btn.dataset.tab).classList.add('on');
+    });
+  });
+
+  // ====== 1. 學生自由設定時限計時器 ======
+  let customMinutes = 60;
+  let timeLeft = customMinutes * 60;
+  let timerId = null;
+
+  function updateTimerUI() {
+    const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+    const s = String(timeLeft % 60).padStart(2, '0');
+    document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+  }
+
+  function applyCustomTime() {
+    const val = parseInt(document.getElementById('customMinInput').value, 10);
+    customMinutes = (isNaN(val) || val < 1) ? 60 : Math.min(180, val);
+    document.getElementById('customMinInput').value = customMinutes;
+    if (timerId) { clearInterval(timerId); timerId = null; }
+    timeLeft = customMinutes * 60;
+    document.getElementById('timerBtn').textContent = '開始';
+    updateTimerUI();
+  }
+
+  function toggleTimer() {
+    const btn = document.getElementById('timerBtn');
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+      btn.textContent = '繼續';
+    } else {
+      btn.textContent = '暫停';
+      timerId = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          updateTimerUI();
+        } else {
+          clearInterval(timerId);
+          timerId = null;
+          btn.textContent = '開始';
+          alert('自訂練習時間到！請核對評卷參考並前往「丁部：成績單與診斷」查看你的表現。');
+        }
+      }, 1000);
+    }
+  }
+
+  function resetTimer() { applyCustomTime(); }
+
+  // ====== 2. 全局與單題「紙筆練習模式（隱藏組合選項）」及雙軌換算控制 ======
+  let paperMode = false;
+  let gradingTrack = 'auto';
+  let revealedMS = {};
+  let selfScores = {};
+
+  function togglePaperMode() {
+    paperMode = !paperMode;
+    const btn = document.getElementById('globalModeBtn');
+    if (paperMode) {
+      btn.classList.add('paper-on');
+      btn.textContent = '切換為：互動建構模式（顯示組合選項）';
+    } else {
+      btn.classList.remove('paper-on');
+      btn.textContent = '切換為：隱藏選項（紙筆寫作練習模式）';
+    }
+    renderSaWorkspace();
+    renderCaseWorkspace();
+    renderEssayWorkspace();
+  }
+
+  function setGradingTrack(track) {
+    gradingTrack = track;
+    renderReport();
+  }
+
+  function toggleRevealMS(itemId, rerenderFn) {
+    revealedMS[itemId] = !revealedMS[itemId];
+    rerenderFn();
+  }
+
+  function setSelfScore(itemId, score, rerenderNavFn, rerenderWsFn) {
+    selfScores[itemId] = score;
+    rerenderNavFn();
+    rerenderWsFn();
+    updateLiveTotal();
+  }
+
+  // ====== 甲部：短答題數據（100% 嚴格對齊教科書第 1 至 6 課用詞） ======
+  const saQuestions = [
+    {
+      id: "sa1", ch: 1, chName: "第 1 課：財務分析", maxMarks: 4,
+      title: "甲部 Q1：毛利率升但淨利率跌的原因與改善方法 (2分) 及速動比率過低的診斷 (2分)",
+      scenario: "「極光光學眼鏡有限公司」今年的會計比率出現兩個現象：(a) 毛利率由去年的 55% 上升至今年的 62%，但淨利率（純利率）卻由去年的 18% 下跌至今年的 9%；(b) 今年的流動比率高達 2.60 : 1，但速動比率（酸性測驗比率）卻只有 0.45 : 1。",
+      question: "試分別結合上述眼鏡公司情境：(a) 解釋為何今年的毛利率上升但淨利率卻反而下跌，並建議一種改善淨利率的方法（2分）；(b) 解釋為何速動比率較能反映變現能力，並說明流動比率高但速動比率低於 1 反映甚麼問題（2分）。（4 分）",
+      steps: [
+        { ptTitle: "論點一：(a) 毛利率升但淨利率跌的原因與改善方法（滿分 2 分：1 分原因解說 ＋ 1 分改善方法）", label: "論點一 · 第 1 步：指出導致毛利率上升但淨利率（純利率）下跌的原因（1分）", colorClass: "hl-s1", opts: [
+          { text: "因為眼鏡公司今年的鏡片銷貨成本大幅暴增。", score: 0, status: "wrong", comment: "若銷貨成本暴增，毛利率應該會下跌而非由 55% 升至 62%。" },
+          { text: "因為毛利率僅考慮銷貨成本，而淨利率則在毛利中進一步扣除了「營業費用（分銷費用、行政費用及其他營業費用）」和「財務成本（利息支出）」；淨利率下跌是因為期內的營業費用或財務成本佔銷貨的比例大幅上升。", score: 1, status: "best", comment: "準確點出課文第 1 課毛利率與淨利率的分別（營業費用與財務成本大幅增加蠶食毛利）。" },
+          { text: "因為眼鏡公司向股東派發了太多普通股股息。", score: 0, status: "wrong", comment: "股息屬於稅後利潤分配，不計入損益表的營業費用或稅前淨利，不影響淨利率。" }
+        ]},
+        { label: "論點一 · 第 2 步：根據第 1 課，建議一種改善眼鏡公司「淨利率」的具體方法（1分）", colorClass: "hl-s2", opts: [
+          { text: "眼鏡公司可透過「減少營業費用」（如控制門市租金、宣傳推廣等分銷費用及行政費用），或進一步「提高毛利率（提高貨品售價／降低銷貨成本）」及「增加銷貨」來提高淨利率。", score: 1, status: "best", comment: "完全命中課文第 1 課提高淨利率的三種標準方法：(i) 提高毛利率、(ii) 增加銷貨、(iii) 減少營業費用。" },
+          { text: "眼鏡公司應該把淨利率提高。", score: 0, status: "partial", comment: "同義反覆，必須提出課本具體方法（如減少營業費用、提高毛利率或增加銷貨）。" },
+          { text: "這會令眼鏡公司的存貨自動消失。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]},
+        { ptTitle: "論點二：(b) 速動比率較能反映變現能力的原因與診斷（滿分 2 分：1 分速動比率意義 ＋ 1 分個案診斷）", label: "論點二 · 第 1 步：解釋為何「速動比率」較「流動比率」更能反映變現能力（1分）", colorClass: "hl-s1", opts: [
+          { text: "因為企業需要一定的時間才能把「存貨」套現，在各種流動資產中，存貨的變現能力最低；速動比率量度企業在扣除存貨後（即無須等待出售存貨的情況下）用速動資產償還短期債務（流動負債）的能力。", score: 1, status: "best", comment: "100% 準確指出課文第 1 課「存貨的變現能力最低，速動比率展示無須等待出售存貨下償還流動負債的能力」。" },
+          { text: "因為速動比率包含了非流動資產。", score: 0, status: "wrong", comment: "速動比率只計算速動資產（流動資產減存貨），不包含非流動資產。" },
+          { text: "因為速動比率計算長期按揭貸款。", score: 0, status: "wrong", comment: "長期貸款屬非流動負債，不計入流動或速動比率。" }
+        ]},
+        { label: "論點二 · 第 2 步：診斷流動比率高達 2.60 : 1 但速動比率只有 0.45 : 1 反映的問題（1分）", colorClass: "hl-s2", opts: [
+          { text: "反映眼鏡公司持有過多存貨（大部分流動資產積壓在眼鏡框及鏡片存貨上，存貨周轉緩慢）；扣除存貨後的速動比率小於 1（0.45 : 1 ＜ 1 : 1），表示公司沒有足夠的速動資產來償還短期債務，短期變現能力欠佳。", score: 1, status: "best", comment: "清楚說明持有過多存貨，且速動比率小於 1 表示沒有足夠速動資產償還短期債務。" },
+          { text: "因為 0.45 比 2.60 細好多。", score: 0, status: "partial", comment: "只重述數字，未有解釋「持有過多存貨，導致沒有足夠的速動資產來償還短期債務」。" },
+          { text: "這會令所有視光師立即辭職。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]}
+      ]
+    },
+    {
+      id: "sa2", ch: 2, chName: "第 2 課：預算編製", maxMarks: 4,
+      title: "甲部 Q2：「不利原料成本差異 (U)」的成因分析與對應補救措施 (4分)",
+      scenario: "「鮮味急凍點心製造廠」在執行預算控制時，發現上季度的「原料成本（鮮蝦及豬肉食材）」出現了高達 $150,000 U 的「不利差異 (Unfavourable Variance)」。",
+      question: "(a) 根據第 2 課「原料成本差異」的兩個常見成因（原料價格或原料用量），指出並結合點心廠情境解釋導致該不利原料成本差異的一個可能原因（2分）；(b) 針對你在 (a) 所指出的原因，建議並解釋一項具體的「補救措施」（2分）。（4 分）",
+      steps: [
+        { ptTitle: "論點一：(a) 不利原料成本差異 (U) 的成因（滿分 2 分：1 分成因方向 ＋ 1 分情境解說）", label: "論點一 · 第 1 步：指出導致「不利原料成本差異 ($150,000 U，即實際原料成本高於預算)」的單一原因（1分）", colorClass: "hl-s1", opts: [
+          { text: "原因是實際原料價格低於預算（從供應商獲得的折扣多於預期）。", score: 0, status: "wrong", comment: "實際原料成本低於預算會帶來「有利差異 (F)」，而非不利差異 (U)。" },
+          { text: "可能原因是「原料用量：企業生產每件產品所用的原料多於預算」（或選：「原料價格：實際原料價格高於預算」）。", score: 1, status: "best", comment: "準確指出課文第 2 課不利原料成本差異的兩大常見成因之一（原料用量多於預算 或 實際原料價格高於預算）。" },
+          { text: "原因是點心廠行政文員的薪金上升了。", score: 0, status: "wrong", comment: "行政文員薪金屬於行政費用，並非原料成本。" }
+        ]},
+        { label: "論點一 · 第 2 步：連結「鮮味急凍點心廠」情境說明具體成因（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如點心廠「聘用了不熟練的員工」在包製點心時造成大量食材浪費、「採用了品質低劣易壞的食材」或發生「原料失竊」，導致生產每籠點心所用的鮮蝦與豬肉多於預算（若選原料價格高於預算，則解說：因通脹高於預期、從供應商獲得的折扣少於預期，或因減少每次購入原料的數量而得不到折扣優惠）。", score: 1, status: "best", comment: "100% 命中課文第 2.4B 節導致原料用量多於預算（或原料價格高於預算）的具體原因。" },
+          { text: "因為買鮮蝦用了太多錢。", score: 0, status: "partial", comment: "同義反覆，必須說明是「原料用量多於預算（不熟練員工／劣質原料／失竊）」還是「原料價格高於預算（通脹／減少每次購貨量失去折扣）」。" },
+          { text: "這會令點心廠的租金下跌。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]},
+        { ptTitle: "論點二：(b) 針對性的補救措施（滿分 2 分：1 分補救措施標題 ＋ 1 分情境解說）", label: "論點二 · 第 1 步：根據第 2 課，針對上述原因指出一項具體的「補救措施」（1分）", colorClass: "hl-s1", opts: [
+          { text: "針對每件產品所用原料多於預算，可「向員工提供更多培訓以減少浪費原料」或「將生產機器更換為效率較高的型號」（若針對實際原料價格高於預算，則可「增加每次購入原料的數量以獲取較大的價格折扣」或「物色提供更便宜原料的供應商」）。", score: 1, status: "best", comment: "完全對應課文第 2.5B 節表 2.1 的標準補救措施。" },
+          { text: "把已經變壞的鮮蝦照樣包入蝦餃賣給顧客。", score: 0, status: "wrong", comment: "這會引致食物中毒並面臨法律責任索償，絕非正當補救措施。" },
+          { text: "叫大家下次小心一點。", score: 0, status: "partial", comment: "必須提出課本具體補救措施（如向員工提供更多培訓減少浪費、更換效率較高的機器，或增加每次購入原料數量獲取折扣／物色更便宜供應商）。" }
+        ]},
+        { label: "論點二 · 第 2 步：連結「控制點心廠實際原料成本」作解說（1分）", colorClass: "hl-s2", opts: [
+          { text: "透過向點心工人提供更多培訓並將包餡機器更換為效率較高的型號，能有效減少生產過程中的食材損耗與浪費（或透過增加每次購入鮮蝦的數量以獲取較大價格折扣），使下季度的實際原料成本回落至預算水平之內。", score: 1, status: "best", comment: "清楚說明如何減少食材浪費（或壓低採購單價）以糾正不利的原料成本差異。" },
+          { text: "這樣下季就不會再出現不利差異了。", score: 0, status: "partial", comment: "同義反覆。" },
+          { text: "這會令全港酒樓停止賣蝦餃。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]}
+      ]
+    },
+    {
+      id: "sa3", ch: 3, chName: "第 3 課：融資方式", maxMarks: 4,
+      title: "甲部 Q3：比較「短期籌資與長期籌資」及「舉債融資與股本融資」 (4分)",
+      scenario: "「康健醫療器材有限公司」計劃添置一部價值 $3,000,000 的全自動光學檢測儀器（固定資產）。管理層正討論應採用「短期籌資」還是「長期籌資」，以及應採用「舉債融資（如銀行長期貸款）」還是「股本融資（如發行普通股）」。",
+      question: "(a) 從「風險（再融資風險）」角度，解釋為何康健公司應採用「長期籌資」而非「短期籌資」來添置該部檢測儀器（2分）；(b) 從「成本」角度，解釋為何採用「舉債融資」的成本一般較「股本融資」低（2分）。（4 分）",
+      steps: [
+        { ptTitle: "論點一：(a) 長期籌資 vs 短期籌資的風險比較（滿分 2 分：1 分再融資風險概念 ＋ 1 分固定資產配對解說）", label: "論點一 · 第 1 步：指出「長期籌資」與「短期籌資」在風險上的分別（1分）", colorClass: "hl-s1", opts: [
+          { text: "短期籌資的資金可供使用十年以上，完全沒有任何再融資風險。", score: 0, status: "wrong", comment: "短期籌資供企業使用不多於一年，須頻繁再融資，風險較高。" },
+          { text: "長期籌資的風險較短期籌資低：因為長期籌資提供的資金可供企業使用一年以上，資金來源較穩定；相反，採用短期籌資須要頻繁地「再融資（用新的債務取代原本的債務）」，企業須承擔較大的再融資風險。", score: 1, status: "best", comment: "準確指出課文第 3 課「長期籌資提供較穩定資金來源，而短期籌資須頻繁再融資故風險較高」。" },
+          { text: "兩者在風險上沒有分別。", score: 0, status: "wrong", comment: "短期籌資的風險高於長期籌資。" }
+        ]},
+        { label: "論點一 · 第 2 步：連結「添置 $3,000,000 檢測儀器（固定資產）」作解說（1分）", colorClass: "hl-s2", opts: [
+          { text: "由於該部光學檢測儀器屬於昂貴的固定資產，康健公司不大可能在短期內賺取足夠的現金來償還購買儀器的費用；若採用短期籌資，當到期需要再融資而又找不到再融資渠道（未能確定能否續借貸款）或貸款利率大幅上升時，公司便可能會出現財政困難，故應採用長期籌資。", score: 1, status: "best", comment: "緊扣課文第 3.3B 節「長期籌資適用於有關固定資產的融資，免卻頻繁再融資及找不到再融資渠道或融資成本激增的風險」。" },
+          { text: "因為檢測儀器好貴。", score: 0, status: "partial", comment: "必須說明「固定資產不大可能在短期內賺取足夠現金償還，採用短期籌資若找不到再融資渠道或利率上升便會出現財政困難」。" },
+          { text: "這會令檢測儀器的價格變成零。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]},
+        { ptTitle: "論點二：(b) 舉債融資成本較股本融資低的原因（滿分 2 分：1 分原因標題 ＋ 1 分解說）", label: "論點二 · 第 1 步：根據第 3 課，指出「舉債融資」的成本較「股本融資」低的原因（1分）", colorClass: "hl-s1", opts: [
+          { text: "因為舉債融資的「利息支出可作扣稅之用」，而且「投資者對債務（如債券／貸款）回報的要求較普通股低」。", score: 1, status: "best", comment: "100% 準確命中課文第 3.4A 節舉債融資成本較股本融資低的兩個主要原因。" },
+          { text: "因為派發給普通股股東的股息可以雙倍扣減利得稅。", score: 0, status: "wrong", comment: "股息只是分派給股東的部分稅後淨利，不能減少稅款；只有利息支出才可扣稅。" },
+          { text: "因為向銀行借錢完全不用付利息。", score: 0, status: "wrong", comment: "銀行貸款必須支付利息。" }
+        ]},
+        { label: "論點二 · 第 2 步：對比「利息支出與普通股股息（或投資風險差異）」作具體解說（1分）", colorClass: "hl-s2", opts: [
+          { text: "由於貸款或債券的利息支出是扣稅項目（稅款是根據營業利潤減去利息支出的餘額計算），有助減少康健公司應繳的稅款及舉債融資成本，而分派給股東的股息則不能減少稅款（此外，債券或貸款的利息收益是固定和有保證的，投資風險較股票低，故放債人要求的回報率亦較普通股股東低）。", score: 1, status: "best", comment: "清楚對比利息支出可扣稅而股息不可扣稅，以及放債人要求回報較低。" },
+          { text: "因為借錢比較划算。", score: 0, status: "partial", comment: "必須明確解釋「利息支出是扣稅項目可減少稅款，而股息不能減少稅款」或「債務利息固定有保證故要求的回報率較普通股低」。" },
+          { text: "這會令稅務局退還過往十年的稅款。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]}
+      ]
+    },
+    {
+      id: "sa4", ch: 4, chName: "第 4 課：資本投資評估", maxMarks: 4,
+      title: "甲部 Q4：以「現金流量」而非「利潤」評估的原因 (2分) 與「回收期法」的缺點 (2分)",
+      scenario: "「極速智能洗車中心」東主正評估一個為期五年的全自動洗車隧道資本投資項目。會計師提醒他：(a) 在評估資本投資時，最好以「現金流量」而非「會計利潤」作為衡量標準；(b) 不應單憑「回收期（還本期）」作決定，因為回收期法存在缺點。",
+      question: "(a) 根據第 4 課，解釋為何在評估資本投資時最好以「現金流量」而非「利潤」作為衡量標準（2分）；(b) 指出並解釋使用「回收期法」評估該洗車隧道項目的其中一項缺點（2分）。（4 分）",
+      steps: [
+        { ptTitle: "論點一：(a) 以現金流量而非利潤作為衡量標準的原因（滿分 2 分：1 分核心原因 ＋ 1 分例子解說）", label: "論點一 · 第 1 步：指出以「現金流量」而非「利潤」評估資本投資的原因（1分）", colorClass: "hl-s1", opts: [
+          { text: "因為會計利潤永遠等於零。", score: 0, status: "wrong", comment: "不正確的陳述。" },
+          { text: "因為「現金流量是企業真正收到或支付的金額」，而「利潤是根據會計原則（如應計基礎及折舊分攤）計算出來的，不一定反映企業實際所得或支付的金額」。", score: 1, status: "best", comment: "100% 準確指出課文第 4.3 節的兩大原因。" },
+          { text: "因為現金流量比利潤容易寫出來。", score: 0, status: "partial", comment: "必須指出「現金流量是企業真正收到或支付的金額，而利潤按會計原則計算不一定反映實際收支金額」。" }
+        ]},
+        { label: "論點一 · 第 2 步：連結「購買洗車隧道機器與折舊分攤」作具體解說（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如洗車中心購入洗車隧道機器並即時以現金付清全額時，最初的實際現金流出量為全數購機款項；但根據會計原則，機器的支出可在使用年期（五年）內分攤（折舊），在計算首年會計利潤時只會把購機支出的一部分記錄為首年費用，未能反映真實的現金收支情況。", score: 1, status: "best", comment: "緊扣課文第 4.3 節購入機器即時付現 vs 會計折舊分攤的例子作解說。" },
+          { text: "因為現金可以用來買東西。", score: 0, status: "partial", comment: "未能說明會計原則（如折舊分攤）導致利潤與實際現金收支出現差異。" },
+          { text: "這會令洗車中心的自來水費自動免除。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]},
+        { ptTitle: "論點二：(b) 回收期法的缺點（滿分 2 分：1 分缺點標題 ＋ 1 分情境解說）", label: "論點二 · 第 1 步：根據第 4 課，指出採用「回收期（還本期）」的單一核心缺點標題（1分）", colorClass: "hl-s1", opts: [
+          { text: "缺點是「忽略了回收期之後的現金流量」（或選：「忽略了金錢的時間值」／「決策準則流於主觀和隨意」）。", score: 1, status: "best", comment: "準確指出課文第 4.3B 節回收期法的三大標準缺點之一。" },
+          { text: "缺點是回收期以會計淨利計算且難以估算資本成本。", score: 0, status: "wrong", comment: "以淨利計算的是會計報酬率 (ARR)；難以估算資本成本的是淨現值 (NPV)。" },
+          { text: "缺點是計算過程極度複雜。", score: 0, status: "wrong", comment: "計算簡單、易於理解是回收期法的優點。" }
+        ]},
+        { label: "論點二 · 第 2 步：連結「洗車隧道投資項目」作解說（1分）", colorClass: "hl-s2", opts: [
+          { text: "回收期只考慮回收期內的現金流量，卻忽略了回收期之後所產生的現金流量（沒有考慮整個項目的實際價值），有可能誤導洗車中心東主，令他否決一些額外現金流入集中在回收期後的優質長期洗車設備項目（若選忽略金錢時間值，則解說：回收期內的現金流量是不經貼現計算的，忽視了今天收到的一元比將來收到的一元更有價值）。", score: 1, status: "best", comment: "緊扣課文第 4.3B 節「有可能誤導企業，令企業否決一些額外現金流入集中在回收期後的優質長期投資項目」作解說。" },
+          { text: "因為回收期不是一個好方法。", score: 0, status: "partial", comment: "必須說明「忽略回收期之後的現金流量，可能令企業否決額外現金流入集中在回收期後的優質長期項目」或「現金流量不經貼現計算，忽略了金錢的時間值」。" },
+          { text: "這會令所有私家車自動變得乾淨。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]}
+      ]
+    },
+    {
+      id: "sa5", ch: 5, chName: "第 5 課：營運資金管理", maxMarks: 4,
+      title: "甲部 Q5：計算「經濟訂貨量 (EOQ)」 (2分) 與放寬應收帳款政策的壞處 (2分)",
+      scenario: "「尚雅有機燕麥奶批發商」每年對燕麥奶的需求量 (D) 為 9,000 箱，每次訂購成本 (F) 為 $200，每箱每年的貯存成本（存倉成本 C）為 $10。此外，為增加銷售額，公司考慮放寬「應收帳款政策（信貸政策）」，把給予茶餐廳客戶的信用期限由 30 天延長至 90 天。",
+      question: "(a) 計算該批發商每次訂購燕麥奶的「經濟訂貨量 (Q*)」（須列出算式，2分）；(b) 根據影響制定應收帳款政策的因素，指出並解釋把信用期限由 30 天延長至 90 天對該批發商的兩項壞處（2分）。（4 分）",
+      steps: [
+        { ptTitle: "論點一：(a) 計算經濟訂貨量 Q*（滿分 2 分：1 分正確算式 ＋ 1 分正確結果與單位）", label: "論點一 · 第 1 步：列出計算「經濟訂貨量 (Q*)」的正確公式與代入數字（1分）", colorClass: "hl-s1", opts: [
+          { text: "算式：Q* ＝ (9,000 × $200) ÷ $10（漏了乘以 2 及漏了開平方根 √）。", score: 0, status: "wrong", comment: "公式不正確：經濟訂貨量公式必須在分子乘以 2 並開平方根。" },
+          { text: "算式：經濟訂貨量 (Q*) ＝ √[(2 × D × F) ÷ C] ＝ √[(2 × 9,000 × $200) ÷ $10] ＝ √(3,600,000 ÷ 10) ＝ √360,000。", score: 1, status: "best", comment: "公式與代入數字完全準確。" },
+          { text: "算式：Q* ＝ 9,000 箱 ÷ $200。", score: 0, status: "wrong", comment: "公式不正確。" }
+        ]},
+        { label: "論點一 · 第 2 步：計算出正確的經濟訂貨量結果並寫出單位（1分）", colorClass: "hl-s2", opts: [
+          { text: "計算結果：經濟訂貨量 (Q*) ＝ 600 箱（在此訂貨量下，總訂購成本等於總貯存成本，總存貨成本降至最低）。", score: 1, status: "best", comment: "計算結果（600 箱）與單位完全準確。" },
+          { text: "計算結果：Q* ＝ 360,000 箱。", score: 0, status: "wrong", comment: "忘記開平方根 √360,000 ＝ 600 箱。" },
+          { text: "計算結果：Q* ＝ $600 元。", score: 0, status: "partial", comment: "單位不正確：經濟訂貨量的單位應為「箱（單位數量）」而非「$（元）」。" }
+        ]},
+        { ptTitle: "論點二：(b) 延長信用期限的壞處（滿分 2 分：1 分變現能力下降 ＋ 1 分壞帳增加）", label: "論點二 · 第 1 步：從「變現能力」角度，指出並解釋延長信用期限至 90 天的第一項壞處（1分）", colorClass: "hl-s1", opts: [
+          { text: "第一項壞處是「變現能力下降（現金狀況轉差）」：因為將信用期限由 30 天延長至 90 天，茶餐廳客戶會延遲還款，令批發商的資金更長時間積壓在應收帳款上，減慢現金流入（延長現金轉換循環）。", score: 1, status: "best", comment: "準確指出課文第 5.4B 節「資金積壓在應收帳款上，導致現金狀況轉差和變現能力下降」。" },
+          { text: "第一項壞處是茶餐廳客戶會在第二天便立即用現金還清貨款。", score: 0, status: "wrong", comment: "延長信用期限至 90 天會令客戶延遲還款，而非提早還款。" },
+          { text: "第一項壞處是對批發商不太好。", score: 0, status: "partial", comment: "必須明確寫出「資金積壓在應收帳款上，導致變現能力下降」。" }
+        ]},
+        { label: "論點二 · 第 2 步：從「壞帳」角度，指出並解釋延長信用期限至 90 天的第二項壞處（1分）", colorClass: "hl-s2", opts: [
+          { text: "第二項壞處是「壞帳風險增加」：因為茶餐廳客戶拖欠款項的時間越長（長達 90 天），期間客戶出現財政困難而最終未能還款的機會便越高，增加逾期應收帳款變成壞帳的損失。", score: 1, status: "best", comment: "準確指出課文第 5.4B 節「顧客拖欠款項的時間越長，出現財政困難而未能還款的機會越低/高，導致壞帳增加」。" },
+          { text: "第二項壞處是壞帳會自動減少至零。", score: 0, status: "wrong", comment: "延長信用期限會令壞帳增加而非減少。" },
+          { text: "這會令燕麥奶的保質期縮短。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]}
+      ]
+    },
+    {
+      id: "sa6", ch: 6, chName: "第 6 課：風險管理", maxMarks: 4,
+      title: "甲部 Q6：分辨「純風險」與「投機風險」及其可保性與原因 (4分)",
+      scenario: "「幻彩霓虹燈工坊」東主面對兩項業務風險：風險 (i) 技工在工場使用高溫火槍燒製玻璃管時，有機會因意外引起火災燒毀工場設備；風險 (ii) 工坊今年斥資研發並推出全新的「DIY 迷你 LED 霓虹燈套裝」，但擔心新產品不受市場歡迎而引致「營運虧損」。",
+      question: "試分別指出上述 (a) 風險 (i)（2分）及 (b) 風險 (ii)（2分）屬於「純風險」還是「投機風險」，並根據可保風險的條件解釋它們是否屬於「可保風險 (Insurable Risk)」。 （4 分）",
+      steps: [
+        { ptTitle: "論點一：(a) 風險 (i) 工場意外火災（滿分 2 分：1 分風險分類與可保性 ＋ 1 分可保條件解說）", label: "論點一 · 第 1 步：指出風險 (i)「工場意外火災」屬於哪類風險及是否屬於可保風險（1分）", colorClass: "hl-s1", opts: [
+          { text: "風險 (i) 屬於「投機風險」，且屬於不可保風險。", score: 0, status: "wrong", comment: "火災意外屬於「純風險（當中的財產風險）」及「可保風險」。" },
+          { text: "風險 (i) 工場意外火災屬於「純風險（財產風險）」，並且屬於「可保風險（可以向保險公司購買火險）」。", score: 1, status: "best", comment: "準確指出屬「純風險（財產風險）」及「可保風險」。" },
+          { text: "風險 (i) 是一種風險。", score: 0, status: "partial", comment: "未能明確指出「純風險」及「可保風險」。" }
+        ]},
+        { label: "論點一 · 第 2 步：根據第 6 課可保風險的五個條件解釋原因（1分）", colorClass: "hl-s2", opts: [
+          { text: "因為工場意外火災滿足可保風險的五個條件：(a) 風險是非投機的（只有損失或沒有損失兩種機會，沒有獲利可能）；(b) 損失由意外引起和無法控制；(c) 發生概率可根據火警統計數據估計；(d) 損失並非過於頻繁或微不足道；及 (e) 同時蒙受損失的受保人數量不多。", score: 1, status: "best", comment: "完整運用課文第 6.3B 節可保風險的五個條件作解釋。" },
+          { text: "因為火警好危險。", score: 0, status: "partial", comment: "必須使用「只有損失或沒有損失兩種機會（非投機）、由意外引起、概率可估計」等可保風險條件作解釋。" },
+          { text: "因為火災會令工坊賺取暴利。", score: 0, status: "wrong", comment: "火災屬純風險，沒有獲利機會。" }
+        ]},
+        { ptTitle: "論點二：(b) 風險 (ii) 新產品滯銷引致營運虧損（滿分 2 分：1 分風險分類與可保性 ＋ 1 分不可保原因解說）", label: "論點二 · 第 1 步：指出風險 (ii)「新產品不受歡迎引致營運虧損」屬於哪類風險及是否屬於可保風險（1分）", colorClass: "hl-s1", opts: [
+          { text: "風險 (ii) 屬於「投機風險 (Speculative Risk)」，並且屬於「不可保風險（所有投機風險都是不可保風險，保險公司不會承保）」。", score: 1, status: "best", comment: "準確指出屬「投機風險」及「不可保風險」。" },
+          { text: "風險 (ii) 屬於「純風險」，可以買火險獲得全額賠償。", score: 0, status: "wrong", comment: "推出新產品引致營運虧損屬於投機風險，保險公司不會承保。" },
+          { text: "風險 (ii) 不太好。", score: 0, status: "partial", comment: "必須明確寫出「投機風險」及「不可保風險」。" }
+        ]},
+        { label: "論點二 · 第 2 步：根據可保風險的條件解釋為何不可保（1分）", colorClass: "hl-s2", opts: [
+          { text: "因為推出新產品同時有「損失（滯銷虧損）和獲利（暢銷賺取利潤）」的機會，違反了可保風險「(a) 風險必須是非投機的」條件（如保險公司承保投機風險，受保人便可保證從投機中獲利；此外營運表現亦受管理層自身控制且虧損概率難以由保險公司估計）。", score: 1, status: "best", comment: "緊扣課文第 6.3B 節「同時有損失和獲利機會，違反風險必須是非投機的條件（否則受保人可保證從投機中獲利）」作解說。" },
+          { text: "因為保險公司不認識 LED 燈。", score: 0, status: "wrong", comment: "不正確的陳述。" },
+          { text: "因為新產品可能會蝕錢。", score: 0, status: "partial", comment: "必須指出「同時有獲利和損失的機會，違反可保風險必須是非投機（純風險）的條件」。" }
+        ]}
+      ]
+    }
+  ];
+
+  // ====== 乙部：商業個案分析題數據（100% 嚴格對齊教科書第 1 至 6 課用詞） ======
+  const caseSubQuestions = [
+    {
+      id: "c1", ch: 5, chName: "第 5 課 & 第 1 課：營運資金管理與應收貨款周轉率", maxMarks: 6,
+      title: "分題 (a)：應收貨款周轉率下跌診斷 (2分) 與「信用分析 5C」審批應用 (4分)",
+      question: "(i) 結合個案中「應收貨款周轉率由去年的 12.00 次大幅下跌至今年的 5.00 次」的數據，指出並解釋綠源公司在應收帳款管理與變現能力上出現的問題（2分）；(ii) 指出並結合個案解釋綠源公司可如何運用「信用分析中的 5C」的其中兩項因素，評估新餐廳客戶的信貸可靠性（4分）。（6 分）",
+      steps: [
+        { ptTitle: "(a)(i) 應收貨款周轉率下跌診斷與影響（滿分 2 分：1 分周轉率下跌意義 ＋ 1 分變現能力與壞帳影響）", label: "第 1 步：根據第 1 課，指出「應收貨款周轉率」由 12.00 次跌至 5.00 次所反映的問題（1分）", colorClass: "hl-s1", opts: [
+          { text: "應收貨款周轉率由 12.00 次跌至 5.00 次，代表公司向餐廳及超市客戶收回應收貨款的速度比去年大幅加快，效率極高。", score: 0, status: "wrong", comment: "概念顛倒：應收貨款周轉率越高，收回應收貨款的速度才越快；由 12 次跌至 5 次代表收回款項的速度大幅「減慢」、效率下降。" },
+          { text: "「應收貨款周轉率」量度企業收回應收貨款的效率；該比率由去年的 12.00 次大幅下跌至今年的 5.00 次，反映綠源公司向餐廳及超市債務人收回現金的速度顯著減慢，收帳效率低落（可能提供了過多貿易賒帳或客戶逾期拖欠）。", score: 1, status: "best", comment: "準確引用課文第 1 課「應收貨款周轉率（量度收回應收貨款的效率及變現能力）」作診斷。" },
+          { text: "代表綠源公司支付牛奶供應商應付貨款的速度減慢。", score: 0, status: "wrong", comment: "混淆了「應收貨款周轉率」與「應付貨款周轉率」。" }
+        ]},
+        { label: "第 2 步：結合個案中綠源公司「手頭現金極少」的背景，解釋其對變現能力與壞帳的影響（1分）", colorClass: "hl-s2", opts: [
+          { text: "由於向債務人收回現金的速度緩慢，大量資金積壓在應收帳款上，令原本已「手頭現金極少」的綠源公司現金狀況轉差、短期「變現能力下降」（難以償還短期債務），同時客戶拖欠款項時間越長，亦會令「壞帳風險增加」。", score: 1, status: "best", comment: "緊扣課文第 1 課及第 5 課「資金積壓在應收帳款上，導致變現能力低及壞帳增加」作解說。" },
+          { text: "這會令雪糕的甜度下降。", score: 0, status: "wrong", comment: "不合理的推論。" },
+          { text: "這對綠源公司不太好。", score: 0, status: "partial", comment: "必須明確寫出「資金積壓在應收帳款令變現能力下降」及「增加壞帳風險」。" }
+        ]},
+        { ptTitle: "(a)(ii) 信用分析 5C 因素一（滿分 2 分：1 分 5C 名稱與課本描述 ＋ 1 分個案評估例子）", label: "第 3 步：根據第 5 課，指出「信用分析中的 5C」的第一項因素名稱與描述（1分）", colorClass: "hl-s1", opts: [
+          { text: "第一項因素是「品格 (Character)」：指對企業信貸可靠性的主觀判斷，即該客戶是否有償還債項的責任感（注意：並非指東主的個人性格）。", score: 1, status: "best", comment: "100% 準確寫出課文第 5.4A 節表 5.1「品格」的描述。" },
+          { text: "第一項因素是「產品價格 (Price)」。", score: 0, status: "wrong", comment: "價格屬市場營銷 4P，並非信用分析 5C（資金、能力、抵押品、狀況、品格）。" },
+          { text: "公司可以同時評估資金、能力、抵押品、狀況和品格。", score: 0, status: "partial", comment: "違反「一段一個重點」原則。" }
+        ]},
+        { label: "第 4 步：結合個案中「評估新餐廳客戶的雪糕賒帳申請」說明如何評估該因素（1分）", colorClass: "hl-s2", opts: [
+          { text: "綠源公司可審視該新餐廳客戶過去的「信貸和還款紀錄」（例如過去向其他食品供應商賒購食材或向銀行借貸時是否按時還清款項），以判斷該餐廳是否有準時償還雪糕貨款的責任感。", score: 1, status: "best", comment: "緊扣課文表 5.1「審視企業過去的信貸和還款紀錄（是否按時還清款項）」作解說。" },
+          { text: "看看餐廳老闆性格是否開朗幽默。", score: 0, status: "wrong", comment: "課本特別提示：品格並非指企業東主的個人性格，而是審視過去的信貸和還款紀錄。" },
+          { text: "試食一下餐廳煮的菜好不好吃。", score: 0, status: "wrong", comment: "與信貸和還款紀錄無關。" }
+        ]},
+        { ptTitle: "(a)(ii) 信用分析 5C 因素二（滿分 2 分：1 分 5C 名稱與課本描述 ＋ 1 分個案評估例子）", label: "第 5 步：根據第 5 課，指出「信用分析中的 5C」的第二項因素名稱與描述（1分）", colorClass: "hl-s1", opts: [
+          { text: "第二項因素是「能力 (Capacity)」：指該客戶償還債項的能力（或選：「資金 Capital：東主投資於企業的資金金額」／「抵押品 Collateral：提供作為保障的抵押品」／「狀況 Conditions：整體經濟環境、行業前景及預期用途」）。", score: 1, status: "best", comment: "100% 準確指出課文第 5.4A 節表 5.1「能力」的描述。" },
+          { text: "第二項因素是「推廣 (Promotion)」。", score: 0, status: "wrong", comment: "推廣屬 4P 而非 5C。" },
+          { text: "第二項因素是看看餐廳大不大。", score: 0, status: "partial", comment: "請使用課本標準 5C 術語：「資金」、「能力」、「抵押品」、「狀況」或「品格」。" }
+        ]},
+        { label: "第 6 步：結合個案中「評估新餐廳客戶」說明如何評估該因素（1分）", colorClass: "hl-s2", opts: [
+          { text: "綠源公司可審查該新餐廳客戶的「現金流量的金額和時機，以及餐廳的銷售紀錄（或變現能力比率如流動比率和速動比率）」，評估其餐飲營運是否有足夠現金償還雪糕貨款（若選資金，則審視餐廳的槓桿比率；若選狀況，則評估整體經濟環境與餐飲業前景對該餐廳的影響）。", score: 1, status: "best", comment: "完全緊扣課文表 5.1「審查企業的現金流量的金額和時機，以及企業的銷售紀錄」作解說。" },
+          { text: "看看餐廳有沒有錢還。", score: 0, status: "partial", comment: "必須具體說明透過審查餐廳的「現金流量的金額和時機、銷售紀錄或變現能力比率」來評估其還款能力。" },
+          { text: "這會令所有餐廳自動結業。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]}
+      ]
+    },
+    {
+      id: "c2", ch: 4, chName: "第 4 課：資本投資評估", maxMarks: 6,
+      title: "分題 (b)：計算回收期 (2分)、淨現值 (NPV) 決策規則 (2分) 與非財務考慮因素 (2分)",
+      question: "針對斥資 $1,200,000（初期支出）引進「液態氮極速急凍雪糕生產線」的項目：(i) 計算該生產線項目的「回收期（還本期）」（須列出算式，2分）；(ii) 根據個案提供的「淨現值 (NPV = +$88,550)」，指出綠源公司應否接受該項目並加以解釋（2分）；(iii) 除財務因素外，指出並結合個案解釋陳總裁在作最終決定前應考慮的一項「非財務因素」（2分）。（6 分）",
+      steps: [
+        { ptTitle: "(b)(i) 計算回收期 Payback Period（滿分 2 分：1 分正確算式 ＋ 1 分正確結果與單位）", label: "第 1 步：列出計算相等額外現金流入下「回收期」的正確算式（1分）", colorClass: "hl-s1", opts: [
+          { text: "算式：回收期 ＝ 每年的額外現金流入 $500,000 ÷ 初期支出 $1,200,000。", score: 0, status: "wrong", comment: "分子分母顛倒：回收期應以「初期支出 ÷ 每年的額外現金流入」計算。" },
+          { text: "算式：回收期 ＝ 初期支出 $1,200,000 ÷ 每年的額外淨現金流入 $500,000。", score: 1, status: "best", comment: "完全對齊課文第 4 課相等現金流回收期公式。" },
+          { text: "算式：回收期 ＝ $1,200,000 ＋ $88,550。", score: 0, status: "wrong", comment: "公式不正確。" }
+        ]},
+        { label: "第 2 步：計算出正確的回收期結果並寫出時間單位（1分）", colorClass: "hl-s2", opts: [
+          { text: "計算結果：回收期 ＝ 2.4 年（即需要 2.4 年便可收回 $1,200,000 的初期投資成本）。", score: 1, status: "best", comment: "計算結果（2.4 年）與時間單位完全準確。" },
+          { text: "計算結果：回收期 ＝ $2.4 元。", score: 0, status: "partial", comment: "單位不正確：回收期是指收回投資成本所需的時間，通常以「年數」表示而非「元」。" },
+          { text: "計算結果：回收期 ＝ 3 年。", score: 0, status: "wrong", comment: "3 年是整個項目的投資期，並非回本所需的回收期（$1,200,000 ÷ $500,000 ＝ 2.4 年）。" }
+        ]},
+        { ptTitle: "(b)(ii) 根據淨現值 (NPV) 作出投資決策（滿分 2 分：1 分決策規則 ＋ 1 分公司價值影響解說）", label: "第 3 步：表明應否接受該項目並指出淨現值 (NPV) 的決策規則（1分）", colorClass: "hl-s1", opts: [
+          { text: "應該接受該投資項目：因為根據淨現值 (NPV) 的決策規則，若獨立投資項目的「淨現值大於或等於 0（NPV ≥ 0）」，企業便應接受該項目。", score: 1, status: "best", comment: "決策立場明確且準確指出課文第 4.3C 節「淨現值 ≥ 0 應接受該項目」的決策規則。" },
+          { text: "應該否決該項目，因為 +$88,550 少於初期支出 $1,200,000。", score: 0, status: "wrong", comment: "計算淨現值時「已經減去了最初的支出 $1,200,000」；NPV 為正數 +$88,550 代表未來淨現金流入的現值比初期支出多出 $88,550。" },
+          { text: "可以接受也可以否決。", score: 0, status: "partial", comment: "立場含糊，必須明確指出「應該接受（因為淨現值為正數，大於或等於 0）」。" }
+        ]},
+        { label: "第 4 步：結合「NPV ＝ +$88,550 及 8% 資本成本」解釋對公司價值的影響（1分）", colorClass: "hl-s2", opts: [
+          { text: "該生產線的淨現值為正數（+$88,550 ＞ $0），代表在考慮金錢的時間值後，項目的回報率高於公司 8% 的資本成本（未來淨現金流入的現值大於最初支出 $1,200,000），接受該項目可令綠源公司的價值增加 $88,550（為東主賺取更大財富）。", score: 1, status: "best", comment: "緊扣課文第 4.3C 節「回報率高於資本成本，直接反映對公司價值的影響，為東主賺取最大財富」作解說。" },
+          { text: "因為 $88,550 是一個正數。", score: 0, status: "partial", comment: "必須說明正數 NPV 代表「未來淨現金流入的現值大於初期支出（回報率高於 8% 資本成本），能提高公司價值」。" },
+          { text: "這會令公司的槓桿比率自動變成 0%。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]},
+        { ptTitle: "(b)(iii) 非財務考慮因素（滿分 2 分：1 分課本非財務因素標題 ＋ 1 分個案解說［不涉經濟利益］）", label: "第 5 步：根據第 4 課，指出一項影響該資本投資決策的「非財務因素」標題（1分）", colorClass: "hl-s1", opts: [
+          { text: "應考慮該生產線的「投資成本與會計報酬率 (ARR)」。", score: 0, status: "wrong", comment: "投資成本及 ARR 均屬於「財務因素」，而題目明確要求回答「非財務因素」。" },
+          { text: "應考慮「遵守監管法規」、「符合行業標準」或「提高員工士氣」（或選：「策略性原因」／「提升企業形象」）。", score: 1, status: "best", comment: "準確指出課文第 4.2B 節的五大常見非財務因素標題。" },
+          { text: "應考慮生產線的剩餘價值是多少錢。", score: 0, status: "wrong", comment: "剩餘價值屬於財務因素。" }
+        ]},
+        { label: "第 6 步：結合個案中「液態氮極速急凍雪糕生產線」作解說（切記不可涉及直接賺錢等經濟利益 · 1分）", colorClass: "hl-s2", opts: [
+          { text: "例如在「遵守監管法規」及「符合行業標準」方面，液態氮屬極低溫高壓氣體，陳總裁須考慮廠房安裝該設備是否符合政府的職安健及工業安全監管法規以免被檢控罰款，以及生產出來的純素雪糕能否符合食品安全國際標準（如 ISO 標準）；而在「提高員工士氣」方面，以先進全自動設備取代繁重人手搬運可改善工作環境，有助提高工場員工士氣。", score: 1, status: "best", comment: "緊扣課文第 4.2B 節非財務因素，且嚴格遵守「不涉及直接經濟利益」的評分要求。" },
+          { text: "因為這可以提高企業形象，從而令下個月雪糕銷售額大增五百萬元賺取暴利。", score: 0, status: "wrong", comment: "課本重點提示：在要求解釋非財務因素的題目中，如答案涉及經濟利益（如增加銷售額賺取利潤），將不會得分。" },
+          { text: "因為非財務因素好重要。", score: 0, status: "partial", comment: "同義反覆，未有結合液態氮生產線作具體解說。" }
+        ]}
+      ]
+    },
+    {
+      id: "c3", ch: 3, chName: "第 3 課：融資方式 (結合第 1 課槓桿比率)", maxMarks: 6,
+      title: "分題 (c)：反對再借長期貸款的原因 (2分) 與兩種可行長期籌資方案 (4分)",
+      question: "針對籌集 $1,200,000 引進新生產線的融資決策：(i) 結合個案中綠源公司「槓桿比率已高達 72%」的情況，根據選擇舉債融資或股本融資的原則，解釋為何陳總裁反對再向銀行借入五年期長期貸款（2分）；(ii) 結合個案中綠源公司屬於「私人有限公司且留存利潤極少」的背景，建議並解釋兩種可行的長期籌資方法（4分）。（6 分）",
+      steps: [
+        { ptTitle: "(c)(i) 反對再借長期貸款的原因（滿分 2 分：1 分高槓桿與破產風險原則 ＋ 1 分個案解說）", label: "第 1 步：根據第 1 課及第 3 課，指出槓桿比率高達 72%（＞50%）所反映的破產風險問題（1分）", colorClass: "hl-s1", opts: [
+          { text: "因為槓桿比率 72% 代表公司完全沒有任何負債，向銀行借錢會削弱東主對公司的控制權。", score: 0, status: "wrong", comment: "72%（高於 50%）代表長期債務比重極高，且向銀行借貸（舉債融資）不會影響東主對公司的控制權。" },
+          { text: "因為綠源公司目前的槓桿比率已高達 72%（遠高於 50% 水平），代表公司已過度採用長期債務籌資（債台高築），償還長期債務的能力低且「破產風險很高」。", score: 1, status: "best", comment: "準確結合第 1 課槓桿比率（＞50% 負債比重偏高）及第 3.4B 節「槓桿比率高代表破產風險很高」。" },
+          { text: "因為銀行不喜歡雪糕公司。", score: 0, status: "partial", comment: "未能從「槓桿比率高達 72% 代表破產風險很高、增加財政負擔」的財務角度解釋。" }
+        ]},
+        { label: "第 2 步：解釋在破產風險高下繼續舉債對綠源公司造成的負面後果（1分）", colorClass: "hl-s2", opts: [
+          { text: "根據舉債融資的做法，無論公司是否錄得利潤，都必須按時支付利息和在到期日償還本金；在槓桿比率已高達 72% 下若繼續向銀行借貸，會進一步增加公司的財政負擔和破產風險（一旦不能如期付息還本便可能被迫清盤），而且銀行亦可能索取極高昂的利息成本甚至拒絕貸款申請。", score: 1, status: "best", comment: "完全命中課文第 3.4A 及 3.4B 節「無論是否錄得利潤都必須按時付息還本、增加財政負擔和破產風險，銀行亦會索取高息或拒絕申請」。" },
+          { text: "再借錢會令槓桿比率變得更高。", score: 0, status: "partial", comment: "必須說明槓桿比率過高下繼續舉債會「增加定期付息還本的財政負擔和被迫清盤的破產風險，或遭銀行索取高息／拒絕申請」。" },
+          { text: "這會令公司的速動比率自動變成 5 : 1。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]},
+        { ptTitle: "(c)(ii) 可行長期籌資方法一（滿分 2 分：1 分方法名稱［排雷］ ＋ 1 分結合個案解說）", label: "第 3 步：識別長短期資金需要並排查個案限制因素，建議第一種可行長期籌資方法（1分）", colorClass: "hl-s1", opts: [
+          { text: "建議綠源公司直接動用內部的「留存利潤」支付 $1,200,000，或使用 30 天「貿易賒帳／銀行透支」購買生產線。", score: 0, status: "wrong", comment: "審題失誤：個案已明言公司「留存利潤及手頭現金極少」（內部資金不足）；而購買固定資產（生產線）須用長期籌資，不能使用貿易賒帳或銀行透支等短期籌資。" },
+          { text: "第一種可行方法是採用股本融資（向外籌資）——「向現有股東或邀請新的私人投資者發行普通股集資」。", score: 1, status: "best", comment: "完美配合「破產風險高（槓桿比率 72%）應採用股本融資」及「內部留存利潤不足應向外籌資」的課本原則。" },
+          { text: "建議將生產線改為獨資企業。", score: 0, status: "wrong", comment: "未能回答籌集資金的方法。" }
+        ]},
+        { label: "第 4 步：結合綠源公司「高槓桿（72%）及現金緊絀」背景解釋發行普通股的好處（1分）", colorClass: "hl-s2", opts: [
+          { text: "由於普通股沒有期限，綠源公司無須向股東償還這 $1,200,000 款項，而且普通股的股息率不是固定的、公司不一定要派發股息；因此發行普通股不會為公司帶來額外的財政負擔，能避免再增加破產風險（同時增加股東資本有助降低過高的 72% 槓桿比率，且股本融資無須提供抵押品）。", score: 1, status: "best", comment: "緊扣課文第 3.4A 節「普通股沒有期限無須償還款項、股息率非固定且不一定要派發股息，不會帶來額外財政負擔」。" },
+          { text: "因為發普通股可以拿到錢買機器。", score: 0, status: "partial", comment: "必須說明發行普通股相對於舉債的優勢——「普通股無期限無須償還本金，且不一定要派發股息，不會增加財政負擔與破產風險」。" },
+          { text: "因為普通股股息可以扣減利得稅。", score: 0, status: "wrong", comment: "股息不可扣減利得稅。" }
+        ]},
+        { ptTitle: "(c)(ii) 可行長期籌資方法二（滿分 2 分：1 分方法名稱 ＋ 1 分結合個案解說）", label: "第 5 步：根據第 3 課十種常用融資方法，建議第二種適用於添置昂貴生產線設備的長期籌資方法（1分）", colorClass: "hl-s1", opts: [
+          { text: "第二種可行方法是採用「租購 (Hire Purchase)」或「租賃 (Leasing)」方式來取得該條液態氮急凍生產線。", score: 1, status: "best", comment: "準確提出課文第 3.2A 節專門用於使用昂貴固定資產的長期籌資方法「租購和租賃」。" },
+          { text: "建議使用「應計費用」來購買這條三年期生產線。", score: 0, status: "wrong", comment: "應計費用（如期末尚未繳付的薪金）屬於短期籌資，不能用於添置大型固定資產。" },
+          { text: "建議放棄引進生產線。", score: 0, status: "wrong", comment: "未能回答如何籌資引進生產線的問題。" }
+        ]},
+        { label: "第 6 步：結合個案中綠源公司「手頭現金極少」解釋採用租購或租賃的運作與好處（1分）", colorClass: "hl-s2", opts: [
+          { text: "由於綠源公司目前手頭現金極少，採用「租購」（協議租用並分期付款購買，在付清全額後生產線歸公司所有）或「租賃」（租用生產線而無須擁有該物品），可讓公司無須在初期一筆過動用 $1,200,000 現金，即可在租購或租賃期間使用該生產線投入生產。", score: 1, status: "best", comment: "緊扣課文第 3.2A 節租購（分期付款購買，付清全額後歸買方所有）與租賃（使用但不擁有物品）的定義及免卻初期大額現金支出的優勢。" },
+          { text: "因為租機比較方便。", score: 0, status: "partial", comment: "必須說明租購（分期付款購買，付清後擁有）或租賃（租用而不擁有）如何讓公司在手頭現金極少下無須初期一筆過支付全額即可使用設備。" },
+          { text: "這會令供應商免費贈送生產線給公司。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]}
+      ]
+    },
+    {
+      id: "c4", ch: 6, chName: "第 6 課：風險管理", maxMarks: 6,
+      title: "分題 (d)：中央冷庫的「風險減少（避免損失 vs 減少損失）」 (2分) 與兩種「責任保險」配置 (4分)",
+      question: "針對綠源公司中央冷凍倉庫（存放大批雪糕存貨）及三間甜品堂食專門店的純風險：(i) 根據第 6 課「風險減少」策略中的「避免損失」和「減少損失」，各舉一例說明綠源公司可如何管理中央冷庫的火災或雪糕變質風險（2分）；(ii) 解釋綠源公司應購買的兩種「責任保險」以保障三間堂食專門店的營運風險（4分）。（6 分）",
+      steps: [
+        { ptTitle: "(d)(i) 風險減少策略應用（滿分 2 分：1 分避免損失措施 ＋ 1 分減少損失措施）", label: "第 1 步：根據第 6 課，指出一項針對中央冷庫的「避免損失 (Loss Prevention —— 減低損失頻率)」措施（1分）", colorClass: "hl-s1", opts: [
+          { text: "購買火險把損失轉移給保險公司。", score: 0, status: "wrong", comment: "購買火險屬於「風險轉移」，而非「風險減少」。" },
+          { text: "在「避免損失（有助避免出現損失，即減低損失頻率）」方面：公司可定期檢查及保養中央冷庫的電線與製冷機組、禁止在冷庫內吸煙或擺放易燃物品，以減低冷庫發生火災或停電故障的頻率。", score: 1, status: "best", comment: "準確對應課文第 6.5A 節「避免損失（減低損失頻率）」的概念與措施。" },
+          { text: "關閉中央冷庫並停止生產所有雪糕。", score: 0, status: "wrong", comment: "停止參與主要業務屬於「風險迴避」（且實際上不可行），而非「風險減少」。" }
+        ]},
+        { label: "第 2 步：根據第 6 課，指出一項針對中央冷庫的「減少損失 (Loss Reduction —— 減低損失嚴重程度)」措施（1分）", colorClass: "hl-s2", opts: [
+          { text: "在「減少損失（不能防止不幸事故發生，但在事故發生時有助減低損失嚴重程度）」方面：公司可在中央冷庫安裝「自動灑水系統」及「後備發電機」，一旦不幸發生火災或停電時，可即時撲滅火勢或維持供電，減低雪糕存貨損毀的嚴重程度。", score: 1, status: "best", comment: "準確對應課文第 6.5A 節「減少損失（如安裝自動灑水系統，在不幸事件發生時減低損失嚴重程度）」的概念與措施。" },
+          { text: "叫倉務員平時小心看住個雪櫃。", score: 0, status: "partial", comment: "未能區分並舉出「減少損失（在事故發生時減低損失嚴重程度，如安裝自動灑水系統或後備發電機）」的具體措施。" },
+          { text: "這會令雪糕在室溫下永遠不會融化。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]},
+        { ptTitle: "(d)(ii) 責任保險建議一：公眾責任保險（滿分 2 分：1 分保險名稱 ＋ 1 分個案場所解說）", label: "第 3 步：根據第 6 課，針對三間堂食專門店經常有大量公眾人士進出，建議第一種「責任保險」名稱（1分）", colorClass: "hl-s1", opts: [
+          { text: "第一種應購買的責任保險是「公眾責任保險 (Public Liability Insurance)」。", score: 1, status: "best", comment: "準確指出課文第 6.6 節常見責任保險「公眾責任保險」。" },
+          { text: "第一種應購買的責任保險是「員工誠信保險」。", score: 0, status: "wrong", comment: "課本重點提示：員工誠信保險並不屬於責任保險（它是保障僱主因僱員欺詐或盜竊而損失金錢）。" },
+          { text: "公司應該買一份保險。", score: 0, status: "partial", comment: "必須寫出具體責任保險的標準名稱（如公眾責任保險、僱員賠償保險或產品責任保險）。" }
+        ]},
+        { label: "第 4 步：結合個案中「銅鑼灣、尖沙咀及沙田三間甜品堂食專門店」解釋公眾責任保險的保障作用（1分）", colorClass: "hl-s2", opts: [
+          { text: "由於三間甜品堂食專門店經常有大量公眾人士（食客）進出，如果專門店的營運或場地設施導致第三者（如到店光顧的食客因地面濕滑跌傷或被店內設施弄傷財物）受傷或蒙受財產損失，公眾責任保險可為這方面的責任風險提供保障，由保險公司向受傷或受損的第三者支付賠償。", score: 1, status: "best", comment: "完全緊扣課文第 6.6 節「如果企業的營運導致第三者（或經營場所的合法訪客）受傷或蒙受財產損失，公眾責任保險可提供保障，向第三者支付賠償」。" },
+          { text: "因為有很多人去專門店食甜品。", score: 0, status: "partial", comment: "必須說明該保險保障甚麼風險——「保障因企業營運導致第三者（如堂食食客）受傷或蒙受財產損失的法律賠償責任」。" },
+          { text: "這會令專門店的商場租金減半。", score: 0, status: "wrong", comment: "不合理的推論。" }
+        ]},
+        { ptTitle: "(d)(ii) 責任保險建議二：僱員賠償保險（或產品責任保險）（滿分 2 分：1 分保險名稱 ＋ 1 分個案解說）", label: "第 5 步：根據第 6 課，建議第二種「責任保險」名稱（1分）", colorClass: "hl-s1", opts: [
+          { text: "第二種必須購買的責任保險是香港法例規定的「僱員賠償保險 (Employees' Compensation Insurance)」（或選：「產品責任保險 Product Liability Insurance」）。", score: 1, status: "best", comment: "準確指出課文第 6.6 節第二種常見責任保險「僱員賠償保險」（或產品責任保險）。" },
+          { text: "第二種責任保險是「營運虧損保險」。", score: 0, status: "wrong", comment: "營運虧損屬不可保的投機風險。" },
+          { text: "第二種是幫員工買保險。", score: 0, status: "partial", comment: "請使用課本標準名稱「僱員賠償保險 (Employees' Compensation Insurance)」。" }
+        ]},
+        { label: "第 6 步：結合個案中「工場技工與專門店侍應（或食客進食純素雪糕）」解釋保障作用（1分）", colorClass: "hl-s2", opts: [
+          { text: "在香港，法律規定綠源公司作為僱主必須購買「僱員賠償保險」，它會就中央冷庫技工或專門店侍應因工受傷、死亡或患上職業病所招致的醫療費用和賠償金額作出經濟補償（若選產品責任保險，則解說：保障因雪糕產品變質或受污染導致消費者食用後生病不適而向公司提出的法律索償）。", score: 1, status: "best", comment: "緊扣課文第 6.6 節「法律規定僱主必須購買僱員賠償保險，就僱員因工受傷或死亡所招致的醫療費用和賠償金額作出經濟補償」。" },
+          { text: "保障員工在店舖入面發生的意外。", score: 0, status: "partial", comment: "必須明確點出「香港法律規定僱主必須購買，就僱員因工受傷或死亡所招致的醫療費用和賠償金額作出經濟補償」。" },
+          { text: "這會令雪糕永遠不會有細菌。", score: 0, status: "wrong", comment: "保險只提供事後經濟賠償，不會物理上消滅細菌。" }
+        ]}
+      ]
+    }
+  ];
+
+  // ====== 丙部：進階論述題數據（100% 嚴格對齊教科書第 1 課及第 2 課用詞） ======
+  const essayTopics = [
+    {
+      topicId: "es1", ch: 1, chName: "第 1 課：財務分析（運用四大類會計比率評估企業表現 · 12分論述題）",
+      topicTitle: "丙部論述題 Q1：耀目智能照明有限公司（闡釋如何運用「四大類會計比率」全面評估企業四方面的表現 · 12分）",
+      scenario: "「耀目智能照明有限公司」生產商用節能 LED 照明系統。公司計劃向銀行申請大額長期貸款及吸引新投資者入股以擴充廠房。試舉例闡釋銀行及投資者可如何運用會計比率，評估該公司在「盈利能力、變現能力、償債能力及管理效能」四方面的表現。（12 分 — 請分別建構 4 個獨立重點段落，每段 3 分）",
+      paragraphs: [
+        {
+          id: "es1_p1", ch: 1, maxMarks: 3, title: "第 1 段：盈利能力比率 (Profitability Ratios · 3分)",
+          steps: [
+            { label: "第 1 步：指出「盈利能力比率」的量度目的與課本三個具體比率名稱（1分）", colorClass: "hl-s1", opts: [
+              { text: "首先，投資者及銀行可運用「盈利能力比率 (Profitability Ratios)」：這類比率用來量度企業賺取利潤的能力，以及運用資金賺取利潤的能力，包括「毛利率」、「淨利率（純利率）」及「運用資金報酬率（動用資金報酬率 ROCE）」。", score: 1, status: "best", comment: "100% 準確指出課文第 1.4A 節「盈利能力比率」的定義並列出毛利率、淨利率與運用資金報酬率。" },
+              { text: "盈利能力比率是用來計算公司倉庫入面有幾多件燈具存貨。", score: 0, status: "wrong", comment: "量度運用存貨效率的是管理效能比率（存貨周轉率），而非盈利能力比率。" },
+              { text: "可以用四類不同的會計比率來評估公司。", score: 0, status: "partial", comment: "違反「一段一個重點」原則。" }
+            ]},
+            { label: "第 2 步：針對「耀目智能照明公司」設定具體比率分析例子（1分）", colorClass: "hl-s2", opts: [
+              { text: "例如透過計算耀目照明的「毛利率（毛利 ÷ 銷貨 × 100%）」及「淨利率（稅前淨利 ÷ 銷貨 × 100%）」，可評估公司在扣除 LED 銷貨成本及扣除所有費用（營業費用與財務成本）後，從每一元銷售收益中賺取毛利與淨利的能力；而計算「運用資金報酬率（利息及稅前淨利 ÷ 平均運用資金 × 100%）」，則可顯示公司每運用一元的長期資金（非流動負債加股東資本）所賺取的利息及稅前利潤。", score: 1, status: "best", comment: "完整結合課文第 1.4A 節毛利率、淨利率與運用資金報酬率的公式與含義。" },
+              { text: "例如計算一下公司有冇賺錢。", score: 0, status: "partial", comment: "必須列舉具體比率名稱（毛利率、淨利率、運用資金報酬率）說明其量度內容。" },
+              { text: "例如為燈具設計新包裝盒。", score: 0, status: "wrong", comment: "屬市場營銷產品策略，與財務比率分析無關。" }
+            ]},
+            { label: "第 3 步：深化論述至支援投資者評估投資是否物有所值及與同業／往年比較的影響（1分）", colorClass: "hl-s3", opts: [
+              { text: "將這些盈利能力比率與公司往年比率（時序分析）或同行平均水平（同業分析）比較，若比率越高，代表耀目照明控制成本費用及運用資金賺取利潤的能力越強，這是新投資者用來評估其投資是否物有所值、能否獲得高投資回報的重要指標。", score: 1, status: "best", comment: "緊扣課文「這是投資者用來評估其投資是否物有所值的重要指標；比率越高，企業運用資金賺取利潤的能力越強，投資者的投資回報也越高」。" },
+              { text: "這樣便評估了公司的盈利能力。", score: 0, status: "partial", comment: "同義反覆。" },
+              { text: "這會令香港的電費自動減半。", score: 0, status: "wrong", comment: "不合理的推論。" }
+            ]}
+          ]
+        },
+        {
+          id: "es1_p2", ch: 1, maxMarks: 3, title: "第 2 段：變現能力比率 (Liquidity Ratios · 3分)",
+          steps: [
+            { label: "第 1 步：指出「變現能力比率」的量度目的與課本具體比率名稱（1分）", colorClass: "hl-s1", opts: [
+              { text: "其次，可運用「變現能力比率 (Liquidity Ratios)」：這類比率用來量度企業償還「短期債務（流動負債）」的能力，主要比率包括「流動比率（營運資金比率）」和「速動比率（酸性測驗比率）」（此外存貨周轉率、應收貨款周轉率和應付貨款周轉率亦可用作量度變現能力）。", score: 1, status: "best", comment: "100% 準確指出課文第 1.4B 節「變現能力比率（量度償還短期債務的能力）」並列出流動比率與速動比率。" },
+              { text: "變現能力比率是用來評估公司三十年後的長期按揭還款能力。", score: 0, status: "wrong", comment: "變現能力比率量度的是償還「短期債務」的能力；償還長期債務的能力屬償債能力比率（槓桿比率）。" },
+              { text: "第二類是變現能力比率。", score: 0, status: "partial", comment: "未能寫出量度「償還短期債務的能力」的定義及「流動比率、速動比率」的具體名稱。" }
+            ]},
+            { label: "第 2 步：針對「耀目照明比較流動比率與速動比率」設定具體例子（1分）", colorClass: "hl-s2", opts: [
+              { text: "例如銀行可計算耀目照明的「流動比率（流動資產 ÷ 流動負債 : 1）」及扣除 LED 燈具存貨後的「速動比率［(流動資產 － 存貨) ÷ 流動負債 : 1］」；由於在各種流動資產中存貨的變現能力最低，速動比率能展示公司在無須等待出售存貨的情況下償還流動負債的能力。", score: 1, status: "best", comment: "清楚引用課文第 1.4B 節流動比率與速動比率的公式及「存貨變現能力最低，速動比率展示無須等待出售存貨下償還流動負債的能力」。" },
+              { text: "例如看看公司有沒有現金。", score: 0, status: "partial", comment: "必須結合「流動比率」與扣除存貨後的「速動比率」作說明。" },
+              { text: "例如計算公司的毛利率。", score: 0, status: "wrong", comment: "毛利率屬盈利能力比率。" }
+            ]},
+            { label: "第 3 步：深化論述至判斷比率是否維持在 1 以上且不宜太高或太低的影響（1分）", colorClass: "hl-s3", opts: [
+              { text: "為了儲備足夠的流動資產償還短期債務，這兩個比率應維持在 1 以上（若小於 1，即使擁有貴重非流動資產，也可能沒有足夠流動資產償還短期債務；但若比率太高，則可能持有過剩的流動資產而未能善用流動資產來賺取利潤）。", score: 1, status: "best", comment: "完美結合課文第 1.4B 節「維持在 1 以上，且兩個比率都不宜太高或太低」的詮釋重點。" },
+              { text: "這樣便知道公司的變現能力了。", score: 0, status: "partial", comment: "同義反覆。" },
+              { text: "這會令所有滯銷燈具自動賣出。", score: 0, status: "wrong", comment: "不合理的推論。" }
+            ]}
+          ]
+        },
+        {
+          id: "es1_p3", ch: 1, maxMarks: 3, title: "第 3 段：償債能力比率 (Solvency Ratios · 3分)",
+          steps: [
+            { label: "第 1 步：指出「償債能力比率」的量度目的與「槓桿比率」名稱（1分）", colorClass: "hl-s1", opts: [
+              { text: "第三，可運用「償債能力比率 (Solvency Ratios)」：償債能力比率量度企業償還到期債務（包括短期負債和長期負債）的整體償債能力；當中的「槓桿比率 (Gearing Ratio)」專門量度企業的長期財務穩健性和償還長期債務的能力。", score: 1, status: "best", comment: "100% 準確指出課文第 1.4C 節「償債能力比率」及「槓桿比率（量度長期財務穩健性和償還長期債務的能力）」。" },
+              { text: "償債能力比率就是存貨周轉率。", score: 0, status: "wrong", comment: "存貨周轉率屬管理效能比率。" },
+              { text: "第三是看公司的負債。", score: 0, status: "partial", comment: "必須明確寫出「償債能力比率」及「槓桿比率 (Gearing Ratio)」的標準名稱。" }
+            ]},
+            { label: "第 2 步：針對「耀目照明計算槓桿比率」說明公式與 50% 判斷基準（1分）", colorClass: "hl-s2", opts: [
+              { text: "例如銀行及投資者可計算耀目照明的「槓桿比率［(非流動負債 ＋ 優先股本) ÷ (非流動負債 ＋ 股東資本) × 100%］」，顯示長期債務相對於長期資本總額的比重；一般而言，若槓桿比率低於 50%（甚至低於同行平均水平），代表公司沒有過度依賴長期債務籌資，償還長期債務的能力頗高。", score: 1, status: "best", comment: "具體結合課文第 1.4C 節槓桿比率公式與 50% 基準判斷。" },
+              { text: "例如槓桿比率越高，代表償債能力越高。", score: 0, status: "wrong", comment: "課本重點提示：槓桿比率越高不代表償債能力越高！槓桿比率越高代表採用越多長期債務籌資，財務風險越高，可能會難以償還長期債務。" },
+              { text: "例如為廠房購買火險。", score: 0, status: "wrong", comment: "屬風險管理，與會計比率分析無關。" }
+            ]},
+            { label: "第 3 步：深化論述至評估固定付息還本風險及避免因無力償債而被迫清盤停業的影響（1分）", colorClass: "hl-s3", opts: [
+              { text: "由於無論企業獲利或虧損，都必須就長期債務支付利息和優先股股息以及償還貸款本金，審視槓桿比率有助銀行及投資者評估耀目照明的財務風險，避免借貸或投資予一家因槓桿比率過高、無力償還到期債務而可能要清盤停業的企業。", score: 1, status: "best", comment: "緊扣課文第 1.4C 節「無論獲利或虧損都必須支付利息和優先股股息及償還本金；若無力償債便很可能要清盤停業」。" },
+              { text: "這樣銀行便知道公司的償債能力了。", score: 0, status: "partial", comment: "同義反覆。" },
+              { text: "這會令銀行免收所有貸款利息。", score: 0, status: "wrong", comment: "不合理的推論。" }
+            ]}
+          ]
+        },
+        {
+          id: "es1_p4", ch: 1, maxMarks: 3, title: "第 4 段：管理效能比率 (Management Efficiency Ratios · 3分)",
+          steps: [
+            { label: "第 1 步：指出「管理效能比率」的量度目的與課本四個具體比率名稱（1分）", colorClass: "hl-s1", opts: [
+              { text: "最後，可運用「管理效能比率 (Management Efficiency Ratios)」：這類比率用來量度企業運用各項資產以賺取銷售收益，或在較短時間內把資產套現的效率，包括「存貨周轉率」、「應收貨款周轉率」、「應付貨款周轉率」及「總資產周轉率（資產周轉率）」（全部以「次」為單位）。", score: 1, status: "best", comment: "100% 準確指出課文第 1.4D 節「管理效能比率」的定義並列出四個周轉率名稱與單位「次」。" },
+              { text: "管理效能比率是用來計算行政總裁的薪金。", score: 0, status: "wrong", comment: "不正確的陳述。" },
+              { text: "最後一類是管理效能比率。", score: 0, status: "partial", comment: "未能寫出量度運用資產效率的定義及存貨／應收貨款／應付貨款／總資產周轉率四個具體比率名稱。" }
+            ]},
+            { label: "第 2 步：針對「耀目照明的存貨、應收貨款與總資產周轉率」設定具體例子（1分）", colorClass: "hl-s2", opts: [
+              { text: "例如透過計算「存貨周轉率（銷貨成本 ÷ 平均存貨）」，可量度運用及出售 LED 燈具存貨的速度與效率；計算「應收貨款周轉率（賒銷 ÷ 平均應收貨款）」與「應付貨款周轉率（賒購 ÷ 平均應付貨款）」，可量度收回客戶貨款與向供應商付款的速度與效率；而計算「總資產周轉率（銷貨 ÷ 資產總額）」，則可量度每運用一元的總資產（包括流動資產和非流動資產）所賺取的銷售收益。", score: 1, status: "best", comment: "完整結合課文第 1.4D 節四個周轉率的公式與量度內容。" },
+              { text: "例如看看管理層管得好不好。", score: 0, status: "partial", comment: "必須舉出具體的管理效能比率（存貨周轉率、應收貨款周轉率、應付貨款周轉率、總資產周轉率）作解說。" },
+              { text: "例如為員工安排培訓課程。", score: 0, status: "wrong", comment: "屬人力資源培訓，並非會計比率。" }
+            ]},
+            { label: "第 3 步：深化論述至確認只須運用較少存貨或總資產即可達至相同銷售收益的影響（1分）", colorClass: "hl-s3", opts: [
+              { text: "這四個周轉率越高，代表耀目照明出售存貨及收回現金的速度越快（只須持有較少量的存貨和運用較少的總資產，便可達至相同水平的銷售收益），證明公司管理效能卓越；綜合這四大類會計比率，銀行與投資者便能全面評估公司的業績。", score: 1, status: "best", comment: "緊扣課文第 1.4D 節「只須持有較少量的存貨／運用較少的資產，便可達至相同水平的銷售收益」並總結全題。" },
+              { text: "這樣便評估完管理效能了。", score: 0, status: "partial", comment: "同義反覆。" },
+              { text: "這會令全港的裝修工程自動完成。", score: 0, status: "wrong", comment: "不合理的推論。" }
+            ]}
+          ]
+        }
+      ]
+    },
+    {
+      topicId: "es2", ch: 2, chName: "第 2 課：預算編製（預算控制的四項用途 · 12分論述題）",
+      topicTitle: "丙部論述題 Q2：極速電競設備製造商（闡釋執行「預算控制 (Budgetary Control)」對企業的四項用途 · 12分）",
+      scenario: "「極速電競設備有限公司」專門研發及生產無線電競滑鼠與機械鍵盤。隨着公司規模擴大並增設了研發部、生產部、市場營銷部及財務部，行政總裁決定在全公司執行「預算控制 (Budgetary Control)」——即制定預算，然後持續地比較實際業績和預算，以確保計劃能付諸實行。試舉例闡釋執行「預算控制」對該電競設備公司的四項用途（好處）。（12 分 — 請分別建構 4 個獨立重點段落，每段 3 分）",
+      paragraphs: [
+        {
+          id: "es2_p1", ch: 2, maxMarks: 3, title: "第 1 段：促使各部門早作規劃 (Encouraging Departments to Plan Ahead · 3分)",
+          steps: [
+            { label: "第 1 步：根據第 2 課，指出預算控制的第一項用途 ——「促使各部門早作規劃」（1分）", colorClass: "hl-s1", opts: [
+              { text: "首先，預算控制的第一項用途是「促使各部門早作規劃」：為了執行預算控制，各管理人員須負責預算中的不同部分，因此企業內每個部門都會積極參與編製預算的工作，仔細分析自己部門的能力和限制。", score: 1, status: "best", comment: "100% 準確指出課文第 2.3B 節預算控制的第一項用途（促使各部門早作規劃）。" },
+              { text: "預算控制的第一項用途是為了向稅務局申請豁免繳交所有利得稅。", score: 0, status: "wrong", comment: "執行內部預算控制並不能豁免利得稅。" },
+              { text: "預算控制有四項不同的用途。", score: 0, status: "partial", comment: "違反「一段一個重點」原則。" }
+            ]},
+            { label: "第 2 步：針對「極速電競設備公司各部門分析能力與限制」設定具體例子（1分）", colorClass: "hl-s2", opts: [
+              { text: "例如極速電競公司的銷售及市場經理在參與編製下年度銷售預算時，仔細分析部門的人手能力與限制，意識到下季度將有兩名資深區域銷售主任退休（或生產部經理發現現有組裝機器產能已達上限），預見可能無法應付暑期電玩節激增的訂單。", score: 1, status: "best", comment: "緊扣課文第 2.3B 節圖 2.4「管理人員在編製預算時仔細分析自己部門的能力和限制（如意識到員工即將退休或產能限制）」的例子。" },
+              { text: "例如公司用預算來分錢給各部門。", score: 0, status: "partial", comment: "欠缺結合各部門管理人員「仔細分析自己部門的能力和限制以發現潛在問題」的具體例子。" },
+              { text: "例如公司為倉庫購買盜竊保險。", score: 0, status: "wrong", comment: "屬風險管理，並非解釋預算控制的用途。" }
+            ]},
+            { label: "第 3 步：深化論述至及早發現潛在問題和未來良機、並預先採取防範及規劃措施的影響（1分）", colorClass: "hl-s3", opts: [
+              { text: "這有助極速電競公司從中及早發現潛在問題（如人手或產能不足、可能遇到的財務問題）和未來良機，讓各部門能未雨綢繆、及早採取防範措施（如提前招聘培訓新人及規劃財務資源分配），為達成企業目標提供清晰指引。", score: 1, status: "best", comment: "清楚推演出「從中發現潛在問題和未來良機 → 及早採取防範措施並有效分配資源」。" },
+              { text: "這樣各部門便做好了規劃。", score: 0, status: "partial", comment: "同義反覆。" },
+              { text: "這會令電競晶片的國際價格自動跌至零。", score: 0, status: "wrong", comment: "不合理的推論。" }
+            ]}
+          ]
+        },
+        {
+          id: "es2_p2", ch: 2, maxMarks: 3, title: "第 2 段：改善企業內部的溝通和協調 (Improving Internal Communication and Coordination · 3分)",
+          steps: [
+            { label: "第 1 步：根據第 2 課，指出預算控制的第二項用途 ——「改善企業內部的溝通和協調」（1分）", colorClass: "hl-s1", opts: [
+              { text: "其次，預算控制的第二項用途是「改善企業內部的溝通和協調」：由於企業的所有預算（如銷售預算、原料預算、人工預算和市場營銷預算）都是互相關聯的，改變其中一項預算便會同時影響其他部門的預算，所以在編製預算過程中所有部門須緊密溝通、共同制定商業計劃。", score: 1, status: "best", comment: "100% 準確指出課文第 2.3B 節預算控制的第二項用途（改善企業內部的溝通和協調）。" },
+              { text: "預算控制的目的是禁止市場部與生產部進行任何交流。", score: 0, status: "wrong", comment: "概念相反。" },
+              { text: "第二是讓大家傾下偈。", score: 0, status: "partial", comment: "請使用課本標準術語：「改善企業內部的溝通和協調」。" }
+            ]},
+            { label: "第 2 步：針對「極速電競公司的市場部、生產部與財務部預算互相關聯」設定例子（1分）", colorClass: "hl-s2", opts: [
+              { text: "例如當「市場營銷部」希望提高無線電競滑鼠的銷售額預算及增加廣告費預算時，會直接影響「生產部」的產量、原料與人工預算以及「財務部」的資金預算；各部門主管在預算委員會會議上須互相交流各自的目標與成本限制。", score: 1, status: "best", comment: "完美呈現課文圖 2.2 市場營銷部、生產部與財務部如何因預算互相關聯而緊密溝通交流。" },
+              { text: "例如幾個部門的經理一起開會。", score: 0, status: "partial", comment: "必須具體說明不同部門的預算（如銷售預算、市場營銷預算與生產原料預算）如何互相關聯並互相交流。" },
+              { text: "例如計算公司的速動比率。", score: 0, status: "wrong", comment: "與跨部門預算協調無關。" }
+            ]},
+            { label: "第 3 步：深化論述至就如何共同達成企業目標取得共識、確保各部門互相協調配合的影響（1分）", colorClass: "hl-s3", opts: [
+              { text: "透過在編製總預算期間互相交流，市場部、生產部與財務部能就如何共同達成公司的整體利潤目標取得共識，有效改善部門之間的溝通和協調，確保各部門步伐一致。", score: 1, status: "best", comment: "緊扣課文第 2.3B 節「部門會互相交流，並就如何共同達成企業的目標取得共識，這有助改善部門之間的溝通和協調」。" },
+              { text: "這樣各部門便能好好協調了。", score: 0, status: "partial", comment: "同義反覆。" },
+              { text: "這會令動漫電玩節免收場租。", score: 0, status: "wrong", comment: "不合理的推論。" }
+            ]}
+          ]
+        },
+        {
+          id: "es2_p3", ch: 2, maxMarks: 3, title: "第 3 段：提供標準讓企業評估各部門和管理人員的表現 (Providing Standards for Performance Evaluation · 3分)",
+          steps: [
+            { label: "第 1 步：根據第 2 課，指出預算控制的第三項用途 ——「提供標準讓企業評估各部門和管理人員的表現」（1分）", colorClass: "hl-s1", opts: [
+              { text: "第三，預算控制的第三項用途是「提供標準讓企業評估各部門和管理人員的表現」：由於不同部門通常負責預算的不同部分，並明確界定了管理人員在預算中的責任範圍，所以預算可以用作「表現標準（各部門須要達到的目標）」。", score: 1, status: "best", comment: "100% 準確指出課文第 2.3B 節預算控制的第三項用途（提供標準讓企業評估各部門和管理人員的表現）。" },
+              { text: "預算控制的目的是讓各部門主管隨意超支而無須承擔任何責任。", score: 0, status: "wrong", comment: "概念相反：如個別部門未能達到預算目標，有關管理人員可能要為此承擔責任。" },
+              { text: "第三個用途是評估一下公司。", score: 0, status: "partial", comment: "必須明確寫出「提供表現標準，讓高級管理層比較實際業績和預算，以監控和評估各部門和管理人員的表現」。" }
+            ]},
+            { label: "第 2 步：針對「比較生產部或市場部的實際業績與預算（計算 F / U 預算差異）」設定具體例子（1分）", colorClass: "hl-s2", opts: [
+              { text: "例如在每季結束後，高級管理層可把「生產部」的實際原料及人工成本與預算作比較，以及把「市場營銷部」的實際銷售額與銷售預算作比較；若發現某部門的實際費用遠高於預算費用（錄得重大不利差異 U）或實際銷售額未達標，便顯示該部門表現欠佳。", score: 1, status: "best", comment: "具體結合比較實際業績與預算（找出實際費用高於預算的不利差異 U）以評估部門表現。" },
+              { text: "例如看看生產部用了幾多錢。", score: 0, status: "partial", comment: "必須說明「將實際業績與預算標準作比較，檢視是否達到目標或出現重大不利差異」。" },
+              { text: "例如為新入職工人舉辦迎新培訓。", score: 0, status: "wrong", comment: "屬人力資源培訓，並非預算控制評估。" }
+            ]},
+            { label: "第 3 步：深化論述至確保各部門按計劃努力工作、並作出調查及在必要時採取補救措施糾正問題的影響（1分）", colorClass: "hl-s3", opts: [
+              { text: "以預算作為客觀表現標準，一方面能促使各部門主管為自己負責的預算部分承擔責任、按照計劃努力工作；另一方面當部門未能達到目標時，企業便可就此作出調查找出原因，並在必要時採取補救措施來糾正問題。", score: 1, status: "best", comment: "緊扣課文第 2.2B 及 2.3B 節「確保所有部門按照計劃努力工作，並找出企業在哪方面未能達到目標，作出調查並在必要時採取補救措施」。" },
+              { text: "這樣便能評估部門業績了。", score: 0, status: "partial", comment: "同義反覆。" },
+              { text: "這會令所有機械鍵盤永不損壞。", score: 0, status: "wrong", comment: "不合理的推論。" }
+            ]}
+          ]
+        },
+        {
+          id: "es2_p4", ch: 2, maxMarks: 3, title: "第 4 段：節省管理層的時間和精力 (Saving Management Time and Effort · 3分)",
+          steps: [
+            { label: "第 1 步：根據第 2 課，指出預算控制的第四項用途 ——「節省管理層的時間和精力」（1分）", colorClass: "hl-s1", opts: [
+              { text: "最後，預算控制的第四項用途是「節省管理層的時間和精力」：企業的高級管理層可透過預算控制報告，輕易找出哪些部門表現遜色（出現重大不利差異），從而集中處理這些部門的問題。", score: 1, status: "best", comment: "100% 準確指出課文第 2.3B 節預算控制的第四項用途（節省管理層的時間和精力）。" },
+              { text: "預算控制的目的是要求行政總裁每天花二十小時親自檢查每一張十元文具單據。", score: 0, status: "wrong", comment: "概念相反：預算控制正是為了幫高級管理層節省時間和精力。" },
+              { text: "最後一個用途是慳時間。", score: 0, status: "partial", comment: "應完整說明「透過預算控制輕易找出哪些部門表現遜色，集中處理這些部門的問題，從而節省管理層的時間和精力」。" }
+            ]},
+            { label: "第 2 步：針對「極速電競公司行政總裁審視各部門預算差異報告」設定例子（1分）", colorClass: "hl-s2", opts: [
+              { text: "例如極速電競公司的行政總裁在審視季度預算差異報告時，見到「研發部」和「市場營銷部」的收支均符合預算目標，只有「生產部」的原料及人工成本出現顯著的不利差異 (U)；行政總裁便無須花費大量時間過問已達標的研發部和市場部，只需集中精力調查生產部超支的問題。", score: 1, status: "best", comment: "具體展示行政總裁如何透過預算差異報告聚焦於出現不利差異 (U) 的生產部，而減少過問已達標的部門。" },
+              { text: "例如行政總裁不用做那麼多工作。", score: 0, status: "partial", comment: "應具體說明管理層如何透過預算報告「把注意力集中在未能達到預算目標（表現遜色）的部門，而投放較少時間在其他已達標的部門上」。" },
+              { text: "例如將所有部門關閉。", score: 0, status: "wrong", comment: "不合理的陳述。" }
+            ]},
+            { label: "第 3 步：深化論述至更有效率地運用高級管理層寶貴的時間和精力於關鍵問題上的影響（1分）", colorClass: "hl-s3", opts: [
+              { text: "藉由投放較少時間和精力在其他能夠順利達到預算目標的部門上，極速電競公司的高級管理層便能更有效率地運用寶貴的時間和精力，專注解決表現遜色部門的營運樽頸及制定長遠發展策略。", score: 1, status: "best", comment: "緊扣課文第 2.3B 節「集中處理這些部門的問題，並投放較少時間和精力在其他能夠達到目標的部門上，更有效率地運用時間和精力」。" },
+              { text: "這樣便節省了管理層的時間和精力。", score: 0, status: "partial", comment: "同義反覆。" },
+              { text: "這會令所有競爭對手自動退出電競市場。", score: 0, status: "wrong", comment: "不合理的推論。" }
+            ]}
+          ]
+        }
+      ]
+    }
+  ];
+
+  // ====== 共用渲染輔助：產生「紙筆練習模式（隱藏選項）」的 DSE 評卷參考與自評區塊 ======
+  function renderPaperPracticeBlock(item, navFnName, wsFnName) {
+    const isRev = !!revealedMS[item.id];
+    const curSelf = selfScores[item.id];
+    let scoreBtns = '';
+    for (let s = 0; s <= item.maxMarks; s++) {
+      scoreBtns += `<button class="score-pill ${curSelf === s ? 'picked' : ''}" onclick="setSelfScore('${item.id}', ${s}, ${navFnName}, ${wsFnName})">${s} 分</button>`;
+    }
+
+    const modelStepsHtml = item.steps.map(st => {
+      const bestOpt = st.opts.find(o => o.status === 'best');
+      return `
+        ${st.ptTitle ? `<div style="font-weight:800;color:var(--teal);margin:12px 0 6px;padding-top:8px;border-top:1px dashed var(--line)">${st.ptTitle}</div>` : ''}
+        <div style="margin-bottom:8px"><span class="${st.colorClass}">${st.label}</span><br><span style="font-weight:700">${bestOpt.text}</span> <span class="badge b-green" style="margin-left:6px">[1分]</span></div>`;
+    }).join('');
+
+    return `
+      <div class="paper-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+          <div>
+            <span class="badge b-teal">紙筆寫作練習模式（已隱藏組合答案選項）</span>
+            <h4 style="margin-top:8px;color:var(--teal);font-size:17.5px">請在實體答題紙上作答及計算（本題滿分：${item.maxMarks} 分；請遵循「一段一重點、1分概念／算式＋1分情境解說／結果＝2分一論點」原則）。</h4>
+          </div>
+          <button class="btn btn-teal" onclick="toggleRevealMS('${item.id}', ${wsFnName})">
+            ${isRev ? '隱藏評卷參考 (Marking Scheme)' : '完成紙筆作答後：顯示 DSE 評卷參考並自評得分'}
+          </button>
+        </div>
+
+        ${isRev ? `
+          <div class="ms-box">
+            <h4 style="color:var(--green);margin-bottom:10px;font-size:17.5px">DSE 評卷參考 (Marking Scheme) 逐分採分點拆解：</h4>
+            <div style="font-size:16px;line-height:1.8;background:var(--card);padding:16px 20px;border-radius:10px;border:1px solid var(--line)">
+              ${modelStepsHtml}
+            </div>
+            <div style="margin-top:16px;padding-top:14px;border-top:1.5px dashed var(--green);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+              <b style="color:var(--ink);font-size:15.5px">請對照上述 [1分] 採分點，為你在答題紙上的作答自評得分：</b>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">${scoreBtns}</div>
+            </div>
+          </div>
+        ` : ''}
+      </div>`;
+  }
+
+  function getItemScore(item, userAnsMap, submittedMap) {
+    if (selfScores[item.id] !== undefined) return selfScores[item.id];
+    if (submittedMap[item.id] && userAnsMap[item.id]) {
+      let sc = 0;
+      item.steps.forEach((st, sIdx) => {
+        const oIdx = userAnsMap[item.id][sIdx];
+        if (oIdx !== undefined) sc += st.opts[oIdx].score;
+      });
+      return sc;
+    }
+    return 0;
+  }
+
+  function isItemCompleted(item, submittedMap) {
+    return selfScores[item.id] !== undefined || !!submittedMap[item.id];
+  }
+
+  // ====== 甲部狀態與渲染 ======
+  let curSaIdx = 0;
+  let saUserAns = {};
+  let saSubmitted = {};
+
+  function selectSa(idx) { curSaIdx = idx; renderSaNav(); renderSaWorkspace(); }
+  function pickSaOpt(sIdx, oIdx) {
+    const q = saQuestions[curSaIdx];
+    if (!saUserAns[q.id]) saUserAns[q.id] = {};
+    saUserAns[q.id][sIdx] = oIdx;
+    saSubmitted[q.id] = false;
+    delete selfScores[q.id];
+    renderSaWorkspace();
+  }
+  function submitSa() {
+    const q = saQuestions[curSaIdx];
+    const ans = saUserAns[q.id] || {};
+    if (Object.keys(ans).length < q.steps.length) { alert(`請先完成本題全部 ${q.steps.length} 個步驟（共 2 個論點）的選擇，再點擊批改。`); return; }
+    saSubmitted[q.id] = true;
+    delete selfScores[q.id];
+    renderSaNav(); renderSaWorkspace(); updateLiveTotal();
+  }
+  function fillBestSa() {
+    const q = saQuestions[curSaIdx];
+    saUserAns[q.id] = {};
+    q.steps.forEach((st, sIdx) => { saUserAns[q.id][sIdx] = st.opts.findIndex(o => o.status === 'best'); });
+    saSubmitted[q.id] = true;
+    delete selfScores[q.id];
+    renderSaNav(); renderSaWorkspace(); updateLiveTotal();
+  }
+  function calcSaScore() {
+    return saQuestions.reduce((sum, q) => sum + getItemScore(q, saUserAns, saSubmitted), 0);
+  }
+  function renderSaNav() {
+    document.getElementById('saScoreHero').textContent = `${calcSaScore()} / 24`;
+    document.getElementById('saNavChips').innerHTML = saQuestions.map((q, i) => {
+      const done = isItemCompleted(q, saSubmitted);
+      return `<button class="chip ${i===curSaIdx?'active':''}" onclick="selectSa(${i})">${done?'[已完成] ':''}${q.title}</button>`;
+    }).join('');
+  }
+  function renderSaWorkspace() {
+    const q = saQuestions[curSaIdx];
+    const ans = saUserAns[q.id] || {};
+    const isSub = !!saSubmitted[q.id];
+    const letters = ['A', 'B', 'C'];
+    const qScore = getItemScore(q, saUserAns, saSubmitted);
+
+    const headerCard = `
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <div><span class="badge b-blue">${q.chName}</span><b style="color:var(--primary);font-size:16px">本題滿分：4 分（2 個獨立論點 × 每個論點 2 分［1分重點／算式＋1分解說／結果］）</b></div>
+          <button class="btn btn-outline" style="padding:6px 14px;font-size:14px" onclick="togglePaperMode()">
+            ${paperMode ? '顯示組合選項' : '隱藏選項（紙筆練習）'}
+          </button>
+        </div>
+        <div style="background:var(--surface);padding:16px 20px;border-radius:12px;border-left:4px solid var(--primary);font-size:16.5px;margin-bottom:14px"><b>背景情境：</b>${q.scenario}</div>
+        <div style="font-size:18px;font-weight:800">${q.question}</div>
+      </div>`;
+
+    if (paperMode) {
+      document.getElementById('saWorkspace').innerHTML = headerCard + renderPaperPracticeBlock(q, 'renderSaNav', 'renderSaWorkspace');
+      return;
+    }
+
+    let pointsHtml = '';
+    for (let p = 0; p < q.steps.length; p += 2) {
+      const st1 = q.steps[p], st2 = q.steps[p+1];
+      pointsHtml += `
+        <div class="point-group-box">
+          <div style="font-weight:800;color:var(--primary);font-size:17px;margin-bottom:12px">${st1.ptTitle || ('論點 ' + (p/2 + 1) + '（2分）')}</div>
+          ${[st1, st2].map((st, offset) => {
+            const sIdx = p + offset;
+            const sel = ans[sIdx];
+            return `
+              <div class="builder-stage" style="margin-bottom:${offset===0?'12px':'0'}">
+                <h4 style="margin-bottom:8px;font-size:16px"><span class="${st.colorClass}">${st.label}</span></h4>
+                ${st.opts.map((o, oIdx) => {
+                  const isSel = sel === oIdx;
+                  const gCls = (isSub && isSel) ? (o.status==='best'?'graded-best':o.status==='partial'?'graded-partial':'graded-wrong') : '';
+                  return `<button class="opt-card ${isSel?'selected':''} ${gCls}" onclick="pickSaOpt(${sIdx}, ${oIdx})"><span class="opt-letter">${letters[oIdx]}</span><span style="flex:1">${o.text}</span></button>`;
+                }).join('')}
+              </div>`;
+          }).join('')}
+        </div>`;
+    }
+
+    const preview = [0, 2].map(p => {
+      const t1 = ans[p] === undefined ? `［未選第 ${p+1} 步］` : `<span class="hl-s1">${q.steps[p].opts[ans[p]].text}</span>`;
+      const t2 = ans[p+1] === undefined ? `［未選第 ${p+2} 步］` : `<span class="hl-s2">${q.steps[p+1].opts[ans[p+1]].text}</span>`;
+      return `<b>【論點 ${p/2 + 1} (2分)】</b>${t1} ${t2}`;
+    }).join('<br><br>');
+
+    document.getElementById('saWorkspace').innerHTML = headerCard + pointsHtml + `
+      <div class="assembled-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <h3 style="color:var(--primary);font-size:19px">甲部短答題答案預覽（兩段獨立論點）</h3>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-green" onclick="submitSa()">批改本題 (4分)</button>
+            <button class="btn btn-outline" onclick="fillBestSa()">示範完整建構</button>
+          </div>
+        </div>
+        <div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16.5px;line-height:1.85">${preview}</div>
+        ${isSub ? `
+          <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h4 style="font-size:17.5px">分步批改回饋</h4>
+              <span class="badge ${qScore===4?'b-green':qScore>=2?'b-amber':'b-red'}" style="font-size:15px;padding:6px 14px">本題得分：${qScore} / 4 分</span>
+            </div>
+            ${q.steps.map((st, sIdx) => {
+              const ch = st.opts[ans[sIdx]];
+              return `<div class="critique-item ${ch.status==='best'?'c-best':ch.status==='partial'?'c-partial':'c-wrong'}"><b>${st.label.split('：')[0]}（得分：${ch.score} / 1 分）：</b>${ch.comment}</div>`;
+            }).join('')}
+          </div>` : ''}
+      </div>`;
+  }
+
+  // ====== 乙部狀態與渲染 ======
+  let curCaseIdx = 0;
+  let caseUserAns = {};
+  let caseSubmitted = {};
+
+  function selectCase(idx) { curCaseIdx = idx; renderCaseNav(); renderCaseWorkspace(); }
+  function pickCaseOpt(sIdx, oIdx) {
+    const q = caseSubQuestions[curCaseIdx];
+    if (!caseUserAns[q.id]) caseUserAns[q.id] = {};
+    caseUserAns[q.id][sIdx] = oIdx;
+    caseSubmitted[q.id] = false;
+    delete selfScores[q.id];
+    renderCaseWorkspace();
+  }
+  function submitCase() {
+    const q = caseSubQuestions[curCaseIdx];
+    const ans = caseUserAns[q.id] || {};
+    if (Object.keys(ans).length < q.steps.length) { alert(`請先完成本分題全部 ${q.steps.length} 個步驟（共 3 個 2 分論點）的選擇，再點擊批改。`); return; }
+    caseSubmitted[q.id] = true;
+    delete selfScores[q.id];
+    renderCaseNav(); renderCaseWorkspace(); updateLiveTotal();
+  }
+  function fillBestCase() {
+    const q = caseSubQuestions[curCaseIdx];
+    caseUserAns[q.id] = {};
+    q.steps.forEach((st, sIdx) => { caseUserAns[q.id][sIdx] = st.opts.findIndex(o => o.status === 'best'); });
+    caseSubmitted[q.id] = true;
+    delete selfScores[q.id];
+    renderCaseNav(); renderCaseWorkspace(); updateLiveTotal();
+  }
+  function calcCaseScore() {
+    return caseSubQuestions.reduce((sum, q) => sum + getItemScore(q, caseUserAns, caseSubmitted), 0);
+  }
+  function renderCaseNav() {
+    document.getElementById('caseScoreHero').textContent = `${calcCaseScore()} / 24`;
+    document.getElementById('caseNavChips').innerHTML = caseSubQuestions.map((q, i) => {
+      const done = isItemCompleted(q, caseSubmitted);
+      return `<button class="chip ${i===curCaseIdx?'active':''}" onclick="selectCase(${i})">${done?'[已完成] ':''}${q.title}</button>`;
+    }).join('');
+  }
+  function renderCaseWorkspace() {
+    const q = caseSubQuestions[curCaseIdx];
+    const ans = caseUserAns[q.id] || {};
+    const isSub = !!caseSubmitted[q.id];
+    const letters = ['A', 'B', 'C'];
+    const qScore = getItemScore(q, caseUserAns, caseSubmitted);
+
+    const headerCard = `
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <div><span class="badge b-teal">${q.chName}</span><b style="color:var(--teal);font-size:16px">本分題滿分：6 分（3 個獨立論點 × 每個論點 2 分［1分概念／算式＋1分個案解說／結果］）</b></div>
+          <button class="btn btn-outline" style="padding:6px 14px;font-size:14px" onclick="togglePaperMode()">
+            ${paperMode ? '顯示組合選項' : '隱藏選項（紙筆練習）'}
+          </button>
+        </div>
+        <div style="font-size:18px;font-weight:800">${q.question}</div>
+      </div>`;
+
+    if (paperMode) {
+      document.getElementById('caseWorkspace').innerHTML = headerCard + renderPaperPracticeBlock(q, 'renderCaseNav', 'renderCaseWorkspace');
+      return;
+    }
+
+    let pointsHtml = '';
+    for (let p = 0; p < q.steps.length; p += 2) {
+      const st1 = q.steps[p], st2 = q.steps[p+1];
+      pointsHtml += `
+        <div class="point-group-box">
+          <div style="font-weight:800;color:var(--teal);font-size:17px;margin-bottom:12px">${st1.ptTitle}</div>
+          ${[st1, st2].map((st, offset) => {
+            const sIdx = p + offset;
+            const sel = ans[sIdx];
+            return `
+              <div class="builder-stage" style="margin-bottom:${offset===0?'12px':'0'}">
+                <h4 style="margin-bottom:8px;font-size:16px"><span class="${st.colorClass}">${st.label}</span></h4>
+                ${st.opts.map((o, oIdx) => {
+                  const isSel = sel === oIdx;
+                  const gCls = (isSub && isSel) ? (o.status==='best'?'graded-best':o.status==='partial'?'graded-partial':'graded-wrong') : '';
+                  return `<button class="opt-card ${isSel?'selected':''} ${gCls}" onclick="pickCaseOpt(${sIdx}, ${oIdx})"><span class="opt-letter">${letters[oIdx]}</span><span style="flex:1">${o.text}</span></button>`;
+                }).join('')}
+              </div>`;
+          }).join('')}
+        </div>`;
+    }
+
+    const preview = [0, 2, 4].map(p => {
+      const t1 = ans[p] === undefined ? `［未選第 ${p+1} 步］` : `<span class="hl-s1">${q.steps[p].opts[ans[p]].text}</span>`;
+      const t2 = ans[p+1] === undefined ? `［未選第 ${p+2} 步］` : `<span class="hl-s2">${q.steps[p+1].opts[ans[p+1]].text}</span>`;
+      return `<b>【${q.steps[p].ptTitle.split('（')[0]} (2分)】</b>${t1} ${t2}`;
+    }).join('<br><br>');
+
+    document.getElementById('caseWorkspace').innerHTML = headerCard + pointsHtml + `
+      <div class="assembled-box" style="border-color:var(--teal)">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <h3 style="color:var(--teal);font-size:19px">乙部個案分析分題答案預覽（三段 2 分論點）</h3>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-green" onclick="submitCase()">批改本分題 (6分)</button>
+            <button class="btn btn-outline" onclick="fillBestCase()">示範完整建構</button>
+          </div>
+        </div>
+        <div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16.5px;line-height:1.85">${preview}</div>
+        ${isSub ? `
+          <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h4 style="font-size:17.5px">分步批改回饋</h4>
+              <span class="badge ${qScore===6?'b-green':qScore>=3?'b-amber':'b-red'}" style="font-size:15px;padding:6px 14px">本分題得分：${qScore} / 6 分</span>
+            </div>
+            ${q.steps.map((st, sIdx) => {
+              const ch = st.opts[ans[sIdx]];
+              return `<div class="critique-item ${ch.status==='best'?'c-best':ch.status==='partial'?'c-partial':'c-wrong'}"><b>${st.label.split('：')[0]}（得分：${ch.score} / 1 分）：</b>${ch.comment}</div>`;
+            }).join('')}
+          </div>` : ''}
+      </div>`;
+  }
+
+  // ====== 丙部狀態與渲染 ======
+  let curEssayTopicIdx = 0;
+  let curEssayParaIdx = 0;
+  let essayUserAns = {};
+  let essaySubmitted = {};
+
+  function selectEssayTopic(tIdx) { curEssayTopicIdx = tIdx; curEssayParaIdx = 0; renderEssayNav(); renderEssayWorkspace(); }
+  function selectEssayPara(pIdx) { curEssayParaIdx = pIdx; renderEssayNav(); renderEssayWorkspace(); }
+  function pickEssayOpt(sIdx, oIdx) {
+    const p = essayTopics[curEssayTopicIdx].paragraphs[curEssayParaIdx];
+    if (!essayUserAns[p.id]) essayUserAns[p.id] = {};
+    essayUserAns[p.id][sIdx] = oIdx;
+    essaySubmitted[p.id] = false;
+    delete selfScores[p.id];
+    renderEssayWorkspace();
+  }
+  function submitEssayPara() {
+    const p = essayTopics[curEssayTopicIdx].paragraphs[curEssayParaIdx];
+    const ans = essayUserAns[p.id] || {};
+    if (Object.keys(ans).length < p.steps.length) { alert('請先完成本段落全部 3 個步驟的選擇，再點擊批改。'); return; }
+    essaySubmitted[p.id] = true;
+    delete selfScores[p.id];
+    renderEssayNav(); renderEssayWorkspace(); updateLiveTotal();
+  }
+  function fillBestEssayPara() {
+    const p = essayTopics[curEssayTopicIdx].paragraphs[curEssayParaIdx];
+    essayUserAns[p.id] = {};
+    p.steps.forEach((st, sIdx) => { essayUserAns[p.id][sIdx] = st.opts.findIndex(o => o.status === 'best'); });
+    essaySubmitted[p.id] = true;
+    delete selfScores[p.id];
+    renderEssayNav(); renderEssayWorkspace(); updateLiveTotal();
+  }
+  function calcEssayScore() {
+    let tot = 0;
+    essayTopics.forEach(t => {
+      t.paragraphs.forEach(p => { tot += getItemScore(p, essayUserAns, essaySubmitted); });
+    });
+    return tot;
+  }
+  function renderEssayNav() {
+    document.getElementById('essayScoreHero').textContent = `${calcEssayScore()} / 24`;
+    document.getElementById('essayTopicChips').innerHTML = essayTopics.map((t, i) => {
+      const tSc = t.paragraphs.reduce((s, p) => s + getItemScore(p, essayUserAns, essaySubmitted), 0);
+      return `<button class="chip ${i===curEssayTopicIdx?'active':''}" onclick="selectEssayTopic(${i})">${t.topicTitle} ［得分：${tSc}/12］</button>`;
+    }).join('');
+
+    const curTopic = essayTopics[curEssayTopicIdx];
+    document.getElementById('essayParaChips').innerHTML = curTopic.paragraphs.map((p, i) => {
+      const done = isItemCompleted(p, essaySubmitted);
+      return `<button class="chip ${i===curEssayParaIdx?'active':''}" onclick="selectEssayPara(${i})">${done?'[已完成] ':''}${p.title}</button>`;
+    }).join('');
+  }
+  function renderEssayWorkspace() {
+    const t = essayTopics[curEssayTopicIdx];
+    const p = t.paragraphs[curEssayParaIdx];
+    const ans = essayUserAns[p.id] || {};
+    const isSub = !!essaySubmitted[p.id];
+    const letters = ['A', 'B', 'C'];
+    const pScore = getItemScore(p, essayUserAns, essaySubmitted);
+
+    const headerCard = `
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <div><span class="badge b-purple">${t.chName}</span><b style="color:var(--purple);font-size:16px">當前段落：${p.title}（本段滿分 3 分 · 全題 4 段共 12 分）</b></div>
+          <button class="btn btn-outline" style="padding:6px 14px;font-size:14px" onclick="togglePaperMode()">
+            ${paperMode ? '顯示組合選項' : '隱藏選項（紙筆練習）'}
+          </button>
+        </div>
+        <div style="background:var(--surface);padding:16px 20px;border-radius:12px;border-left:4px solid var(--purple);font-size:16.5px">${t.scenario}</div>
+      </div>`;
+
+    if (paperMode) {
+      document.getElementById('essayWorkspace').innerHTML = headerCard + renderPaperPracticeBlock(p, 'renderEssayNav', 'renderEssayWorkspace');
+      return;
+    }
+
+    const preview = p.steps.map((st, sIdx) => ans[sIdx] === undefined
+      ? `<span style="color:var(--mute);border-bottom:1px dashed var(--mute)">［請選擇第 ${sIdx+1} 步內容］</span>`
+      : `<span class="${st.colorClass}">${st.opts[ans[sIdx]].text}</span>`).join(' ');
+
+    const fullEssayHtml = t.paragraphs.map(para => {
+      const pAns = essayUserAns[para.id] || {};
+      if (Object.keys(pAns).length < 3) return `<div style="color:var(--mute);margin-bottom:8px"><b>【${para.title}】</b>（尚未完成建構）</div>`;
+      const txt = para.steps.map((st, sIdx) => st.opts[pAns[sIdx]].text).join(' ');
+      return `<div style="margin-bottom:10px"><b>【${para.title}】</b>${txt}</div>`;
+    }).join('');
+
+    document.getElementById('essayWorkspace').innerHTML = headerCard + `
+      ${p.steps.map((st, sIdx) => {
+        const sel = ans[sIdx];
+        return `
+          <div class="builder-stage">
+            <h4 style="margin-bottom:8px;font-size:16px"><span class="${st.colorClass}">${st.label}</span></h4>
+            ${st.opts.map((o, oIdx) => {
+              const isSel = sel === oIdx;
+              const gCls = (isSub && isSel) ? (o.status==='best'?'graded-best':o.status==='partial'?'graded-partial':'graded-wrong') : '';
+              return `<button class="opt-card ${isSel?'selected':''} ${gCls}" onclick="pickEssayOpt(${sIdx}, ${oIdx})"><span class="opt-letter">${letters[oIdx]}</span><span style="flex:1">${o.text}</span></button>`;
+            }).join('')}
+          </div>`;
+      }).join('')}
+      <div class="assembled-box" style="border-color:var(--purple)">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <h3 style="color:var(--purple);font-size:19px">當前段落預覽（${p.title}）</h3>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-green" onclick="submitEssayPara()">批改本段重點 (3分)</button>
+            <button class="btn btn-outline" onclick="fillBestEssayPara()">示範本段完整建構</button>
+          </div>
+        </div>
+        <div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16.5px;line-height:1.85">${preview}</div>
+        ${isSub ? `
+          <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h4 style="font-size:17.5px">段落批改結果</h4>
+              <span class="badge ${pScore===3?'b-green':pScore>=1?'b-amber':'b-red'}" style="font-size:15px;padding:6px 14px">本段得分：${pScore} / 3 分</span>
+            </div>
+            ${p.steps.map((st, sIdx) => {
+              const ch = st.opts[ans[sIdx]];
+              return `<div class="critique-item ${ch.status==='best'?'c-best':ch.status==='partial'?'c-partial':'c-wrong'}"><b>第 ${sIdx+1} 步（得分：${ch.score} / 1 分）：</b>${ch.comment}</div>`;
+            }).join('')}
+          </div>` : ''}
+        <div style="margin-top:20px;padding-top:16px;border-top:1.5px solid var(--line)">
+          <h4 style="color:var(--ink);margin-bottom:10px;font-size:17px">全題 4 個獨立重點段落總覽（12分完整論述文）：</h4>
+          <div style="background:var(--surface);padding:16px 20px;border-radius:12px;font-size:15.5px;line-height:1.8">${fullEssayHtml}</div>
+        </div>
+      </div>`;
+  }
+
+  // ====== 總分更新與丁部「DSE 商管組雙軌等級換算」成績單診斷報告 ======
+  function updateLiveTotal() {
+    const tot = calcSaScore() + calcCaseScore() + calcEssayScore();
+    document.getElementById('liveTotalBadge').textContent = `總分：${tot} / 72`;
+  }
+
+  function renderReport() {
+    const saSc = calcSaScore();
+    const csSc = calcCaseScore();
+    const esSc = calcEssayScore();
+    const total = saSc + csSc + esSc;
+    const pct = Math.round((total / 72) * 100);
+
+    const selfCount = Object.keys(selfScores).length;
+    const usePaperTrack = gradingTrack === 'dse_paper' || (gradingTrack === 'auto' && (paperMode || selfCount >= 4));
+
+    // 雙軌等級門檻定義（滿分 72 分）
+    const paperTrackLevels = [
+      { lv: "Level 5**", minPct: 85, minMarks: 61, desc: "表現卓越（頂尖奪星水平）" },
+      { lv: "Level 5*",  minPct: 78, minMarks: 56, desc: "表現優異（穩奪星級水平）" },
+      { lv: "Level 5",   minPct: 70, minMarks: 50, desc: "根基穩固（高階應用純熟）" },
+      { lv: "Level 4",   minPct: 56, minMarks: 40, desc: "表現良好（高於平均水平）" },
+      { lv: "Level 3",   minPct: 42, minMarks: 30, desc: "基本合格（大學入學門檻）" },
+      { lv: "Level 2",   minPct: 30, minMarks: 22, desc: "基礎掌握（中學文憑及格）" },
+      { lv: "Level 1",   minPct: 18, minMarks: 13, desc: "初步掌握（需加強基礎概念）" },
+      { lv: "Unclassified (U)", minPct: 0, minMarks: 0, desc: "未達水平或尚未完成作答" }
+    ];
+
+    const bufferTrackLevels = [
+      { lv: "Level 5**", minPct: 88, minMarks: 63, desc: "表現卓越（頂尖奪星水平）" },
+      { lv: "Level 5*",  minPct: 80, minMarks: 58, desc: "表現優異（穩奪星級水平）" },
+      { lv: "Level 5",   minPct: 72, minMarks: 52, desc: "根基穩固（高階應用純熟）" },
+      { lv: "Level 4",   minPct: 60, minMarks: 43, desc: "表現良好（高於平均水平）" },
+      { lv: "Level 3",   minPct: 48, minMarks: 35, desc: "基本合格（大學入學門檻）" },
+      { lv: "Level 2",   minPct: 35, minMarks: 25, desc: "基礎掌握（中學文憑及格）" },
+      { lv: "Level 1",   minPct: 22, minMarks: 16, desc: "初步掌握（需加強基礎概念）" },
+      { lv: "Unclassified (U)", minPct: 0, minMarks: 0, desc: "未達水平或尚未完成作答" }
+    ];
+
+    const activeLevels = usePaperTrack ? paperTrackLevels : bufferTrackLevels;
+    let curLevelIdx = activeLevels.findIndex(g => total >= g.minMarks);
+    if (curLevelIdx === -1) curLevelIdx = activeLevels.length - 1;
+    const curGradeObj = activeLevels[curLevelIdx];
+
+    let nextLevelHint = '';
+    if (curLevelIdx > 0) {
+      const nextG = activeLevels[curLevelIdx - 1];
+      const diff = nextG.minMarks - total;
+      nextLevelHint = `距離升級至 <b>${nextG.lv}（需 ${nextG.minMarks} 分 / ${nextG.minPct}%）</b>尚欠 <b>${diff} 分</b>。`;
+    } else {
+      nextLevelHint = `你已達到最高級別 <b>Level 5**</b> 標準。`;
+    }
+
+    document.getElementById('repTotalScore').textContent = `${total} / 72`;
+    document.getElementById('repPct').textContent = `${pct}%`;
+    document.getElementById('repGrade').textContent = `${curGradeObj.lv}`;
+
+    // 按教科書第 1 至 6 課統計得分 (Ch1: 16M, Ch2: 16M, Ch3: 10M, Ch4: 10M, Ch5: 10M, Ch6: 10M => Total 72M)
+    const chEarned = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+    const chMax = { 1: 16, 2: 16, 3: 10, 4: 10, 5: 10, 6: 10 };
+
+    saQuestions.forEach(q => { chEarned[q.ch] += getItemScore(q, saUserAns, saSubmitted); });
+    caseSubQuestions.forEach(q => { chEarned[q.ch] += getItemScore(q, caseUserAns, caseSubmitted); });
+    essayTopics.forEach(t => {
+      t.paragraphs.forEach(p => { chEarned[p.ch] += getItemScore(p, essayUserAns, essaySubmitted); });
+    });
+
+    const p1 = Math.round((chEarned[1] / chMax[1]) * 100);
+    const p2 = Math.round((chEarned[2] / chMax[2]) * 100);
+    const p3 = Math.round((chEarned[3] / chMax[3]) * 100);
+    const p4 = Math.round((chEarned[4] / chMax[4]) * 100);
+    const p5 = Math.round((chEarned[5] / chMax[5]) * 100);
+    const p6 = Math.round((chEarned[6] / chMax[6]) * 100);
+
+    const saDone = saQuestions.filter(q => isItemCompleted(q, saSubmitted)).length;
+    const csDone = caseSubQuestions.filter(q => isItemCompleted(q, caseSubmitted)).length;
+    let esDone = 0;
+    essayTopics.forEach(t => t.paragraphs.forEach(p => { if (isItemCompleted(p, essaySubmitted)) esDone++; }));
+
+    const cutoffRowsHtml = paperTrackLevels.map((pLv, idx) => {
+      const bLv = bufferTrackLevels[idx];
+      const isCurrentRow = idx === curLevelIdx;
+      return `
+        <tr class="${isCurrentRow ? 'active-grade-row' : ''}">
+          <td><b>${pLv.lv}</b> ${isCurrentRow ? '<span class="badge b-green" style="margin-left:6px">目前位置</span>' : ''}</td>
+          <td style="color:var(--teal);font-weight:700">${pLv.minPct}% 或以上（≥ ${pLv.minMarks} / 72 分）</td>
+          <td style="color:var(--purple);font-weight:700">${bLv.minPct}% 或以上（≥ ${bLv.minMarks} / 72 分）</td>
+          <td style="text-align:left;color:var(--mute)">${pLv.desc}</td>
+        </tr>`;
+    }).join('');
+
+    document.getElementById('reportContent').innerHTML = `
+      <div class="grid3">
+        <div class="card" style="text-align:center">
+          <span class="badge b-blue">甲部：短答題 (Section A)</span>
+          <h2 style="font-size:28px;color:var(--primary);margin:10px 0">${saSc} / 24 分</h2>
+          <p style="font-size:14.5px;color:var(--mute);margin:0">已完成評分 ${saDone} / 6 題</p>
+        </div>
+        <div class="card" style="text-align:center">
+          <span class="badge b-teal">乙部：商業個案題 (Section B)</span>
+          <h2 style="font-size:28px;color:var(--teal);margin:10px 0">${csSc} / 24 分</h2>
+          <p style="font-size:14.5px;color:var(--mute);margin:0">已完成評分 ${csDone} / 4 分題</p>
+        </div>
+        <div class="card" style="text-align:center">
+          <span class="badge b-purple">丙部：進階論述題 (Section C)</span>
+          <h2 style="font-size:28px;color:var(--purple);margin:10px 0">${esSc} / 24 分</h2>
+          <p style="font-size:14.5px;color:var(--mute);margin:0">已完成評分 ${esDone} / 8 個段落</p>
+        </div>
+      </div>
+
+      <!-- 雙軌等級換算表與目前等級提示 -->
+      <div class="card" style="border:2px solid var(--green)">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+          <div>
+            <span class="badge b-green">DSE 企會財（商業管理單元 Paper 2B）雙軌等級換算表</span>
+            <h3 style="margin-top:6px;font-size:20px">目前套用軌道：<span style="color:${usePaperTrack?'var(--teal)':'var(--purple)'}">${usePaperTrack ? '軌道 A：真實 DSE 商管組紙筆默寫標準' : '軌道 B：互動建構模式標準（含選項提示安全緩衝 Buffer）'}</span></h3>
+          </div>
+          <div class="chips" style="margin:0">
+            <button class="chip ${usePaperTrack?'active':''}" onclick="setGradingTrack('dse_paper')">套用真實 DSE 紙筆標準</button>
+            <button class="chip ${!usePaperTrack?'active':''}" onclick="setGradingTrack('interactive_buffer')">套用互動建構緩衝標準</button>
+          </div>
+        </div>
+
+        <div style="background:var(--green-light);padding:14px 18px;border-radius:10px;border-left:4px solid var(--green);font-size:16px;margin-bottom:12px">
+          <b>你的預計等級為【${curGradeObj.lv} — ${curGradeObj.desc}】</b>（總分：${total} / 72 分 · 得分率：${pct}%）。${nextLevelHint}
+        </div>
+
+        <table class="cutoff-table">
+          <thead>
+            <tr>
+              <th style="width:22%">預計 DSE 等級</th>
+              <th style="width:26%">軌道 A：真實 DSE 紙筆默寫標準<br><small>(無選項提示・貼合歷屆 Paper 2B Cut-off)</small></th>
+              <th style="width:26%">軌道 B：互動建構緩衝標準<br><small>(有組合選項提示・預留 3%–6% Buffer)</small></th>
+              <th style="width:26%;text-align:left">水平描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cutoffRowsHtml}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <h3 style="margin-bottom:16px;font-size:20.5px">按教科書《財務管理》第 1 至 6 課能力診斷與溫習導航</h3>
+        <div class="meter-wrap">
+          <div class="meter-label">
+            <span>第 1 課：《財務分析》（四大財務決策、四大類會計比率計算與詮釋、同業與時序分析、五大限制）</span>
+            <span style="color:var(--primary)">${chEarned[1]} / ${chMax[1]} 分 (${p1}%)</span>
+          </div>
+          <div class="meter-bg"><div class="meter-fill" style="width:${p1}%;background:var(--primary)"></div></div>
+        </div>
+        <div class="meter-wrap">
+          <div class="meter-label">
+            <span>第 2 課：《預算編製》（編製預算三個目的、預算控制四項用途與六大限制、有利(F)與不利(U)差異成因及補救）</span>
+            <span style="color:var(--teal)">${chEarned[2]} / ${chMax[2]} 分 (${p2}%)</span>
+          </div>
+          <div class="meter-bg"><div class="meter-fill" style="width:${p2}%;background:var(--teal)"></div></div>
+        </div>
+        <div class="meter-wrap">
+          <div class="meter-label">
+            <span>第 3 課：《融資方式》（十種常用融資方法、短期 vs 長期籌資、舉債 vs 股本融資、內部 vs 向外籌資）</span>
+            <span style="color:var(--purple)">${chEarned[3]} / ${chMax[3]} 分 (${p3}%)</span>
+          </div>
+          <div class="meter-bg"><div class="meter-fill" style="width:${p3}%;background:var(--purple)"></div></div>
+        </div>
+        <div class="meter-wrap">
+          <div class="meter-label">
+            <span>第 4 課：《資本投資評估》（五大財務因素與五大非財務因素、ARR、回收期、淨現值 NPV、內部報酬率 IRR）</span>
+            <span style="color:var(--green)">${chEarned[4]} / ${chMax[4]} 分 (${p4}%)</span>
+          </div>
+          <div class="meter-bg"><div class="meter-fill" style="width:${p4}%;background:var(--green)"></div></div>
+        </div>
+        <div class="meter-wrap">
+          <div class="meter-label">
+            <span>第 5 課：《營運資金管理》（營業循環與現金轉換循環、現金預算、應收帳款政策與信用分析 5C、EOQ 與再訂購水平）</span>
+            <span style="color:var(--amber)">${chEarned[5]} / ${chMax[5]} 分 (${p5}%)</span>
+          </div>
+          <div class="meter-bg"><div class="meter-fill" style="width:${p5}%;background:var(--amber)"></div></div>
+        </div>
+        <div class="meter-wrap" style="margin-bottom:20px">
+          <div class="meter-label">
+            <span>第 6 課：《風險管理》（純風險三分類 vs 投機風險、可保風險五條件、四大風險管理策略、企業常見保險保障）</span>
+            <span style="color:var(--red)">${chEarned[6]} / ${chMax[6]} 分 (${p6}%)</span>
+          </div>
+          <div class="meter-bg"><div class="meter-fill" style="width:${p6}%;background:var(--red)"></div></div>
+        </div>
+
+        <div class="grid3" style="padding-top:16px;border-top:1px dashed var(--line)">
+          <div style="background:var(--surface);padding:14px;border-radius:12px;border:1px solid var(--line)">
+            <b style="color:var(--primary);font-size:15px">第 1 課：《財務分析》</b>
+            <p style="font-size:13.5px;color:var(--mute);margin:6px 0 10px">重溫四大財務決策、10 個會計比率公式與五大限制。</p>
+            <a href="財務分析.html" class="btn" style="font-size:13.5px;padding:7px 12px;width:100%;text-align:center">重溫第 1 課</a>
+          </div>
+          <div style="background:var(--surface);padding:14px;border-radius:12px;border:1px solid var(--line)">
+            <b style="color:var(--teal);font-size:15px">第 2 課：《預算編製》</b>
+            <p style="font-size:13.5px;color:var(--mute);margin:6px 0 10px">重溫預算控制四項用途、差異計算 (F/U) 與補救措施。</p>
+            <a href="預算編製.html" class="btn btn-teal" style="font-size:13.5px;padding:7px 12px;width:100%;text-align:center">重溫第 2 課</a>
+          </div>
+          <div style="background:var(--surface);padding:14px;border-radius:12px;border:1px solid var(--line)">
+            <b style="color:var(--purple);font-size:15px">第 3 課：《融資方式》</b>
+            <p style="font-size:13.5px;color:var(--mute);margin:6px 0 10px">重溫十種融資方法、短期 vs 長期、舉債 vs 股本融資。</p>
+            <a href="融資方式.html" class="btn btn-purple" style="font-size:13.5px;padding:7px 12px;width:100%;text-align:center">重溫第 3 課</a>
+          </div>
+          <div style="background:var(--surface);padding:14px;border-radius:12px;border:1px solid var(--line)">
+            <b style="color:var(--green);font-size:15px">第 4 課：《資本投資評估》</b>
+            <p style="font-size:13.5px;color:var(--mute);margin:6px 0 10px">重溫財務與非財務因素、ARR、回收期、NPV 與 IRR。</p>
+            <a href="資本投資評估.html" class="btn btn-green" style="font-size:13.5px;padding:7px 12px;width:100%;text-align:center">重溫第 4 課</a>
+          </div>
+          <div style="background:var(--surface);padding:14px;border-radius:12px;border:1px solid var(--line)">
+            <b style="color:var(--amber);font-size:15px">第 5 課：《營運資金管理》</b>
+            <p style="font-size:13.5px;color:var(--mute);margin:6px 0 10px">重溫現金預算、信用分析 5C、應付帳款、EOQ 與再訂購水平。</p>
+            <a href="營運資金管理.html" class="btn btn-amber" style="font-size:13.5px;padding:7px 12px;width:100%;text-align:center">重溫第 5 課</a>
+          </div>
+          <div style="background:var(--surface);padding:14px;border-radius:12px;border:1px solid var(--line)">
+            <b style="color:var(--red);font-size:15px">第 6 課：《風險管理》</b>
+            <p style="font-size:13.5px;color:var(--mute);margin:6px 0 10px">重溫純風險與投機風險、可保五條件、四大策略與商業保險。</p>
+            <a href="風險管理.html" class="btn" style="background:var(--red);font-size:13.5px;padding:7px 12px;width:100%;text-align:center">重溫第 6 課</a>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // 初始化渲染
+  renderSaNav();
+  renderSaWorkspace();
+  renderCaseNav();
+  renderCaseWorkspace();
+  renderEssayNav();
+  renderEssayWorkspace();
+  renderReport();
+</script>
+</body>
+</html>

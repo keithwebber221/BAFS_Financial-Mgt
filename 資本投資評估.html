@@ -1,0 +1,1633 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>財務管理 — 資本投資評估</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 財務管理單元專屬配色：翡翠深綠 (Emerald) × 深海藍 (Ocean Navy) × 琥珀金 (Amber Gold) */
+      --bg: #f2f6f4;
+      --card: #ffffff;
+      --surface: #f7faf8;
+      --ink: #0f1f18;
+      --ink-sec: #2d4239;
+      --mute: #5c7267;
+      --line: #d8e4dd;
+      --primary: #065f46;
+      --primary-dark: #064e3b;
+      --primary-light: #ecfdf5;
+      --primary-border: #a7f3d0;
+      --teal: #0369a1;
+      --teal-light: #f0f9ff;
+      --teal-border: #bae6fd;
+      --amber: #b45309;
+      --amber-light: #fffbeb;
+      --green: #15803d;
+      --green-light: #f0fdf4;
+      --red: #be123c;
+      --red-light: #fff1f2;
+      --radius: 16px;
+      --shadow: 0 4px 20px -2px rgba(6, 78, 59, 0.06), 0 2px 6px -1px rgba(6, 78, 59, 0.04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.75;
+      padding-bottom: 60px;
+      font-size: 17.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4 { margin: 0; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1.35; }
+
+    /* Top Navigation Bar */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      flex-wrap: wrap;
+    }
+    .home-link {
+      text-decoration: none;
+      color: var(--ink-sec);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      transition: all 0.2s;
+    }
+    .home-link:hover { color: var(--primary); border-color: var(--primary-border); background: var(--primary-light); }
+    .brand { display: flex; align-items: center; gap: 12px; font-size: 19px; font-weight: 800; color: var(--primary-dark); }
+    .brand-tag {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .main-tabs {
+      margin-left: auto;
+      display: flex;
+      gap: 6px;
+      background: #dfe9e3;
+      padding: 5px;
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+    .main-tabs button {
+      border: 0;
+      background: none;
+      padding: 9px 15px;
+      border-radius: 9px;
+      font: 700 15px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .main-tabs button:hover { color: var(--ink); }
+    .main-tabs button.on {
+      background: var(--card);
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(6, 78, 59, 0.1);
+    }
+
+    /* Main Container & Views */
+    .view { display: none; max-width: 1160px; margin: 0 auto; padding: 28px 24px; animation: fadeIn 0.25s ease; }
+    .view.on { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Section Header Banner */
+    .sec-banner {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow);
+    }
+    .sec-banner h1 { font-size: 25px; margin: 6px 0 8px; }
+    .sec-banner p { margin: 0; color: var(--ink-sec); font-size: 16.5px; max-width: 680px; }
+
+    /* Sub-navigation Switcher */
+    .sub-nav {
+      display: inline-flex;
+      background: #eaf1ed;
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .sub-nav button {
+      border: 0;
+      background: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font: 700 15px 'Noto Sans TC', sans-serif;
+      color: var(--mute);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sub-nav button:hover { color: var(--ink); }
+    .sub-nav button.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(6, 95, 70, 0.25);
+    }
+    .sub-view { display: none; }
+    .sub-view.active { display: block; animation: fadeIn 0.2s ease; }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .sidebar-layout { display: grid; grid-template-columns: 295px 1fr; gap: 22px; align-items: start; }
+
+    /* Badges & Pills */
+    .badge {
+      display: inline-block;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-right: 8px;
+    }
+    .b-blue { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border); }
+    .b-teal { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
+    .b-amber { background: var(--amber-light); color: var(--amber); border: 1px solid #fde68a; }
+    .b-green { background: var(--green-light); color: var(--green); border: 1px solid #bbf7d0; }
+    .b-red { background: var(--red-light); color: var(--red); border: 1px solid #fecdd3; }
+
+    /* Interactive Selector Lists */
+    .nav-list { display: flex; flex-direction: column; gap: 10px; }
+    .nav-item {
+      text-align: left;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      font: 700 16px 'Noto Sans TC', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .nav-item:hover { border-color: var(--primary); background: var(--primary-light); }
+    .nav-item.active {
+      background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 6px 16px rgba(6, 95, 70, 0.24);
+    }
+    .nav-item.active span.sub-txt { color: #d1fae5; }
+    .sub-txt { font-size: 13px; color: var(--mute); font-weight: 500; flex-shrink: 0; }
+
+    .chips { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+    .chip {
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      padding: 9px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font: 700 15.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      transition: all 0.2s;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .chip.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(6, 95, 70, 0.2);
+    }
+
+    .btn {
+      border: 0;
+      background: var(--primary);
+      color: #ffffff;
+      font: 700 16px 'Noto Sans TC', sans-serif;
+      padding: 11px 22px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-teal { background: var(--teal); }
+    .btn-teal:hover { background: #075985; }
+    .btn-green { background: var(--green); }
+    .btn-green:hover { background: #166534; }
+    .btn-outline { background: var(--card); color: var(--primary); border: 1.5px solid var(--primary); }
+    .btn-outline:hover { background: var(--primary-light); }
+
+    .note-box {
+      border-left: 4px solid var(--primary);
+      background: var(--primary-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 16px;
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+    .case-box {
+      border-left: 4px solid var(--teal);
+      background: var(--teal-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 14px;
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+    .warn-box {
+      border-left: 4px solid var(--red);
+      background: var(--red-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 14px;
+      font-size: 16px;
+      color: var(--ink);
+    }
+
+    /* Visual Mathematical Fraction & Equation Styling */
+    .math-card {
+      background: var(--primary-light);
+      border: 1.5px solid var(--primary-border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 16.5px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .math-inline {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      vertical-align: middle;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .m-frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      text-align: center;
+      margin: 0 4px;
+      line-height: 1.25;
+    }
+    .m-num {
+      border-bottom: 2px solid currentColor;
+      padding: 0 8px 3px;
+      display: block;
+    }
+    .m-den {
+      padding: 3px 8px 0;
+      display: block;
+    }
+    sup { font-size: 0.75em; font-weight: 900; }
+
+    /* Comparison Table */
+    table.comp-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 16px; }
+    table.comp-table th, table.comp-table td { padding: 12px 15px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    table.comp-table th { background: var(--surface); font-weight: 800; color: var(--ink); }
+    table.comp-table tr.highlight-row { background: var(--primary-light); }
+
+    /* Calculator Inputs */
+    .calc-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+    .calc-field { display: flex; flex-direction: column; gap: 4px; font-size: 14.5px; }
+    .calc-field label { font-weight: 700; color: var(--ink-sec); }
+    .calc-field input[type="number"] {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1.5px solid var(--line);
+      font: 700 15.5px 'Inter', 'Noto Sans TC', sans-serif;
+      color: var(--primary);
+      background: var(--card);
+      width: 100%;
+    }
+
+    /* Builder Specific */
+    .builder-stage {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .opt-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      width: 100%;
+      text-align: left;
+      padding: 15px 18px;
+      margin: 10px 0;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      font: 500 16.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1.65;
+    }
+    .opt-card:hover { border-color: var(--primary); background: var(--surface); }
+    .opt-card.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
+    .opt-card.correct, .opt-card.graded-best { border-color: var(--green); background: var(--green-light); color: #064e3b; }
+    .opt-card.graded-partial { border-color: var(--amber); background: var(--amber-light); color: #78350f; }
+    .opt-card.wrong, .opt-card.graded-wrong { border-color: var(--red); background: var(--red-light); color: #881337; }
+    .opt-letter {
+      display: inline-grid;
+      place-items: center;
+      min-width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #eaf1ed;
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 14.5px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .opt-card.selected .opt-letter { background: var(--primary); color: #ffffff; }
+
+    .hl-s1 { background: #d1fae5; color: #065f46; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s2 { background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s3 { background: #e0f2fe; color: #075985; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+
+    .critique-item {
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-left: 5px solid var(--line);
+      background: var(--card);
+    }
+    .critique-item.c-best { border-left-color: var(--green); background: var(--green-light); }
+    .critique-item.c-partial { border-left-color: var(--amber); background: var(--amber-light); }
+    .critique-item.c-wrong { border-left-color: var(--red); background: var(--red-light); }
+
+    details.guide-Collapsible {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 22px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    details.guide-Collapsible summary {
+      font-weight: 700;
+      font-size: 16.5px;
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    @media (max-width: 860px) {
+      .grid2, .grid3, .sidebar-layout, .calc-input-grid { grid-template-columns: 1fr; }
+      header { padding: 12px 18px; }
+      .main-tabs { width: 100%; justify-content: center; margin-top: 8px; }
+      .sec-banner h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="財務管理_目錄.html" class="home-link">返回單元目錄</a>
+  <select onchange="if(this.value) location.href=this.value" style="padding:7px 12px;border-radius:10px;border:1px solid var(--primary-border);background:var(--primary-light);color:var(--primary);font:700 14.5px 'Noto Sans TC',sans-serif;cursor:pointer">
+    <option value="">快速切換課室／測驗...</option>
+    <option value="財務管理_目錄.html">單元總目錄</option>
+    <option value="財務分析.html">第 1 課：財務分析</option>
+    <option value="預算編製.html">第 2 課：預算編製</option>
+    <option value="融資方式.html">第 3 課：融資方式</option>
+    <option value="資本投資評估.html">第 4 課：資本投資評估</option>
+    <option value="營運資金管理.html">第 5 課：營運資金管理</option>
+    <option value="風險管理.html">第 6 課：風險管理</option>
+    <option value="財務管理_單元綜合測驗.html">單元綜合模擬試卷 (72分)</option>
+  </select>
+  <div class="brand">
+    <span>財務管理</span>
+    <span class="brand-tag">第 4 課：資本投資評估</span>
+  </div>
+  <nav class="main-tabs" id="mainTabs">
+    <button class="on" data-tab="sec-factors">1. 財務與非財務考慮因素</button>
+    <button data-tab="sec-methods">2. 四大資本投資評估法原理</button>
+    <button data-tab="sec-calc">3. 回收期與淨現值計算室</button>
+    <button data-tab="sec-compare">4. 評估法優劣比較與矛盾診斷</button>
+    <button data-tab="sec-builder">5. 論點建構工作坊</button>
+  </nav>
+</header>
+
+<!-- ==================== 1. 影響資本投資決策的財務與非財務因素 ==================== -->
+<section class="view on" id="sec-factors">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元一：影響資本投資決策的因素</span>
+      <h1>資本投資的定義 ＆ 影響決策的五大財務因素與五大非財務因素</h1>
+      <p>資本投資是與企業生產或營運相關的長期投資（通常涉及固定資產投資，如興建新廠房及購買設備以提高生產力），其主要目的是提高企業的盈利能力（切勿與投資債券和股票等金融資產的「金融投資」混淆）。企業在作出決策時應同時考慮財務與非財務因素。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('fac', 0, this)">五大財務因素與五大非財務因素</button>
+      <button onclick="switchSub('fac', 1, this)">因素配對與辨識練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 1A：五大財務因素與五大非財務因素 -->
+  <div class="sub-view active" id="fac-sub-0">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">五大常見財務因素</span>
+        <h3 style="font-size:20.5px;margin:8px 0 8px">點擊查看影響資本投資決策的財務因素</h3>
+        <div class="chips" id="finFacChips"></div>
+        <div id="finFacBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">五大常見非財務因素與 ESG</span>
+        <h3 style="font-size:20.5px;margin:8px 0 8px">點擊查看不能量化的非財務因素（切勿涉及直接經濟利益）</h3>
+        <div class="chips" id="nonFinFacChips"></div>
+        <div id="nonFinFacBox" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 子分頁 1B：財務與非財務因素配對練習 -->
+  <div class="sub-view" id="fac-sub-1">
+    <div class="card" style="margin-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="badge b-teal">財務與非財務因素配對挑戰</span>
+        <span id="facQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute)"></span>
+      </div>
+      <div id="facQuizQ" style="font-size:17.5px;font-weight:700;margin-bottom:14px"></div>
+      <div id="facQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+      <div id="facQuizFb" style="margin-top:14px;font-size:16px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 2. 四大資本投資評估法原理 ==================== -->
+<section class="view" id="sec-methods">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元二：基本的資本投資評估法（資本預算）</span>
+      <h1>評估資本投資的兩大要點 ＆ 四種主要評估方法與決策規則</h1>
+      <p>資本投資評估（又稱為資本預算）是企業從多個項目中選出最佳資本投資項目的分析過程。四種主要的資本投資評估法包括：(i) 會計報酬率 (ARR)、(ii) 回收期（還本期／歸本期）、(iii) 淨現值 (NPV) 以及 (iv) 內部報酬率（內在回報率 IRR）。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('mth', 0, this)">兩大評估要點與四種評估方法</button>
+      <button onclick="switchSub('mth', 1, this)">決策規則與概念判斷練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 2A：兩大評估要點與四種主要評估方法 -->
+  <div class="sub-view active" id="mth-sub-0">
+    <div class="card">
+      <span class="badge b-blue">評估資本投資的兩大黃金要點</span>
+      <h3 style="font-size:21px;margin:8px 0 8px">為何以「現金流量」而非「利潤」作為衡量標準？何謂「額外的現金流量」？</h3>
+      <div class="chips" id="preRuleChips">
+        <button class="chip active" onclick="renderPreRule(0)">要點 1：以現金流量而非利潤作為衡量標準</button>
+        <button class="chip" onclick="renderPreRule(1)">要點 2：使用額外的現金流量而非現金流量總額計算</button>
+      </div>
+      <div id="preRuleBox" style="margin-top:10px"></div>
+    </div>
+
+    <div class="sidebar-layout">
+      <div class="nav-list" id="appMethodNavList"></div>
+      <div class="card" id="appMethodDetailCard" style="margin-bottom:0"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 2B：決策規則與概念判斷練習 -->
+  <div class="sub-view" id="mth-sub-1">
+    <div class="card" style="margin-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="badge b-teal">四大評估法決策規則與概念挑戰</span>
+        <span id="ruleQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute)"></span>
+      </div>
+      <div id="ruleQuizQ" style="font-size:17.5px;font-weight:700;margin-bottom:14px"></div>
+      <div id="ruleQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+      <div id="ruleQuizFb" style="margin-top:14px;font-size:16px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 3. 回收期與淨現值計算室 ==================== -->
+<section class="view" id="sec-calc">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元三：回收期 (Payback Period) 與 淨現值 (NPV) 計算實驗室</span>
+      <h1>視覺化分數列式計算機與經典商業計算題拆解</h1>
+      <p>在計算回收期時，須留意不等額現金流的分步剩餘成本計算，以及相等額外現金流的直接除法；在計算淨現值 (NPV) 時，最後一年的剩餘價值（殘值）應計算為最後一個投資年度年底的現金流入一併貼現。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('calc', 0, this)">動態回收期與淨現值計算機</button>
+      <button onclick="switchSub('calc', 1, this)">5 道商業計算題步驟拆解</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 3A：自訂數據回收期與淨現值計算機 -->
+  <div class="sub-view active" id="calc-sub-0">
+    <div class="card" style="border:1.5px solid var(--primary);margin-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+        <div>
+          <span class="badge b-blue">視覺化公式計算機</span>
+          <h3 style="font-size:21px;margin-top:4px">輸入或切換投資項目現金流、殘值與資本成本，即時生成分數算式與決策建議</h3>
+        </div>
+        <div class="chips" style="margin:0">
+          <button class="chip active" id="npvPre0" onclick="loadNpvPreset(0)">預設 1：電動旅遊巴 (3年含殘值)</button>
+          <button class="chip" id="npvPre1" onclick="loadNpvPreset(1)">預設 2：智能裁剪機 (4年不等額)</button>
+          <button class="chip" id="npvPre2" onclick="loadNpvPreset(2)">預設 3：送餐機械人 (3年相等現金流)</button>
+        </div>
+      </div>
+
+      <div class="grid2" style="margin-top:12px">
+        <div style="background:var(--surface);padding:16px 18px;border-radius:14px;border:1px solid var(--line)">
+          <b style="color:var(--primary);font-size:15px;display:block;margin-bottom:8px">投資項目參數輸入（若某年無現金流可填 0）：</b>
+          <div class="calc-input-grid">
+            <div class="calc-field"><label>初期投資支出 (<i>I</i>) ($)</label><input type="number" id="cInit" value="1800000" step="50000" oninput="runNpvPaybackCalc()"></div>
+            <div class="calc-field"><label>企業資本成本 / 貼現率 (<i>i</i>) (%)</label><input type="number" id="cRate" value="8" step="1" oninput="runNpvPaybackCalc()"></div>
+            <div class="calc-field"><label>第 1 年底淨現金流入 (<i>CF</i><sub>1</sub>) ($)</label><input type="number" id="cCf1" value="650000" step="20000" oninput="runNpvPaybackCalc()"></div>
+            <div class="calc-field"><label>第 2 年底淨現金流入 (<i>CF</i><sub>2</sub>) ($)</label><input type="number" id="cCf2" value="650000" step="20000" oninput="runNpvPaybackCalc()"></div>
+            <div class="calc-field"><label>第 3 年底淨現金流入 (<i>CF</i><sub>3</sub>) ($)</label><input type="number" id="cCf3" value="650000" step="20000" oninput="runNpvPaybackCalc()"></div>
+            <div class="calc-field"><label>第 4 年底淨現金流入 (<i>CF</i><sub>4</sub>) ($)</label><input type="number" id="cCf4" value="0" step="20000" oninput="runNpvPaybackCalc()"></div>
+            <div class="calc-field"><label>期末剩餘價值 / 殘值 ($)</label><input type="number" id="cScrap" value="300000" step="10000" oninput="runNpvPaybackCalc()"></div>
+            <div class="calc-field"><label>可接受的最長回收期 (年)</label><input type="number" id="cMaxPb" value="3" step="0.5" oninput="runNpvPaybackCalc()"></div>
+          </div>
+        </div>
+        <div id="npvLiveResult"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 子分頁 3B：5 道經典商業評估計算題一步步拆解器 -->
+  <div class="sub-view" id="calc-sub-1">
+    <div class="card" style="margin-bottom:0">
+      <span class="badge b-blue">標準列式步驟拆解</span>
+      <h3 style="font-size:21px;margin:8px 0 8px">點擊不同商業投資情境，檢視回收期與淨現值 (NPV) 的標準列式步驟與決策解釋</h3>
+      <div class="chips" id="caseCalcChips"></div>
+      <div id="caseCalcBox" style="margin-top:10px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 4. 評估法優劣比較與矛盾診斷 ==================== -->
+<section class="view" id="sec-compare">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元四：比較不同的資本投資評估法</span>
+      <h1>四種資本投資評估法的優缺點、可靠度與易用度比較 ＆ 矛盾結果處理</h1>
+      <p>由於不同的資本投資評估法均有其限制，企業通常同時採用多於一種方法來進行資本投資決策。當不同資本評估方法導致互相矛盾的決策結果時，應該根據最可靠的「淨現值法 (NPV)」結果進行投資決策。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('cmp', 0, this)">優缺點總表與可靠度・易用度排序</button>
+      <button onclick="switchSub('cmp', 1, this)">單一方法盲點與矛盾結果診斷</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 4A：四大評估法優缺點總表與可靠度／易用度比較 -->
+  <div class="sub-view active" id="cmp-sub-0">
+    <div class="card" style="margin-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <div>
+          <span class="badge b-blue">綜合比較</span>
+          <h3 style="font-size:21px;margin-top:4px">點擊切換比較視角，掌握四種評估方法的優缺點與排序原因</h3>
+        </div>
+        <div class="chips" id="compViewChips" style="margin:0">
+          <button class="chip active" onclick="renderCompView(0)">1. 四大評估法優缺點與決策規則總表</button>
+          <button class="chip" onclick="renderCompView(1)">2. 可靠度 vs 易於使用的程度比較</button>
+          <button class="chip" onclick="renderCompView(2)">3. 資本投資評估法的其他整體限制</button>
+        </div>
+      </div>
+      <div id="compViewBox" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 4B：單一方法決策盲點與矛盾結果診斷室 -->
+  <div class="sub-view" id="cmp-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">單靠 ARR 或回收期的決策盲點</span>
+        <h3 style="font-size:20.5px;margin:8px 0 8px">為何忽略金錢時間值與忽略回收期後現金流會導致錯誤決定</h3>
+        <div class="chips" id="flawDemoChips">
+          <button class="chip active" onclick="renderFlawDemo(0)">盲點 1：ARR 忽略金錢的時間值</button>
+          <button class="chip" onclick="renderFlawDemo(1)">盲點 2：回收期忽略期後現金流 (結合 NPV)</button>
+        </div>
+        <div id="flawDemoBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">評估結果矛盾與非財務因素決策室</span>
+        <h3 style="font-size:20.5px;margin:8px 0 8px">當兩個評估指標矛盾（或財務指標為負數）時應如何決策？</h3>
+        <div class="chips" id="conflictChips">
+          <button class="chip active" onclick="renderConflict(0)">情境 A：ARR 達標 (12%＞10%) 但 NPV 為負數 (-$100,000)</button>
+          <button class="chip" onclick="renderConflict(1)">情境 B：ARR (2%＜7%) 及 NPV (-$120,000) 均不達標，但涉員工安全</button>
+        </div>
+        <div id="conflictBox" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 5. 論點建構問答工作坊 (12題) ==================== -->
+<section class="view" id="sec-builder">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-amber">實戰寫作訓練</span>
+      <h1>「一段一個獨立重點」論點建構工作坊</h1>
+      <p>收錄 4 道短答題（2 步建構 · 2 分）及 8 道進階論述題（3 步建構 · 3 分）。請選擇題目並逐步點選最準確的商業論述。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchBuilderCat('short', this)">短答題訓練 (4題)</button>
+      <button onclick="switchBuilderCat('essay', this)">進階論述題訓練 (8題)</button>
+    </div>
+  </div>
+
+  <details class="guide-Collapsible">
+    <summary>查看「一段一個重點」建構結構指南（點擊展開 / 收起）</summary>
+    <div class="grid2" style="margin-top:14px;font-size:16px">
+      <div style="background:var(--primary-light);padding:14px 18px;border-radius:10px">
+        <b style="color:var(--primary)">短答題／個案題模式（每段滿分 2 分 — 2 步建構）</b><br>
+        <span class="hl-s1">第 1 步 (1分)</span> 準確指出單一決策結論、評估法優缺點或考慮因素名稱<br>
+        <span class="hl-s2">第 2 步 (1分)</span> 結合個案數據比較決策準則，或說明該因素如何影響投資決定
+      </div>
+      <div style="background:var(--teal-light);padding:14px 18px;border-radius:10px">
+        <b style="color:var(--teal)">進階論述題模式（每段滿分 3 分 — 3 步深度建構）</b><br>
+        <span class="hl-s1">第 1 步 (1分)</span> 指出單一評估方法、公式變數或考慮因素名稱並界定其核心含義<br>
+        <span class="hl-s2">第 2 步 (1分)</span> 針對題目企業（如髮型沙龍、皮具製造商、化妝品公司、物流公司）設定具體例子<br>
+        <span class="hl-s3">第 3 步 (1分)</span> 深化推論該方法、變數或因素如何影響投資決策準確性、公司價值或長遠發展
+      </div>
+    </div>
+  </details>
+
+  <div class="card" style="padding:18px 22px;margin-bottom:18px">
+    <div style="font-size:15px;color:var(--mute);font-weight:700;margin-bottom:8px" id="builderCatLabel">選擇短答題（每題滿分 2 分）：</div>
+    <div class="chips" id="questionChips" style="margin:0"></div>
+  </div>
+
+  <div id="builderWorkspace"></div>
+</section>
+
+<script>
+  // Main Tab Switching
+  document.querySelectorAll('#mainTabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#mainTabs button').forEach(b => b.classList.remove('on'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+      btn.classList.add('on');
+      document.getElementById(btn.dataset.tab).classList.add('on');
+    });
+  });
+
+  // Sub-view Switching
+  function switchSub(prefix, idx, btn) {
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll(`[id^="${prefix}-sub-"]`).forEach((el, i) => {
+      el.classList.toggle('active', i === idx);
+    });
+  }
+
+  // ====== 1. 影響資本投資決策的財務與非財務因素 ======
+  const finFactors = [
+    { num: 1, name: "1. 投資成本（現金流出）", desc: "投資成本是以資本項目的<b>現金流出</b>來衡量的。假設其他因素不變，投資項目的成本越高，其吸引力便越低。投資成本有兩種：<br>• <b>(i) 初期資本投資</b>：首要和較為常見的成本（如購買新機器的購入價格和安裝成本）。<br>• <b>(ii) 其後的成本</b>：相對於初期資本投資，金額通常較小（如維修費用、使用打印機一段時間後更換碳粉的成本）。<br>• <b>支出時間的影響</b>：缺乏現金的企業或會選擇可分期投入資金的投資項目。" },
+    { num: 2, name: "2. 投資收入（現金流入）", desc: "在財務學上，通常以<b>現金流入</b>來代表資本項目所帶來的收入（假設其他因素不變，投資項目帶來的收入越高，其吸引力便越大），我們須估計收入的金額和賺取收入的時間。<br>• <b>把節省的成本視為現金流入</b>：有些資本項目不會為企業帶來直接的收入（例如購買新焗爐或設備）；在這個情況下，可把<b>使用新機器所節省的成本（相對於舊機器，如節省 10% 電費或節省人工成本）視為現金流入</b>。" },
+    { num: 3, name: "3. 投資期", desc: "投資期 (Investment Horizon) 是指投資項目的期限。<br>• 有時候，企業會避免參與投資期長的資本項目，因為這些項目可能會<b>長期佔用資金，迫使企業放棄其他投資機會</b>。" },
+    { num: 4, name: "4. 金錢的時間值", desc: `由於投資項目的現金流入和流出會在不同時間發生，企業在估算現金流量時須考慮<b>金錢的時間值</b>——指<b>今天收到的一元比將來收到的一元更有價值</b>。透過計算現金流量的現值 (PV)，企業可衡量投資回報是否大於支出：<div class="math-card"><span>現值 (<i>PV</i>) ＝</span><span class="m-frac"><span class="m-num">未來價值 (<i>FV</i>)</span><span class="m-den">( 1 ＋ 貼現率 <i>i</i> )<sup><i>n</i></sup></span></span></div>• 假設其他因素不變，<b>貼現率 (<i>i</i>) 越高，現金流入的現值便越低</b>，從投資項目獲得的回報也越少，項目的吸引力便越小。` },
+    { num: 5, name: "5. 資本投資項目的風險", desc: "資本投資項目的未來現金流量（尤其是現金流入）是難以預料的。<b>未來現金流量的不確定性越高，項目的投資風險便越高</b>。<br>• 由於風險和回報一般呈正向關係，企業會對<b>投資風險較高的項目要求較高的回報率</b>。如果預期的回報率低於企業所要求的回報率，企業便不會投資該項目。" }
+  ];
+  function renderFinFac(idx) {
+    document.querySelectorAll('#finFacChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const f = finFactors[idx];
+    document.getElementById('finFacBox').innerHTML = `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1.5px solid var(--primary);font-size:16px;line-height:1.75"><h4 style="color:var(--primary);font-size:18px;margin-bottom:8px">${f.name}</h4><div>${f.desc}</div></div>`;
+  }
+  document.getElementById('finFacChips').innerHTML = finFactors.map((f, i) => `<button class="chip ${i===0?'active':''}" onclick="renderFinFac(${i})">${f.name.split('（')[0]}</button>`).join('');
+  renderFinFac(0);
+
+  const nonFinFactors = [
+    { name: "1. 策略性原因", desc: "考慮資本投資項目是否符合企業的<b>策略目標</b>。如果某資本投資項目有助企業達成目標，即使該項目無利可圖，企業也可能會接受這個項目。<br>• <b>例子 1</b>：如某大企業是市場領導者，即使投資開發新產品和擴大零售網絡無法帶來豐厚回報，仍可能會堅持落實。<br>• <b>例子 2</b>：大公司收購掌握新技術的企業，儘管未必有利可圖，但可藉此<b>消除潛在的威脅，並保持其在行業內的領導地位</b>。" },
+    { name: "2. 遵守監管法規", desc: "政府可能會要求某些在生產過程中涉及環境和安全隱憂的行業，安裝一些設施以盡量減少污染和降低安全風險。<br>• <b>例子</b>：發電廠必須安裝減排設施；建築地盤承建商或染布廠必須安裝合適的污水處理設施。即使這些資本投資未必能帶來經濟利益，企業仍須投資，否則便可能會<b>被檢控和罰款</b>。" },
+    { name: "3. 符合行業標準", desc: "在某些行業，企業必須符合特定標準才能維持競爭力（例如製造業關於品質控制的國際標準 <b>ISO 標準</b>）。<br>• 符合相關標準有助提升消費者的信心；當行業訂立更嚴格的標準時，企業便可能要添置新機器和設備以符合這些標準，否則便會失去競爭力。" },
+    { name: "4. 提升企業形象", desc: "有時企業為了提升形象，可能會接受無利可圖或利潤較低的資本項目。<br>• <b>例子</b>：餐廳透過在店內提供無障礙設施（如殘疾人士洗手間和升降平台）予輪椅使用者，提升企業形象。<br><span style='color:var(--red)'>注意：在要求解釋非財務因素的題目中，如答案涉及經濟利益（如寫「從而增加銷售額賺取利潤」），將不會得分。</span>" },
+    { name: "5. 提高員工士氣", desc: "企業投資於能<b>改善工作環境</b>的資本項目，有助提高員工士氣。<br>• <b>例子</b>：提供更先進的設備、更寬敞的工作場所、改善通風設備，或為員工設立飯堂及康樂活動室。企業在評估這些項目時，不僅要考慮經濟利益，也要考慮提高員工士氣這項不能量化的益處。" },
+    { name: "6. ESG 投資", desc: "<b>ESG 投資</b>是指在作出投資決策過程中考慮到三項非財務因素：<br>• <b>環境 (Environmental)</b>：考慮保育自然環境（如投資於減少碳排放和保護自然資源的項目）。<br>• <b>社會 (Social)</b>：考慮員工、客戶和社區等持份者（如建設支援母乳喂飼的工作場所，為在職母親提供具備冷藏設施的哺乳室）。<br>• <b>企業管治 (Governance)</b>：關注公司管理是否符合法例監管和道德標準（如航空公司購入以低排放能源為燃料的飛機以滿足未來法規要求）。" }
+  ];
+  function renderNonFinFac(idx) {
+    document.querySelectorAll('#nonFinFacChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const f = nonFinFactors[idx];
+    document.getElementById('nonFinFacBox').innerHTML = `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1.5px solid var(--teal);font-size:16px;line-height:1.75"><h4 style="color:var(--teal);font-size:18px;margin-bottom:8px">${f.name}</h4><div>${f.desc}</div></div>`;
+  }
+  document.getElementById('nonFinFacChips').innerHTML = nonFinFactors.map((f, i) => `<button class="chip ${i===0?'active':''}" onclick="renderNonFinFac(${i})">${f.name.split(' ')[1]}</button>`).join('');
+  renderNonFinFac(0);
+
+  const facQuizItems = [
+    { q: "1. 在疫情最嚴重時期，某航空公司因為「不確定投資所帶來的現金流量」，所以決定不購買新飛機。識別影響這決策的主要財務因素：", opts: ["A. 財務因素：資本投資項目的風險（未來現金流量的不確定性）", "B. 非財務因素：符合行業標準"], ans: 0, exp: "正確。未來現金流量的不確定性越高，代表「資本投資項目的風險」越高。" },
+    { q: "2. 某口罩生產商為「節省人工成本」，以全自動化的口罩生產機器取代原來半自動化的機器。識別影響這決策的主要財務因素：", opts: ["A. 財務因素：投資收入（把使用新機器所節省的成本視為現金流入）", "B. 財務因素：投資期"], ans: 0, exp: "正確。當購買新機器不帶來直接銷售收入時，可把使用新機器所節省的成本（相對於舊機器）視為現金流入（即「投資收入」）。" },
+    { q: "3. 某藥物生產商「為免資金被長期佔用」，否決一項為期 20 年的研發項目。識別影響這決策的主要財務因素：", opts: ["A. 財務因素：投資期（投資項目的期限）", "B. 非財務因素：提高員工士氣"], ans: 0, exp: "正確。投資期長的項目會長期佔用資金，迫使企業放棄其他投資機會，屬於「投資期」因素。" },
+    { q: "4. 某企業在兩個售價相同的打印機型號之中，選擇了「維修費用較便宜」的型號。識別影響這決策的主要財務因素：", opts: ["A. 財務因素：投資成本（當中的「其後的成本」）", "B. 非財務因素：遵守監管法規"], ans: 0, exp: "正確。投資成本包括初期資本投資及其後的成本（如維修費用）。" },
+    { q: "5. 某地產發展商為「營造環保企業的形象」而設立海洋生態保育中心。識別影響這決策的主要非財務因素：", opts: ["A. 非財務因素：提升企業形象", "B. 非財務因素：遵守監管法規"], ans: 0, exp: "正確。設立生態保育中心營造環保形象，屬於「提升企業形象」。" },
+    { q: "6. 某燃煤發電廠「為符合法例規定」，安裝排污監察系統。識別影響這決策的主要非財務因素：", opts: ["A. 非財務因素：提高員工士氣", "B. 非財務因素：遵守監管法規"], ans: 1, exp: "正確。為符合法例規定免被檢控罰款而安裝排污減排設備，屬於「遵守監管法規」。" },
+    { q: "7. 某螺絲生產商購買檢測機器，以「確保產品符合螺絲尺寸的標準」。識別影響這決策的主要非財務因素：", opts: ["A. 非財務因素：符合行業標準", "B. 財務因素：金錢的時間值"], ans: 0, exp: "正確。添置設備以符合品質與尺寸標準並維持競爭力，屬於「符合行業標準」。" },
+    { q: "8. 某社交媒體巨頭「為鏟除潛在對手」，收購不同的初創科技公司；而某投資銀行在辦公大樓「設立多用途活動室供員工進行康樂活動」。這兩項分別屬於哪項非財務因素？", opts: ["A. 前者屬「策略性原因」；後者屬「提高員工士氣」", "B. 兩者均屬「遵守監管法規」"], ans: 0, exp: "正確。收購初創公司以消除潛在威脅保持領導地位屬「策略性原因」；設立員工活動室改善工作環境屬「提高員工士氣」。" }
+  ];
+  let curFQ = 0;
+  function renderFacQuiz() {
+    const it = facQuizItems[curFQ];
+    document.getElementById('facQuizProg').textContent = `題目 ${curFQ + 1} / ${facQuizItems.length}`;
+    document.getElementById('facQuizQ').textContent = it.q;
+    document.getElementById('facQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:12px 16px" onclick="checkFacQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('facQuizFb').innerHTML = '';
+  }
+  function checkFacQuiz(idx) {
+    const it = facQuizItems[curFQ];
+    const fb = document.getElementById('facQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14.5px" onclick="curFQ=(curFQ+1)%facQuizItems.length;renderFacQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderFacQuiz();
+
+  // ====== 2. 四大資本投資評估法原理與決策規則 ======
+  const preRules = [
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:6px">要點 1：在評估資本投資時，最好以「現金流量」而非「利潤」作為衡量標準</b>
+      在財務學上，我們傾向以現金流量而非收益或利潤來評估某個項目是否值得投資，因為：<br>
+      • <b>(i) 現金流量是企業真正收到或支付的金額</b>。<br>
+      • <b>(ii) 利潤不一定反映企業實際所得或支付的金額</b>，因為利潤是根據會計原則（如應計基礎及折舊分攤）計算出來的。<br>
+      • <b>例子</b>：假設企業購入一台 100 萬元的機器並即時以現金付清全額，最初的現金流出量為 100 萬元；但根據會計原則，機器的支出可在使用年期內分攤（折舊），在計算利潤時只會把這 100 萬元的一部分記錄為投資期首年的費用。<br>
+      • <b>四種評估法所牽涉的變數</b>：除了<b>「會計報酬率 (ARR)」</b>是運用<b>淨利</b>來進行評估外，其他評估方法（<b>回收期、淨現值及內部報酬率</b>）都是以<b>現金流量</b>來計算的。
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:6px">要點 2：使用「額外的現金流量」計算，而不是使用現金流量的總額計算</b>
+      • 企業在評估資本投資項目時，應量度它所產生的<b>額外現金流量</b>，而不是單單量度該項目所產生的現金流量總額。<br>
+      • <b>商業例子</b>：假設一條新生產線每年能為企業帶來 $100,000 的現金流入，而舊生產線每年只能帶來 $60,000。如果企業要以新生產線取代舊生產線，每年可產生的<b>額外現金流入就是 $40,000（$100,000 － $60,000）</b>。
+    </div>`
+  ];
+  function renderPreRule(idx) {
+    document.querySelectorAll('#preRuleChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('preRuleBox').innerHTML = preRules[idx];
+  }
+  renderPreRule(0);
+
+  const appMethods = [
+    {
+      num: "01", name: "1. 會計報酬率 (ARR)",
+      badge: "運用淨利計算・以百分比表示",
+      def: "會計報酬率 (Accounting Rate of Return, ARR) 量度<b>每一元的平均投資所賺取的平均每年淨利</b>。投資項目的會計報酬率越高，其回報率便越高（註：考生無須在考試中計算會計報酬率）。",
+      formulaHtml: `<span>會計報酬率 (ARR) ：量度每一元的平均投資所賺取的平均每年淨利 (%)</span>`,
+      rules: "<b>決策規則（比較會計報酬率和目標回報率）：</b><br>• <b>(i) 獨立項目</b>：若投資項目的<b>會計報酬率高於或等於企業的目標回報率</b>，企業便應接受該投資項目。<br>• <b>(ii) 互相排斥的項目（不能同時接受兩個項目）</b>：若兩個項目的會計報酬率均高於或等於目標回報率，應選擇<b>會計報酬率較高者</b>。"
+    },
+    {
+      num: "02", name: "2. 回收期 (Payback Period)",
+      badge: "運用現金流量・以年數表示",
+      def: "回收期（又稱<b>還本期</b>或<b>歸本年期</b>）是指<b>企業收回投資成本所需的時間</b>，通常以年數表示，常用於小型資本項目的決策（有利可圖的資本項目的回收期通常比投資期短）。",
+      formulaHtml: `
+        <span>相等現金流：回收期 ＝</span>
+        <span class="m-frac"><span class="m-num">初期支出</span><span class="m-den">每年的額外現金流入</span></span>
+        <span style="margin-left:8px">｜ 非整年收回剩餘成本時間 ＝</span>
+        <span class="m-frac"><span class="m-num">去年的剩餘成本</span><span class="m-den">今年的現金流量</span></span>`,
+      rules: "<b>決策規則（比較回收期與企業可接受的最長回收期）：</b><br>• <b>(i) 獨立項目</b>：若投資項目的<b>回收期短於或等於企業可接受的最長回收期</b>，企業便應接受該項目。<br>• <b>(ii) 互相排斥的項目</b>：若兩個項目的回收期均短於或等於企業可接受的最長回收期，便應選擇<b>回收期較短的項目</b>。"
+    },
+    {
+      num: "03", name: "3. 淨現值 (NPV)",
+      badge: "運用現金流量貼現・以金額表示",
+      def: "淨現值 (Net Present Value, NPV) 等於<b>投資項目未來淨現金流入的現值（包括投資項目的剩餘價值在內）減去最初的支出</b>。若企業要計算投資項目的淨現值，必須先估算其<b>資本成本（所需回報率 <i>i</i>）</b>。",
+      formulaHtml: `
+        <span>淨現值 (NPV) ＝</span>
+        <span class="m-frac"><span class="m-num"><i>CF</i><sub>1</sub></span><span class="m-den">(1 ＋ <i>i</i>)<sup>1</sup></span></span>
+        <span>＋</span>
+        <span class="m-frac"><span class="m-num"><i>CF</i><sub>2</sub></span><span class="m-den">(1 ＋ <i>i</i>)<sup>2</sup></span></span>
+        <span>＋ … ＋</span>
+        <span class="m-frac"><span class="m-num"><i>CF</i><sub><i>n</i></sub>（包含剩餘價值）</span><span class="m-den">(1 ＋ <i>i</i>)<sup><i>n</i></sup></span></span>
+        <span>－ 初期支出 (<i>I</i>)</span>`,
+      rules: "<b>決策規則：</b><br>• <b>(i) 獨立項目</b>：若投資項目的<b>淨現值大於或等於 0（淨現值 ≥ 0）</b>，企業便應接受該項目；反之便應否決（淨現值為零代表回報率剛好足以彌補資本成本；淨現值為負數代表回報率低於企業的資本成本，接受會使公司價值減少）。<br>• <b>(ii) 互相排斥的項目</b>：當兩個項目的淨現值皆為正數時，企業應選擇<b>淨現值較高者</b>。<br>• <span style='color:var(--red)'>重要概念：企業接受淨現值為負數的項目<b>不代表會錄得虧損，亦不代表不會有淨現金流入</b>。</span>"
+    },
+    {
+      num: "04", name: "4. 內部報酬率 (IRR)",
+      badge: "運用現金流量貼現・以百分比表示",
+      def: "內部報酬率（又稱<b>內在報酬率</b>或<b>內在回報率</b>，IRR）是淨現值計算的一種特別情況，它是指<b>資本項目的淨現值等於零時的貼現率</b>。雖然與淨現值使用相同公式，但淨現值是以金額衡量項目的價值，內部報酬率則是以<b>百分比</b>衡量項目的回報率（註：試題不會要求考生計算內部報酬率）。",
+      formulaHtml: `<span>內部報酬率 (IRR) ＝ 令資本項目的「淨現值 (NPV) ＝ $0」時的貼現率 (%)</span>`,
+      rules: "<b>決策規則（比較項目的內部報酬率與企業的資本成本）：</b><br>• <b>(i) 獨立項目</b>：若投資項目的<b>內部報酬率高於或等於企業的資本成本（內部報酬率 ≥ 所需回報率）</b>，企業便應接受該項目。<br>• <b>(ii) 互相排斥的項目</b>：當兩者的內部報酬率都高於企業的所需回報率時，應該選擇<b>內部報酬率較高的項目</b>。"
+    }
+  ];
+
+  function renderAppMethod(idx) {
+    document.getElementById('appMethodNavList').innerHTML = appMethods.map((m, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderAppMethod(${i})">
+        <span>${m.name}</span>
+      </button>
+    `).join('');
+    const m = appMethods[idx];
+    document.getElementById('appMethodDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${m.name}</h3>
+        <span class="badge b-blue">${m.badge}</span>
+      </div>
+      <p style="margin:0 0 10px;font-size:17px">${m.def}</p>
+      <div class="math-card">${m.formulaHtml}</div>
+      <div class="case-box">${m.rules}</div>
+    `;
+  }
+  renderAppMethod(2);
+
+  const ruleQuizItems = [
+    { q: "1. 某企業使用「會計報酬率 (ARR)」評估兩項資本投資項目甲和乙，它們的會計報酬率分別是每年 5% 和 6%。假如企業的目標回報率是每年 5%，當 (a) 兩者並非互相排斥 及 (b) 兩者是互相排斥的，企業應作出甚麼決策？", opts: ["A. (a) 並非互相排斥：同時接受項目甲和乙（因均高於或等於目標回報率 5%） ｜ (b) 互相排斥：選擇會計報酬率較高的項目乙（6%）", "B. 兩種情況下都只接受項目甲"], ans: 0, exp: "正確。獨立項目只要高於或等於目標回報率（5%）便應接受；互相排斥項目則選擇會計報酬率較高者（項目乙）。" },
+    { q: "2. 某企業正在評估項目甲和項目乙，它們的「內部報酬率 (IRR)」分別為 5% 和 4%。假如企業所要求的回報率（資本成本）是 4%，當 (a) 兩者並非互相排斥 及 (b) 兩者是互相排斥的，企業應作出甚麼決策？", opts: ["A. (a) 並非互相排斥：同時接受項目甲和乙（因均高於或等於要求回報率 4%） ｜ (b) 互相排斥：選擇內部報酬率較高的項目甲（5%）", "B. 兩種情況下都否決兩個項目"], ans: 0, exp: "正確。當 IRR 高於或等於所需回報率（4%）時應接受；若兩者互相排斥，則選擇 IRR 較高的項目甲（5%）。" },
+    { q: "3. 辨別陳述是否正確：「會計報酬率是使用現金流量計算的，並且考慮到金錢的時間值。」", opts: ["A. 正確", "B. 不正確 — 會計報酬率是以『利潤（淨利）』為計算基礎，且沒有進行貼現，沒有考慮金錢的時間值"], ans: 1, exp: "正確（陳述不正確）。會計報酬率以淨利計算，且忽略了金錢的時間值。" },
+    { q: "4. 辨別陳述是否正確：「負淨現值（NPV ＜ 0）意味着投資項目不會產生淨現金流入。」", opts: ["A. 正確", "B. 不正確 — 負淨現值只代表項目的回報率低於企業的資本成本（貼現後現值少於初期支出），不代表不會有淨現金流入，亦不代表會錄得虧損"], ans: 1, exp: "正確（陳述不正確）。企業接受淨現值為負數的項目不代表會錄得虧損，亦不代表不會有淨現金流入。" },
+    { q: "5. 辨別陳述是否正確：「如果資本項目的內部報酬率 (IRR) 高於零，企業應該接受該項目。」", opts: ["A. 正確", "B. 不正確 — 內部報酬率必須『高於或等於企業的資本成本（所需回報率）』，企業才應接受該項目"], ans: 1, exp: "正確（陳述不正確）。淨現值 (NPV) 才是與零比較（NPV ≥ 0）；內部報酬率 (IRR) 則必須高於或等於企業的資本成本（所需回報率）。" },
+    { q: "6. 辨別陳述是否正確：「內部報酬率計算投資項目的金錢價值，且內部報酬率越低，投資於項目的回報便越高。」", opts: ["A. 正確", "B. 不正確 — 淨現值才以金額衡量項目的價值；內部報酬率是以『百分比』衡量項目的回報率，且內部報酬率越高代表回報越高"], ans: 1, exp: "正確（陳述不正確）。內部報酬率以百分比衡量回報率，數值越高回報越高。" },
+    { q: "7. 辨別陳述是否正確：「回收期考慮與資本項目相關的所有現金流量，並考慮到金錢的時間值。」", opts: ["A. 正確", "B. 不正確 — 回收期只考慮回收期內的現金流量（忽略了回收期之後的現金流量），且沒有貼現（忽略了金錢的時間值）"], ans: 1, exp: "正確（陳述不正確）。回收期忽略了金錢的時間值，亦忽略了回收期之後的現金流量。" }
+  ];
+  let curRuleQ = 0;
+  function renderRuleQuiz() {
+    const it = ruleQuizItems[curRuleQ];
+    document.getElementById('ruleQuizProg').textContent = `題目 ${curRuleQ + 1} / ${ruleQuizItems.length}`;
+    document.getElementById('ruleQuizQ').textContent = it.q;
+    document.getElementById('ruleQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:12px 16px" onclick="checkRuleQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('ruleQuizFb').innerHTML = '';
+  }
+  function checkRuleQuiz(idx) {
+    const it = ruleQuizItems[curRuleQ];
+    const fb = document.getElementById('ruleQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14.5px" onclick="curRuleQ=(curRuleQ+1)%ruleQuizItems.length;renderRuleQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderRuleQuiz();
+
+  // ====== 3. 回收期與淨現值 (NPV) 計算實驗室 ======
+  const npvPresets = [
+    { init: 1800000, rate: 8, cf1: 650000, cf2: 650000, cf3: 650000, cf4: 0, scrap: 300000, maxPb: 3 },
+    { init: 2100000, rate: 10, cf1: 1000000, cf2: 750000, cf3: 500000, cf4: 300000, scrap: 0, maxPb: 3 },
+    { init: 4000000, rate: 6, cf1: 1420000, cf2: 1420000, cf3: 1420000, cf4: 0, scrap: 0, maxPb: 3 }
+  ];
+  const fmtC = n => '$' + Math.round(n).toLocaleString('en-US');
+
+  function loadNpvPreset(idx) {
+    [0,1,2].forEach(i => document.getElementById('npvPre'+i).classList.toggle('active', i === idx));
+    const p = npvPresets[idx];
+    document.getElementById('cInit').value = p.init;
+    document.getElementById('cRate').value = p.rate;
+    document.getElementById('cCf1').value = p.cf1;
+    document.getElementById('cCf2').value = p.cf2;
+    document.getElementById('cCf3').value = p.cf3;
+    document.getElementById('cCf4').value = p.cf4;
+    document.getElementById('cScrap').value = p.scrap;
+    document.getElementById('cMaxPb').value = p.maxPb;
+    runNpvPaybackCalc();
+  }
+
+  function runNpvPaybackCalc() {
+    const init = Math.max(1, +document.getElementById('cInit').value || 0);
+    const ratePct = Math.max(0, +document.getElementById('cRate').value || 0);
+    const rate = ratePct / 100;
+    const rawCfs = [
+      Math.max(0, +document.getElementById('cCf1').value || 0),
+      Math.max(0, +document.getElementById('cCf2').value || 0),
+      Math.max(0, +document.getElementById('cCf3').value || 0),
+      Math.max(0, +document.getElementById('cCf4').value || 0)
+    ];
+    const scrap = Math.max(0, +document.getElementById('cScrap').value || 0);
+    const maxPb = Math.max(0.1, +document.getElementById('cMaxPb').value || 3);
+
+    const lastYr = rawCfs[3] > 0 ? 4 : 3;
+    const cfs = rawCfs.slice(0, lastYr);
+    cfs[lastYr - 1] += scrap;
+
+    let rem = init;
+    let pbYears = 0;
+    let recovered = false;
+    let pbStepsHtml = '';
+    for (let y = 0; y < cfs.length; y++) {
+      if (cfs[y] <= 0) continue;
+      if (rem >= cfs[y]) {
+        rem -= cfs[y];
+        pbYears += 1;
+        pbStepsHtml += `<div>• 第 ${y+1} 年底：流入 ${fmtC(cfs[y])} ➔ 尚未收回剩餘成本 ＝ <b>${fmtC(rem)}</b>（所需年數：1 年）</div>`;
+        if (rem === 0) { recovered = true; break; }
+      } else {
+        const fracYr = rem / cfs[y];
+        pbYears += fracYr;
+        pbStepsHtml += `<div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:2px">
+          <span>• 第 ${y+1} 年收回剩餘成本的時間 ＝</span>
+          <span class="m-frac" style="color:var(--primary);font-weight:800"><span class="m-num">${fmtC(rem)}</span><span class="m-den">${fmtC(cfs[y])}</span></span>
+          <span>＝ <b>${fracYr.toFixed(2)} 年</b></span>
+        </div>`;
+        rem = 0;
+        recovered = true;
+        break;
+      }
+    }
+
+    let pvSum = 0;
+    let npvFractionHtmlParts = [];
+    let pvValuesList = [];
+    const rBase = (1 + rate).toFixed(2).replace(/\.00$/, '');
+
+    for (let y = 0; y < cfs.length; y++) {
+      const pv = cfs[y] / Math.pow(1 + rate, y + 1);
+      pvSum += pv;
+      pvValuesList.push(`$${Math.round(pv).toLocaleString('en-US')}`);
+      const isLastWithScrap = (y === lastYr - 1 && scrap > 0);
+      const numStr = isLastWithScrap ? `${fmtC(cfs[y]-scrap)} ＋ 剩餘價值 ${fmtC(scrap)}` : fmtC(cfs[y]);
+      npvFractionHtmlParts.push(`
+        <span class="m-frac">
+          <span class="m-num">${numStr}</span>
+          <span class="m-den">(${rBase})<sup>${y+1}</sup></span>
+        </span>
+      `);
+    }
+    const npv = pvSum - init;
+    const pbOk = recovered && pbYears <= maxPb;
+    const npvOk = npv >= 0;
+
+    document.getElementById('npvLiveResult').innerHTML = `
+      <div style="background:var(--card);padding:16px 18px;border-radius:14px;border:1.5px solid var(--line);font-size:14.5px">
+        <div style="border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <b style="color:var(--primary);font-size:16.5px">(1) 回收期 (Payback Period) 計算結果：</b>
+            <span class="badge ${pbOk?'b-green':'b-red'}" style="margin:0;font-size:15px">${recovered ? pbYears.toFixed(2) + ' 年' : '投資期內無法回本'}</span>
+          </div>
+          <div style="margin-top:8px;line-height:1.7;color:var(--ink-sec);font-size:14px">${pbStepsHtml}</div>
+          <div style="margin-top:8px;font-weight:700;color:${pbOk?'var(--green)':'var(--red)'}">
+            回收期決策：${recovered ? (pbOk ? `由於回收期（${pbYears.toFixed(2)} 年）短於或等於可接受最長回收期（${maxPb} 年），應接受該項目。` : `由於回收期（${pbYears.toFixed(2)} 年）長於可接受最長回收期（${maxPb} 年），根據回收期法應否決該項目。`) : `在 ${lastYr} 年投資期內未能收回初期成本 ${fmtC(init)}，應否決該項目。`}
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <b style="color:var(--teal);font-size:16.5px">(2) 淨現值 (NPV) 分數算式與結果：</b>
+            <span class="badge ${npvOk?'b-green':'b-red'}" style="margin:0;font-size:15px">${npv >= 0 ? '+$' : '-$'}${Math.abs(npv).toFixed(2)}</span>
+          </div>
+          <div class="math-card" style="font-size:14px;justify-content:flex-start;padding:12px 14px">
+            <span>淨現值 ＝</span>
+            ${npvFractionHtmlParts.join('<span>＋</span>')}
+            <span>－ ${fmtC(init)}</span>
+          </div>
+          <div style="font-size:13.5px;color:var(--mute);margin-bottom:6px">
+            • <b>各年貼現現值明細：</b>[ ${pvValuesList.join(' ＋ ')} ] － ${fmtC(init)} ＝ <b style="color:var(--ink)">${npv >= 0 ? '+$' : '-$'}${Math.abs(npv).toFixed(2)}</b>
+          </div>
+          <div style="font-weight:700;color:${npvOk?'var(--green)':'var(--red)'}">
+            淨現值決策：${npvOk ? `由於淨現值是正數（+$${npv.toFixed(2)} ≥ $0），企業應接受該項目以提高公司價值。` : `由於淨現值是負數（-$${Math.abs(npv).toFixed(2)} ＜ $0），代表回報率低於資本成本（${ratePct}%），接受會減少公司價值，故應否決該項目。`}
+          </div>
+        </div>
+      </div>`;
+  }
+  runNpvPaybackCalc();
+
+  const caseCalcs = [
+    {
+      title: "情境 1：服裝配飾生產商添置全自動化機器（含剩餘價值的回收期與 NPV）",
+      given: "初期投資 = $150,000，預期可使用 4 年，並在每年年底帶來 $90,000 的淨現金流入，機器的剩餘價值為 $9,500。生產商的資本成本是每年 7%。",
+      s1: `<b>(a) 計算該投資項目的回收期（至一個小數位）：</b>
+           <div class="math-card" style="justify-content:flex-start;font-size:15px">
+             <span>回收期 ＝</span>
+             <span class="m-frac"><span class="m-num">初期支出 $150,000</span><span class="m-den">每年的額外現金流入 $90,000</span></span>
+             <span>＝ 1.67 年 ➔ <b style="color:var(--green)">1.7 年（至一個小數位）</b></span>
+           </div>`,
+      s2: `<b>(b) 計算該投資項目的淨現值（至兩個小數位，第 4 年分子須加上剩餘價值 $9,500）：</b>
+           <div class="math-card" style="justify-content:flex-start;font-size:14.5px">
+             <span>淨現值 ＝</span>
+             <span class="m-frac"><span class="m-num">$90,000</span><span class="m-den">(1.07)<sup>1</sup></span></span><span>＋</span>
+             <span class="m-frac"><span class="m-num">$90,000</span><span class="m-den">(1.07)<sup>2</sup></span></span><span>＋</span>
+             <span class="m-frac"><span class="m-num">$90,000</span><span class="m-den">(1.07)<sup>3</sup></span></span><span>＋</span>
+             <span class="m-frac"><span class="m-num">$90,000 ＋ $9,500</span><span class="m-den">(1.07)<sup>4</sup></span></span>
+             <span>－ $150,000</span>
+           </div>
+           • 計算結果：$84,112.15 ＋ $78,609.49 ＋ $73,466.81 ＋ $75,908.05 － $150,000 ＝ <b style="color:var(--green)">+$162,096.50</b>。`,
+      s3: "<b>(c) 根據淨現值解釋應否接受：</b>由於機器的<b>淨現值是正數（+$162,096.50 ≥ 0）</b>，投資該項目可提高公司價值，因此生產商<b>應該接受</b>這個投資項目。"
+    },
+    {
+      title: "情境 2：餐廳購買廚餘處理器（不等額現金流的回收期與 NPV）",
+      given: "初期投資 = $48,000，預期在未來 4 年每年年底產生的淨現金流入分別為：第 1 年 +$20,800、第 2 年 +$18,500、第 3 年 +$15,200、第 4 年 +$13,600。資本成本是每年 10%。",
+      s1: `<b>(a) 計算廚餘處理器的回收期（至一個小數位）：</b><br>
+           • 第 1 年底剩餘成本 ＝ $48,000 － $20,800 ＝ $27,200（1 年）<br>
+           • 第 2 年底剩餘成本 ＝ $27,200 － $18,500 ＝ $8,700（1 年）<br>
+           <div class="math-card" style="justify-content:flex-start;font-size:15px">
+             <span>回收期 ＝ 1 ＋ 1 ＋</span>
+             <span class="m-frac"><span class="m-num">第 2 年剩餘成本 $8,700</span><span class="m-den">第 3 年現金流量 $15,200</span></span>
+             <span>＝ 2 ＋ 0.57 ＝ <b style="color:var(--green)">2.6 年（至一個小數位）</b></span>
+           </div>`,
+      s2: `<b>(b) 計算廚餘處理器的淨現值（至兩個小數位）：</b>
+           <div class="math-card" style="justify-content:flex-start;font-size:14.5px">
+             <span>淨現值 ＝</span>
+             <span class="m-frac"><span class="m-num">$20,800</span><span class="m-den">(1.1)<sup>1</sup></span></span><span>＋</span>
+             <span class="m-frac"><span class="m-num">$18,500</span><span class="m-den">(1.1)<sup>2</sup></span></span><span>＋</span>
+             <span class="m-frac"><span class="m-num">$15,200</span><span class="m-den">(1.1)<sup>3</sup></span></span><span>＋</span>
+             <span class="m-frac"><span class="m-num">$13,600</span><span class="m-den">(1.1)<sup>4</sup></span></span>
+             <span>－ $48,000</span>
+           </div>
+           • 計算結果：$18,909.09 ＋ $15,289.26 ＋ $11,419.98 ＋ $9,288.98 － $48,000 ＝ <b style="color:var(--green)">+$6,907.31</b>。`,
+      s3: "<b>(c) 支持購買的一個財務因素：</b>該廚餘處理器的<b>淨現值為正數（+$6,907.31）</b>，考慮金錢時間值後未來現金流入的現值大於初期投資成本，能提高餐廳的公司價值。"
+    },
+    {
+      title: "情境 3：中式點心餐廳設立急凍點心生產線（比較兩個品牌的回收期）",
+      given: "餐廳須在兩個品牌的食品生產機器中選擇其一，並規定所有資本投資項目須在 2 年內回本。初期支出同為 $2,300,000。首三年年底淨現金流入：品牌一分別是 $1,900,000、$1,350,000 和 $580,000；品牌二分別是 $1,300,000、$1,200,000 和 $900,000。",
+      s1: `<b>(ci) 計算兩個品牌食品生產機器的回收期（至兩個小數位）：</b>
+           <div class="math-card" style="justify-content:flex-start;font-size:14.5px">
+             <span>• 品牌一回收期 ＝ 1 ＋</span>
+             <span class="m-frac"><span class="m-num">$2,300,000 － $1,900,000</span><span class="m-den">$1,350,000</span></span>
+             <span>＝ 1 ＋</span>
+             <span class="m-frac"><span class="m-num">$400,000</span><span class="m-den">$1,350,000</span></span>
+             <span>＝ <b style="color:var(--green)">1.30 年</b></span>
+           </div>
+           <div class="math-card" style="justify-content:flex-start;font-size:14.5px">
+             <span>• 品牌二回收期 ＝ 1 ＋</span>
+             <span class="m-frac"><span class="m-num">$2,300,000 － $1,300,000</span><span class="m-den">$1,200,000</span></span>
+             <span>＝ 1 ＋</span>
+             <span class="m-frac"><span class="m-num">$1,000,000</span><span class="m-den">$1,200,000</span></span>
+             <span>＝ <b style="color:var(--primary)">1.83 年</b></span>
+           </div>`,
+      s2: "<b>(cii) 根據回收期解釋應投資哪個品牌：</b>雖然兩個品牌的回收期均短於 2 年（符合兩年內回本的規定），但由於兩個項目是互相排斥的（只能選其一），品牌一的回收期（1.30 年）短於品牌二（1.83 年），故應投資<b>第一個品牌的機器</b>。",
+      s3: "<b>(d) 建議另外兩種更可靠的資本投資評估法：</b>可採用<b>「淨現值 (NPV)」</b>及<b>「內部報酬率 (IRR)」</b>，因為這兩種方法都考慮了<b>金錢的時間值</b>以及<b>投資期內所有與項目相關的現金流量（不會忽略回收期後的現金流量）</b>。"
+    },
+    {
+      title: "情境 4：珠寶店建立網上購物平台（計算 NPV 與相對於回收期的好處）",
+      given: "網上購物平台計劃的初期資本支出是 $1,300,000，投資期為 4 年，資本成本為每年 15%。把網站維修成本計算在內，每年可帶來 $900,000 的淨現金流入。",
+      s1: `<b>(ci) 計算網上購物平台項目的淨現值（至整數元）：</b>
+           <div class="math-card" style="justify-content:flex-start;font-size:14.5px">
+             <span>淨現值 ＝</span>
+             <span class="m-frac"><span class="m-num">$900,000</span><span class="m-den">(1.15)<sup>1</sup></span></span><span>＋</span>
+             <span class="m-frac"><span class="m-num">$900,000</span><span class="m-den">(1.15)<sup>2</sup></span></span><span>＋</span>
+             <span class="m-frac"><span class="m-num">$900,000</span><span class="m-den">(1.15)<sup>3</sup></span></span><span>＋</span>
+             <span class="m-frac"><span class="m-num">$900,000</span><span class="m-den">(1.15)<sup>4</sup></span></span>
+             <span>－ $1,300,000</span>
+           </div>
+           • 計算結果：$782,609 ＋ $680,530 ＋ $591,765 ＋ $514,578 － $1,300,000 ＝ <b style="color:var(--green)">+$1,269,482（或 $1,269,481）</b>。`,
+      s2: "<b>(cii) 根據淨現值解釋應否接受：</b>由於項目的<b>淨現值是正數（+$1,269,481 ≥ 0）</b>，投資該項目可提高公司價值，因此珠寶店<b>應該接受</b>這個投資項目。",
+      s3: "<b>(d) 相對於使用回收期，使用淨現值進行評估的兩個好處：</b>(1) 淨現值<b>考慮了金錢的時間值</b>；(2) 淨現值<b>考慮了投資期內所有與項目相關的現金流量（不會忽略回收期後的現金流量）</b>；(3) 可直接反映投資項目對公司價值的影響。"
+    },
+    {
+      title: "情境 5：國際餐飲連鎖店引入落單及送餐機械人系統（歸本期與負 NPV 決策）",
+      given: "機械人系統所需要的期初支出為 $4,000,000，項目年期為 3 年，資本成本為 6%；在考慮每年所產生的費用和所省卻的勞工成本後，每年可帶來淨現金流 $1,420,000。",
+      s1: `<b>(ci) 計算機械人系統的歸本期／回收期（至小數後兩位）：</b>
+           <div class="math-card" style="justify-content:flex-start;font-size:15px">
+             <span>歸本期（回收期）＝</span>
+             <span class="m-frac"><span class="m-num">期初支出 $4,000,000</span><span class="m-den">每年淨現金流 $1,420,000</span></span>
+             <span>＝ <b style="color:var(--primary)">2.82 年</b></span>
+           </div>`,
+      s2: `<b>(cii) 計算機械人系統的淨現值（至整數）：</b>
+           <div class="math-card" style="justify-content:flex-start;font-size:14.5px">
+             <span>淨現值 ＝</span>
+             <span class="m-frac"><span class="m-num">$1,420,000</span><span class="m-den">(1.06)<sup>1</sup></span></span><span>＋</span>
+             <span class="m-frac"><span class="m-num">$1,420,000</span><span class="m-den">(1.06)<sup>2</sup></span></span><span>＋</span>
+             <span class="m-frac"><span class="m-num">$1,420,000</span><span class="m-den">(1.06)<sup>3</sup></span></span>
+             <span>－ $4,000,000</span>
+           </div>
+           • 計算結果：$1,339,623 ＋ $1,263,795 ＋ $1,192,259 － $4,000,000 ＝ <b style="color:var(--red)">-$204,323（負數）</b>。`,
+      s3: "<b>(d) 根據淨現值解釋應否接納：</b>由於機械人系統計劃的<b>淨現值為負數（-$204,323 ＜ 0）</b>，代表項目的回報率低於 6% 資本成本，接納該計劃會使餐廳的公司價值減少，故<b>不應接納</b>。"
+    }
+  ];
+  function renderCaseCalc(idx) {
+    document.querySelectorAll('#caseCalcChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const c = caseCalcs[idx];
+    document.getElementById('caseCalcBox').innerHTML = `<div style="background:var(--surface);padding:16px 20px;border-radius:14px;border:1px solid var(--line);font-size:15.5px;line-height:1.75"><b style="color:var(--primary);font-size:17px">${c.title}</b><div style="margin:6px 0;color:var(--mute)"><b>已知數據：</b>${c.given}</div><div style="background:var(--card);padding:10px 14px;border-radius:8px;border-left:4px solid var(--primary);margin-bottom:8px">${c.s1}</div><div style="background:var(--card);padding:10px 14px;border-radius:8px;border-left:4px solid var(--teal);margin-bottom:8px">${c.s2}</div><div style="background:var(--green-light);padding:10px 14px;border-radius:8px;border-left:4px solid var(--green)">${c.s3}</div></div>`;
+  }
+  document.getElementById('caseCalcChips').innerHTML = caseCalcs.map((c, i) => `<button class="chip ${i===0?'active':''}" onclick="renderCaseCalc(${i})">${c.title.split('（')[0]}</button>`).join('');
+  renderCaseCalc(0);
+
+  // ====== 4. 四大評估法優劣比較與矛盾決策診斷室 ======
+  const compViews = [
+    `<table class="comp-table" style="font-size:15px">
+      <thead><tr><th style="width:15%">方法</th><th style="width:32%">優點</th><th style="width:33%">缺點</th><th style="width:20%">決策規則</th></tr></thead>
+      <tbody>
+        <tr><td><b>1. 會計報酬率 (ARR)</b></td><td>• 計算簡單<br>• 易於理解（以簡單的百分比表示，有助向股東解釋項目的盈利能力）</td><td>• 以利潤而非現金流量為計算基礎<br>• 忽略金錢的時間值<br>• 不能反映公司價值的實際增長<br>• 利潤有可能被操控</td><td>接受會計報酬率高於或等於目標回報率的項目。</td></tr>
+        <tr><td><b>2. 回收期 (Payback)</b></td><td>• 計算簡單，易於理解<br>• 有助識別高風險的項目<br>• 增加再投資的機會</td><td>• 忽略金錢的時間值<br>• 忽略回收期後的現金流量<br>• 決策準則流於主觀和隨意</td><td>接受回收期短於或等於可接受的最長回收期的項目。</td></tr>
+        <tr class="highlight-row"><td><b>3. 淨現值 (NPV)</b></td><td>• 考慮金錢的時間值<br>• 考慮所有現金流量<br>• 與公司價值直接相關（反映對公司價值的影響）</td><td>• 難以計算企業的資本成本（要求回報率）<br>• 難以比較投資金額不同的項目<br>• 較難理解（不能顯示回報率）</td><td>接受淨現值大於或等於零的項目。</td></tr>
+        <tr><td><b>4. 內部報酬率 (IRR)</b></td><td>• 考慮金錢的時間值<br>• 考慮所有現金流量<br>• 易於理解，因為它以百分比表示投資回報</td><td>• 不能反映公司價值的實際增長<br>• 或會出現多重內部報酬率（當項目有現金流出時）</td><td>接受內部報酬率大於或等於資本成本的項目。</td></tr>
+      </tbody>
+    </table>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:14px;border:1px solid var(--line);font-size:15.5px;line-height:1.75">
+      <div class="grid2">
+        <div style="background:var(--card);padding:14px 16px;border-radius:12px;border-left:5px solid var(--primary)">
+          <b style="color:var(--primary);font-size:17px">1. 就「可靠度 (Reliability)」而言：</b><br>
+          <div style="font-weight:800;color:var(--ink);margin:8px 0;font-size:16.5px">淨現值 ＞ 內部報酬率 ＞ 會計報酬率和回收期</div>
+          • <b>(i) 淨現值是最好的</b>：因為淨現值直接反映投資項目對公司價值的影響。管理人員只要選擇淨現值最高的項目，便能為公司價值帶來最大的增長。<br>
+          • <b>(ii) 內部報酬率次之</b>：雖然淨現值和內部報酬率都考慮了金錢的時間值，但內部報酬率僅以百分比表示回報率，不能反映項目對公司價值的影響；因此在作出決策時，淨現值一般比內部報酬率可取。<br>
+          • <b>(iii) 會計報酬率和回收期較遜色</b>：因為兩者都忽略了金錢的時間值。<br>
+          • <b>矛盾決策法則</b>：有時候不同的資本評估方法可能會導致互相矛盾的決策結果；在這種情況下，<b>應該根據淨現值法的結果進行投資決策</b>。
+        </div>
+        <div style="background:var(--card);padding:14px 16px;border-radius:12px;border-left:5px solid var(--teal)">
+          <b style="color:var(--teal);font-size:17px">2. 就「易於使用的程度 (Ease of Use)」而言：</b><br>
+          <div style="font-weight:800;color:var(--ink);margin:8px 0;font-size:16.5px">會計報酬率和回收期 ＞ 內部報酬率 ＞ 淨現值</div>
+          • <b>(i) 會計報酬率和回收期最易使用</b>：因為兩者都不涉及艱深的運算技巧，所以雖然有其限制，但還是獲企業廣泛採用。<br>
+          • <b>(ii) 內部報酬率較淨現值易明</b>：因為它以百分比表示，在現實中管理人員往往傾向以內部報酬率報告評估結果。<br>
+          • <b>(iii) 淨現值最難使用和理解</b>：沒有接受正規財務培訓的管理人員通常不會視它為首選。
+        </div>
+      </div>
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:14px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--red);font-size:17.5px;display:block;margin-bottom:8px">資本投資評估法的其他限制：</b>
+      1. <b>十分依賴現金流量的預測</b>：有些行業很難預測未來的現金流量。如果所得的資料不可靠，企業所得出的投資評估結果也不會可靠。<br>
+      2. <b>管理人員也許會刻意高估現金流入和低估現金流出</b>，企圖令項目顯得更有利可圖。因此，檢查現金流量的預測是否合理是很重要的。<br>
+      3. <b>上述四種資本投資評估法僅考慮財務因素</b>：管理人員在作出決策前，還應考慮非財務因素。
+    </div>`
+  ];
+  function renderCompView(idx) {
+    document.querySelectorAll('#compViewChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('compViewBox').innerHTML = compViews[idx];
+  }
+  renderCompView(0);
+
+  const flawDemos = [
+    `<div style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line);font-size:15px;line-height:1.75">
+      <b style="color:var(--primary);font-size:16.5px">盲點 1：忽略金錢的時間值所帶來的問題（以會計報酬率為例）</b><br>
+      假設兩個互斥項目（甲和乙）的初期投資一樣、投資年期同是 3 年、三年後均無剩餘價值：<br>
+      • <b>項目甲的淨利</b>：第 1 年 <b>$40,000</b>、第 2 年 $1,000、第 3 年 $1,000（總淨利 = $42,000）<br>
+      • <b>項目乙的淨利</b>：第 1 年 $1,000、第 2 年 $1,000、第 3 年 <b>$40,000</b>（總淨利 = $42,000）<br>
+      • <b>分析</b>：兩個項目的平均每年淨利相同，根據會計報酬率，投資哪個項目根本沒有分別。然而，如考慮<b>金錢的時間值</b>，便會發現<b>項目甲較為可取</b>——因為項目甲在首年所帶來的 $40,000 淨利，其價值會比項目乙在第三年所帶來的 $40,000 淨利高。
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line);font-size:15px;line-height:1.75">
+      <b style="color:var(--primary);font-size:16.5px">盲點 2：只運用回收期（忽略回收期後現金流）所帶來的問題</b><br>
+      假設奧蘭治公司（資本成本 10%，可接受最長回收期 4 年）要在互斥項目甲和乙之間選其一，初期支出同為 <b>$45,000</b>：<br>
+      • <b>項目甲</b>：第 1–3 年每年 +$15,000；<b>第 4–6 年均為 $0</b> ➔ 回收期 ＝ <b>3 年</b>；但淨現值 ＝ <b>-$7,697.2（負數）</b>。<br>
+      • <b>項目乙</b>：第 1–2 年 +$10,000、第 3 年 +$15,000、<b>第 4 年 +$40,000、第 5–6 年 +$30,000</b> ➔ 回收期 ＝ <b>3.25 年</b>；而淨現值 ＝ <b>+$46,507.5（正數）</b>。<br>
+      • <b>結論</b>：若只根據回收期決策，會選擇回收期較短的項目甲（3 年 ＜ 3.25 年），但項目甲在回收期結束後便沒有現金流入且淨現值為負數；相反，項目乙大部分現金流入在回收期後產生，且淨現值為正數（+$46,507.5），故應<b>捨棄項目甲而選取項目乙</b>。
+    </div>`
+  ];
+  function renderFlawDemo(idx) {
+    document.querySelectorAll('#flawDemoChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('flawDemoBox').innerHTML = flawDemos[idx];
+  }
+  renderFlawDemo(0);
+
+  const conflictData = [
+    `<div style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line);font-size:15px;line-height:1.75">
+      <b style="color:var(--primary);font-size:16.5px">情境 A（物流公司安裝機械臂）：計劃的「會計報酬率估計為 12%（比公司所需回報率高）」，但「淨現值則為 -$100,000」。根據這兩項指標，公司應否接納這計劃？</b><br>
+      • <b>決策結論：不應接納這計劃。</b><br>
+      • <b>支持原因</b>：當會計報酬率與淨現值導致互相矛盾的決策結果時，應該<b>根據較可靠的淨現值法結果進行決策</b>（因為淨現值考慮了金錢的時間值及實際現金流量，並直接反映對公司價值的影響；而會計報酬率忽略了金錢時間值）。由於該計劃的<b>淨現值為負數（-$100,000 ＜ 0），代表回報率低於資本成本，接納會使公司價值減少</b>。
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line);font-size:15px;line-height:1.75">
+      <b style="color:var(--teal);font-size:16.5px">情境 B（建築公司添置防中暑智能頭盔）：計劃的「會計報酬率是 2%（目標回報率是 7%）」，且「淨現值是 -$120,000」。從財務與非財務角度應如何評估？</b><br>
+      • <b>1. 根據會計報酬率和淨現值（財務角度）</b>：由於會計報酬率（2%）低於目標回報率（7%），而且淨現值為負數（-$120,000 ＜ 0），因此從財務角度<b>不應購買</b>智能頭盔。<br>
+      • <b>2. 支持購買智能頭盔的兩個「非財務因素」</b>：<br>
+      &nbsp;&nbsp;(i) <b>提高員工士氣</b>：智能頭盔可減低工人在酷熱天氣工作時中暑的風險，加強工作時的安全性和舒適度（改善工作環境），有助提升工人滿意度和士氣。<br>
+      &nbsp;&nbsp;(ii) <b>提升企業形象（或遵守監管法規／職安健指引）</b>：展現公司重視工人職業安全，有助建立正面的企業形象。
+    </div>`
+  ];
+  function renderConflict(idx) {
+    document.querySelectorAll('#conflictChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('conflictBox').innerHTML = conflictData[idx];
+  }
+  renderConflict(0);
+
+  // ====== 5. 論點建構問答工作坊 (選項無括號自然行文・批改回饋針對作答內容直接點評) ======
+  const workshopQuestions = [
+    {
+      id: "s1", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 1：潔淨乾洗連鎖店（會計報酬率決策與廣泛採用原因）", topic: "會計報酬率 (ARR) 的決策規則與易於使用的優點", maxMarks: 2,
+      scenario: "「潔淨乾洗連鎖店」打算購買一批新型環保乾洗機。公司估算新乾洗機的「會計報酬率」為每年 15%，而店舖訂立的目標回報率為每年 10%。",
+      question: "(i) 根據會計報酬率，解釋乾洗店應否購買新乾洗機（1分）；(ii) 解釋為何即使會計報酬率並非最可靠的評估法，仍被用作評估資本投資項目（1分）。（2 分）",
+      steps: [
+        { label: "第 1 步：比較會計報酬率與目標回報率，指出應否購買（1分）", colorClass: "hl-s1", opts: [
+          { text: "不應該購買，因為會計報酬率 15% 高於目標回報率 10%。", score: 0, status: "wrong", comment: "決策規則顛倒。當投資項目的會計報酬率高於或等於企業的目標回報率時，代表預期回報達標，企業應該接受而非否決該項目。" },
+          { text: "應該購買新乾洗機：因為新乾洗機的會計報酬率為每年 15%，高於乾洗店所訂立的每年 10% 目標回報率，符合接受項目的決策規則。", score: 1, status: "best", comment: "準確比較新乾洗機的會計報酬率 15% 與目標回報率 10%，得出應該購買的正確結論。" },
+          { text: "應該購買，因為會計報酬率是正數。", score: 0, status: "partial", comment: "判準不完整。單憑會計報酬率為正數不足以決定接受項目，必須將其與乾洗店的目標回報率 10% 作比較。" }
+        ]},
+        { label: "第 2 步：指出會計報酬率仍被廣泛採用的單一核心原因（1分）", colorClass: "hl-s2", opts: [
+          { text: "因為會計報酬率相對於其他評估方法較易於計算，不涉及複雜的貼現運算，而且以簡單的百分比表示，易於理解，有助管理人員輕易地向東主或股東解釋項目的盈利能力。", score: 1, status: "best", comment: "準確指出會計報酬率計算簡單及以百分比表示易於理解兩大優點，解釋了其獲廣泛採用的原因。" },
+          { text: "因為會計報酬率考慮了金錢的時間值及所有現金流量。", score: 0, status: "wrong", comment: "概念錯誤。會計報酬率是以會計淨利而非現金流量為計算基礎，且沒有進行貼現，忽略了金錢的時間值。" },
+          { text: "因為很多公司都喜歡用會計報酬率。", score: 0, status: "partial", comment: "同義反覆，未有指出會計報酬率「計算簡單」或「以百分比表示易於理解」的具體優點。" }
+        ]}
+      ]
+    },
+    {
+      id: "s2", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 2：鮮果連鎖超市（內部報酬率決策與限制）", topic: "內部報酬率 (IRR) 的決策規則與限制", maxMarks: 2,
+      scenario: "「鮮果連鎖超級市場」為了更妥善管理生鮮存貨，考慮斥資 $1,200,000 把智能庫存系統升級。經計算後，該新庫存系統的「內部報酬率」是 8%，而超級市場目前的資本成本為每年 10%。",
+      question: "(i) 根據內部報酬率，解釋連鎖超級市場應否採用新的庫存系統（1分）；(ii) 舉出使用內部報酬率來評估資本投資項目的一項限制（1分）。（2 分）",
+      steps: [
+        { label: "第 1 步：比較內部報酬率與資本成本，指出應否採用（1分）", colorClass: "hl-s1", opts: [
+          { text: "應該採用，因為內部報酬率 8% 大於零。", score: 0, status: "wrong", comment: "判準錯誤。與零比較是淨現值法的決策規則；內部報酬率必須與企業的資本成本 10% 作比較。" },
+          { text: "不應採用新的庫存系統：因為該系統的內部報酬率為 8%，低於連鎖超級市場每年 10% 的資本成本，即所需回報率。", score: 1, status: "best", comment: "準確比較內部報酬率 8% 與資本成本 10%，清楚說明因預期回報率低於資金成本而不應採用。" },
+          { text: "應該採用，因為 8% 比 10% 低，代表成本更便宜。", score: 0, status: "wrong", comment: "混淆了回報率與成本。內部報酬率 8% 是項目的預期回報率而非成本，低於 10% 資本成本代表投資回報不足以彌補資金成本。" }
+        ]},
+        { label: "第 2 步：指出使用「內部報酬率」評估項目的一項限制（1分）", colorClass: "hl-s2", opts: [
+          { text: "限制是內部報酬率只以百分比表示回報率，不能反映投資項目對公司價值帶來的實際金額增長；此外，當項目在投資期內出現淨現金流出時，更可能會得出多於一個內部報酬率。", score: 1, status: "best", comment: "準確指出內部報酬率僅顯示百分比而無法反映公司價值實際金額增長，以及可能出現多重內部報酬率的限制。" },
+          { text: "限制是內部報酬率完全忽略了金錢的時間值，且只考慮回收期內的現金流。", score: 0, status: "wrong", comment: "張冠李戴。忽略金錢時間值及只考慮回收期內現金流是「回收期法」的缺點；內部報酬率已考慮金錢時間值及所有現金流量。" },
+          { text: "限制是內部報酬率以會計淨利計算。", score: 0, status: "wrong", comment: "概念混淆。以會計淨利計算的是會計報酬率，而內部報酬率是以現金流量計算的。" }
+        ]}
+      ]
+    },
+    {
+      id: "s3", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 3：綠葉印染廠（安裝無現金流入污水設施的非財務因素）", topic: "影響資本投資決策的非財務因素：遵守監管法規與提升企業形象", maxMarks: 2,
+      scenario: "「綠葉印染廠」決定斥資安裝一套大型工業污水過濾及處理設施。這套設施並不能為印染廠帶來任何直接現金流入或成本節省。",
+      question: "試以其中一項「非財務因素」為例，解釋為何綠葉印染廠仍會決定投資安裝這套污水處理設施。（2 分）",
+      steps: [
+        { label: "第 1 步：指出促使印染廠安裝污水設施的單一「非財務因素」（1分）", colorClass: "hl-s1", opts: [
+          { text: "為了賺取豐厚的排污費現金流入及提高淨現值。", score: 0, status: "wrong", comment: "審題失誤。題目已列明該設施不能帶來任何現金流入，而且要求以「非財務因素」作答，涉及直接經濟利益不會獲得分數。" },
+          { text: "受遵守監管法規及提升企業形象等非財務因素影響。", score: 1, status: "best", comment: "準確指出促使印染廠在無經濟回報下仍投資排污設施的「遵守監管法規」與「提升企業形象」非財務因素。" },
+          { text: "同時受投資成本、金錢時間值、遵守法規及提高員工士氣影響。", score: 0, status: "partial", comment: "違反一段一重點原則，而且混入了投資成本與金錢時間值等財務因素。" }
+        ]},
+        { label: "第 2 步：扣連「印染廠安裝污水處理設施」作扼要解釋（1分）", colorClass: "hl-s2", opts: [
+          { text: "因為印染過程會產生大量化學廢水，政府環保法例要求印染廠安裝污水處理設施以減少污染；即使該設施不能帶來經濟利益，印染廠仍須投資安裝，否則便可能會被檢控和罰款；同時主動減少排污保護環境亦有助建立良好的企業形象。", score: 1, status: "best", comment: "緊扣印染廠排污受環保法例規管的情境，清楚說明免遭檢控罰款及建立環保形象的原因，且嚴格遵守不涉直接經濟利益的原則。" },
+          { text: "因為安裝後可以吸引大量顧客買布，令明年銷售額增加五百萬元。", score: 0, status: "wrong", comment: "違反非財務因素的作答要求。解釋非財務因素時若涉及增加銷售額或賺取利潤等直接經濟利益，將不獲給分。" },
+          { text: "因為印染廠想遵守監管法規。", score: 0, status: "partial", comment: "純粹重複第 1 步的字眼，未有結合印染廠減少化學廢水污染以免被政府檢控和罰款的具體情況作解釋。" }
+        ]}
+      ]
+    },
+    {
+      id: "s4", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 4：迅捷跨境物流（ARR 與 NPV 結果矛盾時的投資決策）", topic: "資本投資評估法比較：當會計報酬率與淨現值結果矛盾時的決策", maxMarks: 2,
+      scenario: "「迅捷跨境物流公司」計劃在貨倉安裝智能機械臂協助搬運沉重包裹。財務經理報告：「這項機械臂投資計劃的會計報酬率估計為 12%，比公司的所需回報率 10% 為高；然而，該計劃的淨現值則為 -$100,000。」",
+      question: "單純根據機械臂計劃的「會計報酬率」和「淨現值」數據，解釋迅捷跨境物流公司應否接納這項計劃，並舉出一個原因支持你的答案。（2 分）",
+      steps: [
+        { label: "第 1 步：明確指出應否接納該計劃的決策結論（1分）", colorClass: "hl-s1", opts: [
+          { text: "應該接納該計劃，因為會計報酬率 12% 高於所需回報率 10%。", score: 0, status: "wrong", comment: "決策錯誤。當會計報酬率與淨現值的評估結果出現矛盾時，應以較可靠的淨現值法為準；由於淨現值為負數 -$100,000，故不應接納。" },
+          { text: "不應接納該機械臂投資計劃，因為當兩項指標出現矛盾時應以較可靠的淨現值法結果為準，而該項目的淨現值為負數 -$100,000。", score: 1, status: "best", comment: "準確作出不應接納的決策，並點出應以較可靠的淨現值法結果為準。" },
+          { text: "同時接納又同時否決該計劃。", score: 0, status: "wrong", comment: "未能作出明確的投資決策。" }
+        ]},
+        { label: "第 2 步：解釋為何在兩者矛盾時應以「淨現值」而非「會計報酬率」為準（1分）", colorClass: "hl-s2", opts: [
+          { text: "因為淨現值法比會計報酬率更可靠：會計報酬率只以會計利潤計算且忽略了金錢的時間值；而淨現值考慮了金錢的時間值及實際現金流量，並直接反映項目對公司價值的影響，負淨現值 -$100,000 代表回報率低於資本成本，接納會令公司價值減少。", score: 1, status: "best", comment: "清楚對比淨現值考慮金錢時間值與實際現金流量的優勢，並說明負淨現值 -$100,000 代表接納計劃會令公司價值減少。" },
+          { text: "因為 -$100,000 代表機械臂完全不會帶來任何現金流入。", score: 0, status: "wrong", comment: "概念誤解。負淨現值只代表未來現金流入經貼現後的現值總和少於初期投資成本，並不代表項目完全沒有現金流入。" },
+          { text: "因為淨現值比較好。", score: 0, status: "partial", comment: "解釋過於空泛，必須說明淨現值考慮了金錢的時間值及直接反映對公司價值的影響，而負淨現值會減少公司價值。" }
+        ]}
+      ]
+    },
+    {
+      id: "e1", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 1：悅目書局收購評估（財務因素一：投資成本與投資收入）", topic: "影響資本投資決策的財務因素：投資成本（或投資收入）", maxMarks: 3,
+      scenario: "剛退休的資深編輯文軒打算斥資收購一位朋友經營的「悅目書局」實體書店業務。試解釋文軒在作出這項資本投資決策時應考慮的財務因素。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「投資成本，包括初期資本投資與其後的成本」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一財務因素名稱與核心概念（1分）", colorClass: "hl-s1", opts: [
+          { text: "文軒應同時考慮投資成本、投資收入、投資期、金錢的時間值及投資風險五項財務因素。", score: 0, status: "partial", comment: "違反一段一重點原則，只羅列了五項財務因素的名稱而未有針對「投資成本」作界定。" },
+          { text: "文軒應考慮投資成本，即現金流出這項財務因素：投資成本是以資本項目的現金流出衡量，包括初期資本投資及其後的成本；假設其他因素不變，投資成本越高，項目的吸引力便越低。", score: 1, status: "best", comment: "準確指出「投資成本」這項財務因素，並清楚說明其包含初期資本投資與其後成本的現金流出概念。" },
+          { text: "文軒應考慮收購書局能否滿足他的個人退休興趣及文化使命感。", score: 0, status: "wrong", comment: "因素類別錯誤。個人退休興趣與文化使命感屬於不能以金錢量度的非財務因素，並非題目要求解釋的財務因素。" }
+        ]},
+        { label: "第 2 步：針對「收購悅目書局」設定具體的初期與其後投資成本例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如文軒要看看買書局要花多少錢。", score: 0, status: "partial", comment: "描述過於簡略，未有結合收購實體書局業務具體區分初期收購裝修支出與其後的持續維修營運支出。" },
+          { text: "例如文軒須估算向朋友買入悅目書局的頂手費、現有書籍存貨及店舖翻新裝修的初期資本投資金額，同時亦須預計收購後更新收銀系統、冷氣設備定期維修費用等其後的成本，以及這些支出的付款時間安排。", score: 1, status: "best", comment: "緊扣收購悅目書局情境，具體舉出頂手費與翻新裝修的初期資本投資，以及設備定期維修等其後成本，例子貼切充實。" },
+          { text: "例如文軒向顧客發放問卷調查閱讀習慣。", score: 0, status: "wrong", comment: "派發問卷調查屬於市場研究工作，並非評估資本投資項目的財務成本因素。" }
+        ]},
+        { label: "第 3 步：深化論述至衡量個人資金負擔能力與評估項目吸引力的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "透過全面核算初期收購價款與其後的持續支出時間，文軒能評估自身的退休積蓄是否足以負擔該筆現金流出，或是否需要選擇分期投入資金，並衡量總投資成本相對於預期回報是否過高，從而判斷收購該書局是否具財務吸引力。", score: 1, status: "best", comment: "清楚推演出核算初期與其後現金流出如何協助評估個人資金負擔能力，並判斷收購項目的財務吸引力。" },
+          { text: "這樣文軒便考慮了投資成本因素。", score: 0, status: "partial", comment: "同義反覆，未有說明評估初期與其後投資成本對衡量資金負擔能力及項目吸引力的影響。" },
+          { text: "這會令所有書籍的印刷成本變成零元。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e2", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 2：悅目書局收購評估（財務因素二：資本投資項目的風險）", topic: "影響資本投資決策的財務因素：資本投資項目的風險", maxMarks: 3,
+      scenario: "承上題，退休編輯文軒打算斥資收購朋友經營的「悅目書局」實體書店業務。除了投資成本與收入外，試以「資本投資項目的風險」為例，解釋文軒在作出這項收購決策時應考慮的財務因素。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「資本投資項目的風險，即未來現金流量的不確定性與風險回報取捨」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一財務因素名稱與核心概念（1分）", colorClass: "hl-s1", opts: [
+          { text: "文軒應考慮資本投資項目的風險：資本項目未來的現金流量，尤其是現金流入是難以預料的，未來現金流量的不確定性越高，項目的投資風險便越高。", score: 1, status: "best", comment: "準確指出「資本投資項目的風險」因素，並清楚界定其源於未來現金流入的不確定性。" },
+          { text: "文軒應考慮在書店內增設員工康樂室以提高士氣。", score: 0, status: "wrong", comment: "類別混淆。提高員工士氣屬於非財務因素，並非題目要求闡釋的財務因素。" },
+          { text: "文軒要考慮有沒有風險。", score: 0, status: "partial", comment: "表述過於籠統，必須明確指出資本投資項目的風險是指「未來現金流量，尤其是現金流入的不確定性」。" }
+        ]},
+        { label: "第 2 步：針對「收購實體書店業務」設定具體現金流不確定性例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如隨着近年電子書及網上書店盛行，市民到實體書店買書的習慣改變，加上商場鋪租可能上調，令悅目書局未來數年的實際售書現金流入存在很大不確定性。", score: 1, status: "best", comment: "緊扣實體書店面對電子書與網店競爭的行業背景，具體說明為何悅目書局未來的售書現金流入難以預料。" },
+          { text: "例如書店可能會賺錢，也可能會蝕錢。", score: 0, status: "partial", comment: "描述過於空泛，未有結合實體書店的行業環境說明為何未來現金流入存在不確定性。" },
+          { text: "例如書店遵守消防條例安裝滅火筒。", score: 0, status: "wrong", comment: "安裝滅火筒屬於遵守監管法規的非財務因素，與評估未來現金流入的不確定性無關。" }
+        ]},
+        { label: "第 3 步：深化論述至風險回報取捨與決策結論（1分）", colorClass: "hl-s3", opts: [
+          { text: "由於風險和回報一般呈正向關係，若文軒評估後認為實體書店未來現金流入的不確定性較高、投資風險較大，便會對該收購項目要求較高的回報率；如果預期的回報率低於所要求的回報率，文軒便不會投資收購該書局。", score: 1, status: "best", comment: "清楚推演出風險與回報的正向關係，說明當未來現金流風險較高時會提高所需回報率，若預期回報不達標便應否決收購。" },
+          { text: "所以文軒在買書局時要考慮風險。", score: 0, status: "partial", comment: "同義反覆，未有說明風險越高則要求回報率越高，以及預期回報率低於要求回報率時應否決項目的決策邏輯。" },
+          { text: "這會令香港所有網上書店立即結業。", score: 0, status: "wrong", comment: "推論不合常理。" }
+        ]}
+      ]
+    },
+    {
+      id: "e3", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 3：時尚髮型設計沙龍（評估擴充計劃的方法：回收期）", topic: "資本投資評估法：回收期 (Payback Period) 的應用與優點", maxMarks: 3,
+      scenario: "「時尚髮型設計沙龍」計劃在銅鑼灣開設一家新分店，正考慮使用不同的資本投資評估法來評估這項擴充計劃。試說明該髮型屋可如何運用「回收期」來評估開設新分店的計劃，並指出其優點。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「回收期」的原理、決策規則及針對髮型屋擴充的優點為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出「回收期」評估法的定義與決策規則（1分）", colorClass: "hl-s1", opts: [
+          { text: "髮型屋可同時運用會計報酬率、回收期、淨現值及內部報酬率四種方法。", score: 0, status: "partial", comment: "違反一段一重點原則，未有針對「回收期」界定其含義及決策規則。" },
+          { text: "髮型屋可運用回收期，又稱還本期進行評估：回收期是指企業收回投資成本所需的時間，通常以年數表示；若新分店的回收期短於或等於髮型屋可接受的最長回收期，便應接受該擴充計劃。", score: 1, status: "best", comment: "準確指出「回收期」評估法的定義，並清楚說明回收期短於或等於可接受最長回收期即應接受的決策規則。" },
+          { text: "回收期是指計算新分店每年平均會計淨利佔初期投資的百分比。", score: 0, status: "wrong", comment: "方法混淆。計算平均每年會計淨利佔平均投資百分比的是「會計報酬率」，回收期是以現金流量計算收回初期支出的年數。" }
+        ]},
+        { label: "第 2 步：針對「髮型屋開設銅鑼灣新分店」設定具體計算與應用例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如髮型屋估算開設銅鑼灣新分店的初期裝修及添置美髮設備支出為 $1,200,000，再預測新分店每年剪染髮服務可帶來的額外現金流入為 $600,000，從而計算出需要 2 年時間才能收回開店的初期成本。", score: 1, status: "best", comment: "緊扣髮型屋開設銅鑼灣新分店的情境，具體以初期裝修設備支出 $1,200,000 除以每年剪染髮額外現金流入 $600,000 展示回收期的計算應用。" },
+          { text: "例如髮型屋算一下要多少年回本。", score: 0, status: "partial", comment: "描述過於簡略，未有結合髮型屋的新店裝修設備初期支出與每年剪染髮服務額外現金流入作具體舉例。" },
+          { text: "例如髮型屋為新入職髮型師提供剪髮技巧培訓。", score: 0, status: "wrong", comment: "提供剪髮培訓屬於人力資源管理，並非評估資本投資項目的回收期計算方法。" }
+        ]},
+        { label: "第 3 步：深化論述至識別高風險項目、加快資金回籠與增加再投資機會的優點（1分）", colorClass: "hl-s3", opts: [
+          { text: "採用回收期法計算簡單且易於理解，有助髮型屋識別高風險的項目，因為營商環境瞬息萬變，回本期較長的項目不確定性較大；同時選取較快收回投資成本的項目，能讓髮型屋有更多現金來增加再投資的機會。", score: 1, status: "best", comment: "全面闡述回收期法計算簡單、有助識別高風險項目及加快資金回籠以增加再投資機會三大優點。" },
+          { text: "這樣髮型屋便評估了新分店計劃。", score: 0, status: "partial", comment: "同義反覆，漏答了題目後半部分要求指出的回收期法優點。" },
+          { text: "這會令銅鑼灣的商場業主免收所有租金。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e4", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 4：時尚髮型設計沙龍（評估擴充計劃的方法：淨現值 NPV）", topic: "資本投資評估法：淨現值 (NPV) 的應用與優點", maxMarks: 3,
+      scenario: "承上題，「時尚髮型設計沙龍」計劃在銅鑼灣開設新分店。除了回收期外，試說明該髮型屋可如何運用「淨現值」來評估開設新分店的計劃，並指出其優點。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「淨現值」的原理、決策規則及反映公司價值增長的優點為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出「淨現值」的定義與決策規則（1分）", colorClass: "hl-s1", opts: [
+          { text: "髮型屋可運用淨現值進行評估：淨現值等於投資項目未來淨現金流入的現值減去最初的支出；若計算出的淨現值大於或等於零，髮型屋便應接受該新分店計劃。", score: 1, status: "best", comment: "準確指出「淨現值」評估法的定義，並清楚說明淨現值大於或等於零即應接受項目的決策規則。" },
+          { text: "淨現值是指直接把未來十年的會計利潤加起來，完全不作任何貼現。", score: 0, status: "wrong", comment: "概念錯誤。淨現值是以實際現金流量而非會計利潤計算，且必須按資本成本將未來現金流量貼現為現值。" },
+          { text: "髮型屋可以用淨現值來評估新分店。", score: 0, status: "partial", comment: "只重複了題目字眼，未有界定淨現值「未來淨現金流入現值減去最初支出」的定義及決策規則。" }
+        ]},
+        { label: "第 2 步：針對「髮型屋開設新分店」設定具體貼現計算例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如髮型屋先估算自身的資本成本作為貼現率，將新分店在投資期內每年年底預計帶來的額外淨現金流入及期末器材剩餘價值貼現為現值，再減去新分店最初的裝修及購置美髮設備支出。", score: 1, status: "best", comment: "具體結合髮型屋的資本成本貼現率、新分店每年額外淨現金流入與期末器材剩餘價值，以及最初裝修設備支出，清楚展示淨現值的運作。" },
+          { text: "例如髮型屋把數字代入淨現值公式計算。", score: 0, status: "partial", comment: "欠缺結合髮型屋開設新分店的裝修設備初期支出、每年剪染髮淨現金流入與資本成本貼現率的具體說明。" },
+          { text: "例如髮型屋在社交媒體邀請網絡紅人宣傳新店。", score: 0, status: "wrong", comment: "邀請網絡紅人宣傳屬於市場推廣活動，並非運用淨現值評估投資項目的過程。" }
+        ]},
+        { label: "第 3 步：深化論述至考慮金錢時間值、涵蓋全部現金流及直接反映公司價值增長的優點（1分）", colorClass: "hl-s3", opts: [
+          { text: "淨現值法是最可靠的評估方法，因為它既考慮了金錢的時間值，又考慮投資期內所有與項目相關的現金流量而不會忽略回收期後的現金流量，更能直接反映開設新分店對公司價值的影響，公司價值會按正淨現值數額增加。", score: 1, status: "best", comment: "完整闡述淨現值法考慮金錢時間值、涵蓋投資期內所有現金流量，以及直接反映項目對公司價值影響三大核心優點。" },
+          { text: "這樣髮型屋便算出了淨現值。", score: 0, status: "partial", comment: "同義反覆，漏答了淨現值法考慮金錢時間值、考慮所有現金流量及直接反映公司價值增長的優點。" },
+          { text: "這會令淨現值成為最簡單、完全無須估算資本成本的方法。", score: 0, status: "wrong", comment: "優劣顛倒。計算淨現值必須先估算企業的資本成本，而難以估算資本成本及較難理解正是淨現值法的缺點。" }
+        ]}
+      ]
+    },
+    {
+      id: "e5", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 5：尚品皮具製造商（淨現值公式所涉變數說明）", topic: "淨現值 (NPV) 公式所涉及的四項變數及其意思", maxMarks: 3,
+      scenario: "一家新成立的手袋生產商使用「淨現值」來評估「開設廠房」這一項投資項目。試指出計算淨現值所涉及的每項變數，並以例子說明每項變數的意思。",
+      question: "請遵循「一段一個獨立重點」原則，以淨現值公式中的四項變數「每個時段完結時的淨現金流入、資本成本或所需回報率、投資期或使用年限及最初的成本」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出計算淨現值公式所涉及的四項變數名稱（1分）", colorClass: "hl-s1", opts: [
+          { text: "計算淨現值涉及四項變數：一是投資項目最初的成本，二是投資項目的投資期或使用年限，三是每個時段完結時的淨現金流入，包括投資項目的剩餘價值在內，四是資本成本或所需回報率，即貼現率。", score: 1, status: "best", comment: "準確列出計算淨現值所涉及的最初成本、投資期、每年淨現金流入含剩餘價值，以及資本成本貼現率四項變數。" },
+          { text: "計算淨現值只涉及會計折舊費用和普通股股息率兩項變數。", score: 0, status: "wrong", comment: "概念錯誤。會計折舊屬於非現金費用，並不用於計算淨現值的現金流量。" },
+          { text: "計算淨現值涉及一些英文字母變數。", score: 0, status: "partial", comment: "未有明確寫出最初成本、投資期、每年淨現金流入及資本成本四項變數的財務名稱。" }
+        ]},
+        { label: "第 2 步：針對「手袋生產商開設廠房」舉例說明各項變數的具體意思（1分）", colorClass: "hl-s2", opts: [
+          { text: "以該手袋生產商為例：最初的成本是指興建或購買廠房及安裝生產設備的初期現金支出；投資期或使用年限是指該廠房預計可使用的總年數；淨現金流入是指廠房在每年完結時為生產商帶來的額外現金流入減去現金流出後的淨額，最後一年包括出售舊廠房設備的剩餘價值；資本成本則是生產商為開設廠房籌集資金的成本率或投資者對項目的所需回報率。", score: 1, status: "best", comment: "緊扣手袋生產商開設廠房的情境，逐一清楚解釋初期建廠成本、廠房使用年限、每年額外淨現金流入含殘值，以及籌資資本成本的意思。" },
+          { text: "例如手袋生產商把建廠的數字放進這些變數入面。", score: 0, status: "partial", comment: "未有結合手袋廠房的具體收支與年期解釋每一項變數所代表的意思。" },
+          { text: "例如手袋生產商聘請知名模特兒拍攝手袋廣告。", score: 0, status: "wrong", comment: "偏離主題，未有解釋開設廠房項目中淨現值公式各項變數的意思。" }
+        ]},
+        { label: "第 3 步：深化論述至各變數如何共同決定淨現值正負與建廠決策（1分）", colorClass: "hl-s3", opts: [
+          { text: "透過將廠房在使用年限內每年的淨現金流入按資本成本貼現為現值總和，再減去最初建廠成本，手袋生產商便能判斷項目的淨現值是否大於或等於零，從而決定應否接受開設廠房項目以提高公司價值。", score: 1, status: "best", comment: "清楚總結四項變數如何配合貼現計算出淨現值，並根據淨現值是否大於或等於零來指導建廠決策。" },
+          { text: "這樣手袋生產商便認識了這些變數。", score: 0, status: "partial", comment: "同義反覆，未有說明如何運用這四項變數計算淨現值以作出建廠投資決策。" },
+          { text: "這會令真皮原料的價格自動下降。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e6", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 6：亞洲美妝零售集團（開拓歐洲市場：分析回收期法的缺點）", topic: "分析不同資本投資評估法的缺點：回收期 (Payback Period) 的缺點", maxMarks: 3,
+      scenario: "一家亞洲化妝品零售公司考慮開拓歐洲市場，同時運用了不同的資本投資評估法來評估這項計劃。試分析使用「回收期」評估這項開拓歐洲市場計劃時的缺點。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「回收期法的缺點，包括忽略回收期後的現金流量、忽略金錢的時間值及決策準則流於主觀」為核心，結合開拓歐洲市場情境建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出「回收期」評估法的核心缺點（1分）", colorClass: "hl-s1", opts: [
+          { text: "回收期法的缺點是計算過程極為繁複艱深，且必須先準確估算企業的資本成本貼現率。", score: 0, status: "wrong", comment: "張冠李戴。計算較繁複及必須先估算資本成本貼現率是「淨現值法」的缺點；回收期法不作貼現，計算簡單。" },
+          { text: "使用回收期評估的主要缺點包括：它只考慮回收期內的現金流量而忽略了回收期之後的現金流量，沒有考慮整個項目的實際價值；它亦忽略了金錢的時間值，現金流量不經貼現計算；而且訂立目標回收期的決策準則流於主觀和隨意。", score: 1, status: "best", comment: "完整指出回收期法忽略回收期後現金流量、忽略金錢時間值，以及決策準則流於主觀隨意三大核心缺點。" },
+          { text: "回收期法的缺點是會得出多個不同的回收期。", score: 0, status: "wrong", comment: "張冠李戴。當項目在期內出現現金流出時得出多個數值，是「內部報酬率」的缺點而非回收期。" }
+        ]},
+        { label: "第 2 步：針對「亞洲化妝品公司開拓歐洲新市場」設定具體情境說明（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如該亞洲化妝品品牌初進軍歐洲市場時，首兩三年需投入大量宣傳推廣建立知名度，初期現金流入較少而令回收期較長；但當品牌在歐洲站穩陣腳後，便會在回收期之後產生龐大的持續現金流入。", score: 1, status: "best", comment: "緊扣亞洲化妝品品牌開拓歐洲新市場初期慢熱、龐大現金流入集中在回收期之後的業務特徵，例子極具說服力。" },
+          { text: "例如化妝品公司在歐洲賣唇膏和粉底。", score: 0, status: "partial", comment: "只提及售賣的產品，未有結合開拓新市場初期現金流較少、後期現金流龐大的時間分佈說明回收期法的盲點。" },
+          { text: "例如化妝品公司向銀行借取短期透支。", score: 0, status: "wrong", comment: "借取銀行透支屬於短期融資決策，與分析回收期評估法的缺點無關。" }
+        ]},
+        { label: "第 3 步：深化論述至誤導管理層否決優質長期投資項目的不良影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "由於回收期法沒有考慮整個項目的實際價值及金錢時間值，有可能誤導該化妝品公司，令管理層否決這項額外現金流入集中在回收期後的優質長期歐洲拓展項目。", score: 1, status: "best", comment: "清楚推演出忽略回收期後現金流量如何誤導管理層，導致錯誤否決後期回報豐厚的優質長期跨國拓展項目。" },
+          { text: "所以回收期法有很多缺點。", score: 0, status: "partial", comment: "同義反覆，未有說明忽略回收期後現金流量會令企業錯失後期回報豐厚的優質長期投資項目。" },
+          { text: "這會令歐洲的化妝品關稅自動取消。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e7", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 7：亞洲美妝零售集團（開拓歐洲市場：分析淨現值法的缺點）", topic: "分析不同資本投資評估法的缺點：淨現值 (NPV) 的缺點", maxMarks: 3,
+      scenario: "承上題，該亞洲化妝品零售公司同時使用「淨現值」來評估開拓歐洲市場的不同方案，例如方案一是斥巨資設立自家的零售店，方案二則是小規模透過中間商分銷產品。試分析使用「淨現值法」進行評估時的缺點。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「淨現值法的缺點，包括難以估算合適的要求回報率或資本成本，以及難以透過淨現值法比較投資金額不同的資本項目」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出「淨現值」評估法的核心缺點（1分）", colorClass: "hl-s1", opts: [
+          { text: "使用淨現值評估的主要缺點是：企業難以估算合適的要求回報率，即資本成本或貼現率，估算過程繁複；而且難以透過淨現值法比較投資金額不同的資本項目，對未受正規財務培訓的管理人員亦較難理解。", score: 1, status: "best", comment: "準確指出淨現值法難以估算合適的資本成本、難以直接比較投資金額不同的項目，以及較難理解的核心缺點。" },
+          { text: "淨現值法的缺點是完全忽略了金錢的時間值及回收期後的現金流量。", score: 0, status: "wrong", comment: "優劣顛倒。考慮金錢的時間值及投資期內所有現金流量正是淨現值法的優點，忽略這兩點的是回收期法。" },
+          { text: "淨現值法有一些限制。", score: 0, status: "partial", comment: "表述空泛，未有明確寫出「難以估算資本成本」或「難以比較投資金額不同的項目」等具體缺點。" }
+        ]},
+        { label: "第 2 步：針對「開拓歐洲市場的跨國風險與不同投資金額方案」設定具體例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如由於化妝品公司首次遠赴歐洲市場，要動用大量人力物力才可估算一個反映歐洲市場風險的合適資本成本；此外，由於設立自家零售店的初期投資金額極龐大，與透過中間商分銷的較小初期投資金額截然不同，難以直接透過淨現值的絕對金額比較兩個規模懸殊的項目。", score: 1, status: "best", comment: "具體結合首次遠赴歐洲難以估算貼現率，以及自設零售店與透過中間商分銷兩個投資金額懸殊方案難以直接比較的情境。" },
+          { text: "例如公司不知道怎樣計算淨現值。", score: 0, status: "partial", comment: "描述過於表面，應具體說明首次進軍歐洲市場難以估算合適的資本成本貼現率，以及難以直接比較不同投資規模的方案。" },
+          { text: "例如公司在香港招聘化妝品售貨員。", score: 0, status: "wrong", comment: "在香港招聘售貨員屬於日常人力資源工作，與運用淨現值法評估歐洲拓展方案的缺點無關。" }
+        ]},
+        { label: "第 3 步：深化論述至貼現率偏差扭曲結果與需配合其他方法綜合評估的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "一旦估算的資本成本出現偏差，便會直接影響貼現後的淨現值結果；因此化妝品公司在評估規模不同的方案時，不能單靠淨現值法，而應同時採用內部報酬率等其他資本投資評估法來作出更全面的決策。", score: 1, status: "best", comment: "清楚推演出資本成本估算偏差對淨現值結果的影響，並點出應同時配合內部報酬率等其他方法綜合評估不同規模的方案。" },
+          { text: "所以淨現值法有這些缺點。", score: 0, status: "partial", comment: "同義反覆，未有說明資本成本估算偏差的影響及應同時結合其他評估方法作全面決策的啟示。" },
+          { text: "這會令公司完全無須考慮任何財務因素。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e8", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 8：協和建築工程／新風物流（負 NPV 下支持添置安全設備的非財務因素）", topic: "影響資本投資決策的非財務因素：提高員工士氣與提升企業形象", maxMarks: 3,
+      scenario: "「協和工程」計劃為建築工人添置「智能防中暑頭盔」，而「新風物流」則計劃在工場安裝「協助搬運笨重包裹的機械臂」以減少工人背傷和肌肉疼痛。雖然財務經理計算出該項目的淨現值為負數 -$120,000，但管理層在考慮非財務因素後仍決定採納該項目。試解釋支持公司採納該項目的非財務因素。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「提高員工士氣，即改善工作環境與職業安全」這項非財務因素為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出支持採納該項目的單一「非財務因素」名稱與概念（1分）", colorClass: "hl-s1", opts: [
+          { text: "支持採納的因素是該項目可以為公司帶來高達五百萬元的額外現金流入及正數淨現值。", score: 0, status: "wrong", comment: "審題失誤。題目已指明項目的淨現值為負數 -$120,000，且要求解釋「非財務因素」，涉及直接經濟利益不會得分。" },
+          { text: "支持公司採納該項目的主要非財務因素是提高員工士氣：企業投資於能改善工作環境與安全性的資本項目，有助提升僱員的滿意度和士氣，同時亦有助提升企業形象及遵守職業安全監管法規。", score: 1, status: "best", comment: "準確指出「提高員工士氣」這項非財務因素，並說明透過改善工作環境與安全性來提升員工滿意度的原理。" },
+          { text: "公司同時考慮了提高員工士氣、提升企業形象、遵守法規、符合標準及策略性原因。", score: 0, status: "partial", comment: "違反一段一重點原則，只羅列了所有非財務因素的標題而未有針對單一因素作深入闡釋。" }
+        ]},
+        { label: "第 2 步：針對「添置智能防暑頭盔或搬運機械臂」設定改善工作環境的具體例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如建築工人在酷熱天氣下工作容易中暑，而物流前線工人則因長期搬運笨重包裹容易導致背傷和肌肉疼痛；公司主動為工人添置監測熱壓力指數的智能頭盔或安裝機械臂協助搬運重物，能直接減低工人中暑或受傷的風險，加強工作時的安全性和舒適度。", score: 1, status: "best", comment: "緊扣酷熱地盤智能頭盔與物流倉搬運機械臂的具體功用，清楚說明如何減低工人中暑與肌肉勞損風險以改善工作環境。" },
+          { text: "例如公司買了頭盔和機械臂給工人用。", score: 0, status: "partial", comment: "描述過於簡略，未有說明智能頭盔或機械臂如何減低工人中暑或背傷風險，以加強工作安全性與舒適度。" },
+          { text: "例如公司扣減遲到工人的工資作為懲罰。", score: 0, status: "wrong", comment: "扣減工資屬於紀律處分，並非支持公司添置安全設備的非財務因素。" }
+        ]},
+        { label: "第 3 步：深化論述至員工感受到關懷、提升滿意度與士氣的不能量化益處（1分）", colorClass: "hl-s3", opts: [
+          { text: "這項投資能讓前線工人感受到公司對其職業安全與健康的重視，從而提升員工對工作的滿意度、歸屬感與整體士氣，減少工人因勞損受傷或工作環境惡劣而辭職，為公司帶來不能以數字量化的重要益處。", score: 1, status: "best", comment: "清楚推演出前線工人感受到公司關懷後如何提升工作滿意度、歸屬感與士氣，且全段嚴格遵守不涉及直接經濟利益的要求。" },
+          { text: "這樣工人的士氣就會提高。", score: 0, status: "partial", comment: "同義反覆，未有說明工人感受到職業安全受重視如何提升工作滿意度與歸屬感等不能量化的益處。" },
+          { text: "這樣公司把智能頭盔轉售給其他地盤便可立即賺取十倍暴利。", score: 0, status: "wrong", comment: "違反非財務因素作答原則，混入了轉售賺取暴利的直接經濟利益。" }
+        ]}
+      ]
+    }
+  ];
+
+  let curBuilderCat = 'short';
+  let curQIdx = 0;
+  let userSelections = {};
+  let isSubmitted = false;
+
+  function switchBuilderCat(cat, btn) {
+    curBuilderCat = cat;
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('builderCatLabel').textContent = cat === 'short' ? '選擇短答題（每題滿分 2 分）：' : '選擇進階論述題（每題滿分 3 分）：';
+    curQIdx = cat === 'short' ? 0 : 4;
+    userSelections = {};
+    isSubmitted = false;
+    renderQuestionChips();
+    renderWorkshop();
+  }
+
+  function renderQuestionChips() {
+    document.getElementById('questionChips').innerHTML = workshopQuestions
+      .map((q, i) => ({ q, i }))
+      .filter(x => x.q.cat === curBuilderCat)
+      .map(x => `<button class="chip ${x.i===curQIdx?'active':''}" onclick="selectWorkshopQ(${x.i})">${x.q.title}</button>`)
+      .join('');
+  }
+
+  function selectWorkshopQ(idx) {
+    curQIdx = idx;
+    userSelections = {};
+    isSubmitted = false;
+    renderQuestionChips();
+    renderWorkshop();
+  }
+
+  function pickStepOption(sIdx, oIdx) {
+    userSelections[sIdx] = oIdx;
+    isSubmitted = false;
+    renderWorkshop();
+  }
+
+  function submitConstructedAnswer() {
+    const q = workshopQuestions[curQIdx];
+    if (Object.keys(userSelections).length < q.steps.length) {
+      alert(`請先完成全部 ${q.steps.length} 個步驟的選擇，再點擊批改。`);
+      return;
+    }
+    isSubmitted = true;
+    renderWorkshop();
+  }
+
+  function fillBestChoices() {
+    const q = workshopQuestions[curQIdx];
+    q.steps.forEach((st, sIdx) => {
+      userSelections[sIdx] = st.opts.findIndex(o => o.status === 'best');
+    });
+    isSubmitted = true;
+    renderWorkshop();
+  }
+
+  function renderWorkshop() {
+    const q = workshopQuestions[curQIdx];
+    const letters = ['A', 'B', 'C'];
+
+    let totalScore = 0;
+    q.steps.forEach((st, sIdx) => {
+      if (userSelections[sIdx] !== undefined) {
+        totalScore += st.opts[userSelections[sIdx]].score;
+      }
+    });
+
+    const previewParts = q.steps.map((st, sIdx) => {
+      const selIdx = userSelections[sIdx];
+      if (selIdx === undefined) {
+        return `<span style="color:var(--mute);border-bottom:1px dashed var(--mute)">［未選擇第 ${sIdx + 1} 步］</span>`;
+      }
+      return `<span class="${st.colorClass}">${st.opts[selIdx].text}</span>`;
+    });
+
+    document.getElementById('builderWorkspace').innerHTML = `
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <div>
+            <span class="badge b-blue">${q.typeBadge}</span>
+            <span class="badge b-teal">${q.topic}</span>
+          </div>
+          <b style="color:var(--primary);font-size:16px">本段滿分：${q.maxMarks} 分</b>
+        </div>
+        <div style="background:var(--surface);padding:16px 20px;border-radius:12px;border-left:4px solid var(--primary);font-size:16.5px;margin-bottom:14px"><b>背景情境：</b>${q.scenario}</div>
+        <div style="font-size:18px;font-weight:800;color:var(--ink)">${q.question}</div>
+      </div>
+
+      ${q.steps.map((st, sIdx) => {
+        const selIdx = userSelections[sIdx];
+        return `
+          <div class="builder-stage">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <h4 style="font-size:16.5px"><span class="${st.colorClass}">${st.label}</span></h4>
+              <span style="font-size:14px;font-weight:600;color:var(--mute)">${selIdx !== undefined ? '已選 ' + letters[selIdx] : '請點選一項'}</span>
+            </div>
+            ${st.opts.map((o, oIdx) => {
+              const isSel = selIdx === oIdx;
+              let gradeCls = '';
+              if (isSubmitted && isSel) {
+                gradeCls = o.status === 'best' ? 'graded-best' : o.status === 'partial' ? 'graded-partial' : 'graded-wrong';
+              }
+              return `
+                <button class="opt-card ${isSel ? 'selected' : ''} ${gradeCls}" onclick="pickStepOption(${sIdx}, ${oIdx})">
+                  <span class="opt-letter">${letters[oIdx]}</span>
+                  <span style="flex:1">${o.text}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }).join('')}
+
+      <div class="card" style="border:2px solid var(--primary);margin-bottom:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+          <h3 style="color:var(--primary);font-size:19px">建構段落預覽</h3>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-green" onclick="submitConstructedAnswer()">批改答案</button>
+            <button class="btn btn-outline" onclick="fillBestChoices()">示範完整建構</button>
+          </div>
+        </div>
+        <div style="font-size:17px;line-height:1.85;background:var(--surface);padding:18px 22px;border-radius:12px;border:1px solid var(--line)">
+          ${previewParts.join(' ')}
+        </div>
+
+        ${isSubmitted ? `
+          <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--line)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h4 style="font-size:17.5px">分步批改回饋</h4>
+              <span class="badge ${totalScore === q.maxMarks ? 'b-green' : totalScore >= 1 ? 'b-amber' : 'b-red'}" style="font-size:15px;padding:6px 14px">
+                得分：${totalScore} / ${q.maxMarks} 分
+              </span>
+            </div>
+            ${q.steps.map((st, sIdx) => {
+              const chosen = st.opts[userSelections[sIdx]];
+              const cCls = chosen.status === 'best' ? 'c-best' : chosen.status === 'partial' ? 'c-partial' : 'c-wrong';
+              return `
+                <div class="critique-item ${cCls}">
+                  <b>第 ${sIdx + 1} 步（選項 ${letters[userSelections[sIdx]]} · ${chosen.score} 分）：</b>${chosen.comment}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  renderQuestionChips();
+  renderWorkshop();
+</script>
+</body>
+</html>

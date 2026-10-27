@@ -1,0 +1,1508 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>財務管理 — 融資方式</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 財務管理單元專屬配色：翡翠深綠 (Emerald) × 深海藍 (Ocean Navy) × 琥珀金 (Amber Gold) */
+      --bg: #f2f6f4;
+      --card: #ffffff;
+      --surface: #f7faf8;
+      --ink: #0f1f18;
+      --ink-sec: #2d4239;
+      --mute: #5c7267;
+      --line: #d8e4dd;
+      --primary: #065f46;
+      --primary-dark: #064e3b;
+      --primary-light: #ecfdf5;
+      --primary-border: #a7f3d0;
+      --teal: #0369a1;
+      --teal-light: #f0f9ff;
+      --teal-border: #bae6fd;
+      --amber: #b45309;
+      --amber-light: #fffbeb;
+      --green: #15803d;
+      --green-light: #f0fdf4;
+      --red: #be123c;
+      --red-light: #fff1f2;
+      --radius: 16px;
+      --shadow: 0 4px 20px -2px rgba(6, 78, 59, 0.06), 0 2px 6px -1px rgba(6, 78, 59, 0.04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.75;
+      padding-bottom: 60px;
+      font-size: 17.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4 { margin: 0; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1.35; }
+
+    /* Top Navigation Bar */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      flex-wrap: wrap;
+    }
+    .home-link {
+      text-decoration: none;
+      color: var(--ink-sec);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      transition: all 0.2s;
+    }
+    .home-link:hover { color: var(--primary); border-color: var(--primary-border); background: var(--primary-light); }
+    .brand { display: flex; align-items: center; gap: 12px; font-size: 19px; font-weight: 800; color: var(--primary-dark); }
+    .brand-tag {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .main-tabs {
+      margin-left: auto;
+      display: flex;
+      gap: 6px;
+      background: #dfe9e3;
+      padding: 5px;
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+    .main-tabs button {
+      border: 0;
+      background: none;
+      padding: 9px 15px;
+      border-radius: 9px;
+      font: 700 15px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .main-tabs button:hover { color: var(--ink); }
+    .main-tabs button.on {
+      background: var(--card);
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(6, 78, 59, 0.1);
+    }
+
+    /* Main Container & Views */
+    .view { display: none; max-width: 1160px; margin: 0 auto; padding: 28px 24px; animation: fadeIn 0.25s ease; }
+    .view.on { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Section Header Banner */
+    .sec-banner {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow);
+    }
+    .sec-banner h1 { font-size: 25px; margin: 6px 0 8px; }
+    .sec-banner p { margin: 0; color: var(--ink-sec); font-size: 16.5px; max-width: 680px; }
+
+    /* Sub-navigation Switcher */
+    .sub-nav {
+      display: inline-flex;
+      background: #eaf1ed;
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .sub-nav button {
+      border: 0;
+      background: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font: 700 15px 'Noto Sans TC', sans-serif;
+      color: var(--mute);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sub-nav button:hover { color: var(--ink); }
+    .sub-nav button.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(6, 95, 70, 0.25);
+    }
+    .sub-view { display: none; }
+    .sub-view.active { display: block; animation: fadeIn 0.2s ease; }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .sidebar-layout { display: grid; grid-template-columns: 295px 1fr; gap: 22px; align-items: start; }
+
+    /* Badges & Pills */
+    .badge {
+      display: inline-block;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-right: 8px;
+    }
+    .b-blue { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border); }
+    .b-teal { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
+    .b-amber { background: var(--amber-light); color: var(--amber); border: 1px solid #fde68a; }
+    .b-green { background: var(--green-light); color: var(--green); border: 1px solid #bbf7d0; }
+    .b-red { background: var(--red-light); color: var(--red); border: 1px solid #fecdd3; }
+
+    /* Interactive Selector Lists */
+    .nav-list { display: flex; flex-direction: column; gap: 10px; }
+    .nav-item {
+      text-align: left;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      font: 700 16px 'Noto Sans TC', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .nav-item:hover { border-color: var(--primary); background: var(--primary-light); }
+    .nav-item.active {
+      background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 6px 16px rgba(6, 95, 70, 0.24);
+    }
+    .nav-item.active span.sub-txt { color: #d1fae5; }
+    .sub-txt { font-size: 13px; color: var(--mute); font-weight: 500; flex-shrink: 0; }
+
+    .chips { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+    .chip {
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      padding: 9px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font: 700 15.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      transition: all 0.2s;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .chip.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(6, 95, 70, 0.2);
+    }
+
+    .btn {
+      border: 0;
+      background: var(--primary);
+      color: #ffffff;
+      font: 700 16px 'Noto Sans TC', sans-serif;
+      padding: 11px 22px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-teal { background: var(--teal); }
+    .btn-teal:hover { background: #075985; }
+    .btn-green { background: var(--green); }
+    .btn-green:hover { background: #166534; }
+    .btn-outline { background: var(--card); color: var(--primary); border: 1.5px solid var(--primary); }
+    .btn-outline:hover { background: var(--primary-light); }
+
+    .note-box {
+      border-left: 4px solid var(--primary);
+      background: var(--primary-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 16px;
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+    .case-box {
+      border-left: 4px solid var(--teal);
+      background: var(--teal-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 14px;
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+    .warn-box {
+      border-left: 4px solid var(--red);
+      background: var(--red-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 14px;
+      font-size: 16px;
+      color: var(--ink);
+    }
+
+    /* Comparison Table */
+    table.comp-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 16px; }
+    table.comp-table th, table.comp-table td { padding: 12px 15px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    table.comp-table th { background: var(--surface); font-weight: 800; color: var(--ink); }
+    table.comp-table tr.highlight-row { background: var(--primary-light); }
+
+    input[type="range"] { width: 100%; accent-color: var(--primary); cursor: pointer; }
+
+    /* Builder Specific */
+    .builder-stage {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .opt-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      width: 100%;
+      text-align: left;
+      padding: 15px 18px;
+      margin: 10px 0;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      font: 500 16.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1.65;
+    }
+    .opt-card:hover { border-color: var(--primary); background: var(--surface); }
+    .opt-card.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
+    .opt-card.correct, .opt-card.graded-best { border-color: var(--green); background: var(--green-light); color: #064e3b; }
+    .opt-card.graded-partial { border-color: var(--amber); background: var(--amber-light); color: #78350f; }
+    .opt-card.wrong, .opt-card.graded-wrong { border-color: var(--red); background: var(--red-light); color: #881337; }
+    .opt-letter {
+      display: inline-grid;
+      place-items: center;
+      min-width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #eaf1ed;
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 14.5px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .opt-card.selected .opt-letter { background: var(--primary); color: #ffffff; }
+
+    .hl-s1 { background: #d1fae5; color: #065f46; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s2 { background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s3 { background: #e0f2fe; color: #075985; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+
+    .critique-item {
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-left: 5px solid var(--line);
+      background: var(--card);
+    }
+    .critique-item.c-best { border-left-color: var(--green); background: var(--green-light); }
+    .critique-item.c-partial { border-left-color: var(--amber); background: var(--amber-light); }
+    .critique-item.c-wrong { border-left-color: var(--red); background: var(--red-light); }
+
+    details.guide-Collapsible {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 22px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    details.guide-Collapsible summary {
+      font-weight: 700;
+      font-size: 16.5px;
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    @media (max-width: 860px) {
+      .grid2, .grid3, .sidebar-layout { grid-template-columns: 1fr; }
+      header { padding: 12px 18px; }
+      .main-tabs { width: 100%; justify-content: center; margin-top: 8px; }
+      .sec-banner h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="財務管理_目錄.html" class="home-link">返回單元目錄</a>
+  <select onchange="if(this.value) location.href=this.value" style="padding:7px 12px;border-radius:10px;border:1px solid var(--primary-border);background:var(--primary-light);color:var(--primary);font:700 14.5px 'Noto Sans TC',sans-serif;cursor:pointer">
+    <option value="">快速切換課室／測驗...</option>
+    <option value="財務管理_目錄.html">單元總目錄</option>
+    <option value="財務分析.html">第 1 課：財務分析</option>
+    <option value="預算編製.html">第 2 課：預算編製</option>
+    <option value="融資方式.html">第 3 課：融資方式</option>
+    <option value="資本投資評估.html">第 4 課：資本投資評估</option>
+    <option value="營運資金管理.html">第 5 課：營運資金管理</option>
+    <option value="風險管理.html">第 6 課：風險管理</option>
+    <option value="財務管理_單元綜合測驗.html">單元綜合模擬試卷 (72分)</option>
+  </select>
+  <div class="brand">
+    <span>財務管理</span>
+    <span class="brand-tag">第 3 課：融資方式</span>
+  </div>
+  <nav class="main-tabs" id="mainTabs">
+    <button class="on" data-tab="sec-methods">1. 認識融資方法與三大分類</button>
+    <button data-tab="sec-term">2. 短期籌資 vs 長期籌資</button>
+    <button data-tab="sec-debt-eq">3. 舉債融資 vs 股本融資</button>
+    <button data-tab="sec-int-ext">4. 內部籌資 vs 向外籌資</button>
+    <button data-tab="sec-builder">5. 論點建構工作坊</button>
+  </nav>
+</header>
+
+<!-- ==================== 1. 認識融資方法與三大分類 ==================== -->
+<section class="view on" id="sec-methods">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元一：不同的融資方法（資金來源）與分類方式</span>
+      <h1>企業常用的十種融資方法與三種常見分類方式</h1>
+      <p>某種籌資方法是否適用於某企業，取決於企業的規模、信貸可靠性及企業擁有權類型等因素。每種融資方法均可按 (i) 短期籌資和長期籌資、(ii) 舉債融資和股本融資，以及 (iii) 內部籌資和向外籌資進行分類。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('mth', 0, this)">十種常用融資方法與三維屬性</button>
+      <button onclick="switchSub('mth', 1, this)">必然邏輯關係與分類練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 1A：十種常用融資方法與三維屬性 -->
+  <div class="sub-view active" id="mth-sub-0">
+    <div class="sidebar-layout">
+      <div class="nav-list" id="tenMethodNavList"></div>
+      <div class="card" id="tenMethodDetailCard" style="margin-bottom:0"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 1B：不同融資方式的必然關係與分類練習 -->
+  <div class="sub-view" id="mth-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">不同融資方式的關係</span>
+        <h3 style="font-size:21px;margin:8px 0 8px">融資方式分類的兩大必然邏輯關係</h3>
+        <div class="chips" id="relChips">
+          <button class="chip active" onclick="renderRel(0)">1. 舉債融資必然是向外籌資</button>
+          <button class="chip" onclick="renderRel(1)">2. 股本融資必然是長期籌資</button>
+          <button class="chip" onclick="renderRel(2)">3. 融資方法三維度總覽表</button>
+        </div>
+        <div id="relBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">融資方法特點與分類練習</span>
+        <h3 style="font-size:21px;margin:8px 0 10px">辨識十種融資方法的描述與三維分類（共 6 題）</h3>
+        <p id="mQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute);margin:0 0 10px"></p>
+        <div id="mQuizQ" style="font-size:17px;font-weight:700;padding:18px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:14px"></div>
+        <div id="mQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="mQuizFb" style="margin-top:14px;font-size:16px;min-height:52px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 2. 短期籌資 vs 長期籌資 ==================== -->
+<section class="view" id="sec-term">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元二：短期籌資和長期籌資</span>
+      <h1>短期籌資與長期籌資的三大比較維度及選擇原則</h1>
+      <p>短期籌資是指資金供企業使用不多於一年的融資方式；長期籌資是指資金供企業使用一年以上的融資方式。長遠而言，任何企業想保持競爭力和謀求長遠發展，其資金必須以長期資金為主。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('term', 0, this)">三大比較維度與選擇原則</button>
+      <button onclick="switchSub('term', 1, this)">過度使用後果模擬與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 2A：三大比較維度與選擇原則 -->
+  <div class="sub-view active" id="term-sub-0">
+    <div class="sidebar-layout">
+      <div class="nav-list" id="termCompNavList"></div>
+      <div class="card" id="termCompDetailCard" style="margin-bottom:0"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 2B：過度使用短期或長期籌資的後果與練習 -->
+  <div class="sub-view" id="term-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">期限錯配後果分析</span>
+        <h3 style="font-size:21px;margin:8px 0 8px">過度使用短期籌資與過度使用長期籌資的後果</h3>
+        <div class="chips" id="mismatchChips">
+          <button class="chip active" onclick="renderMismatch(0)">1. 過度使用短期籌資（為固定資產融資）</button>
+          <button class="chip" onclick="renderMismatch(1)">2. 過度使用長期籌資（應付短期需要）</button>
+          <button class="chip" onclick="renderMismatch(2)">3. 案例：航空公司應對短期現金短缺</button>
+        </div>
+        <div id="mismatchBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">短期 vs 長期籌資判斷挑戰</span>
+        <h3 style="font-size:21px;margin:8px 0 10px">指出企業應使用短期還是長期籌資及判斷陳述正誤（共 6 題）</h3>
+        <p id="termQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute);margin:0 0 10px"></p>
+        <div id="termQuizQ" style="font-size:17px;font-weight:700;padding:18px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:14px"></div>
+        <div id="termQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="termQuizFb" style="margin-top:14px;font-size:16px;min-height:52px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 3. 舉債融資 vs 股本融資 ==================== -->
+<section class="view" id="sec-debt-eq">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元三：舉債融資和股本融資</span>
+      <h1>舉債融資與股本融資的四大比較維度及選擇原則</h1>
+      <p>舉債融資（又稱債務融資）是指從企業東主以外的來源籌集資金，使用舉債融資的企業須於日後償還款項；股本融資（又稱權益籌資）是指從企業的東主籌集資金（對有限公司而言包括運用留存利潤和發行普通股）。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('de', 0, this)">四大比較維度與破產風險原則</button>
+      <button onclick="switchSub('de', 1, this)">利息扣稅省稅模擬器與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 3A：四大比較維度與破產風險選擇原則 -->
+  <div class="sub-view active" id="de-sub-0">
+    <div class="sidebar-layout">
+      <div class="nav-list" id="deCompNavList"></div>
+      <div class="card" id="deCompDetailCard" style="margin-bottom:0"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 3B：利息扣稅省稅模擬器與練習 -->
+  <div class="sub-view" id="de-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">利息扣稅與槓桿模擬</span>
+        <h3 style="font-size:20.5px;margin:8px 0 6px">實測為何「利息支出可作扣稅之用」能降低舉債成本</h3>
+        <p style="font-size:15px;color:var(--ink-sec);margin:0 0 10px">假設「耀暉有限公司」營業利潤（EBIT）為 <b>$1,000,000</b>，利得稅率為 <b>16.5%</b>，現有股東資本 <b>$2,500,000</b>。拉動滑桿調整長期債務金額（年利率 6%）：</p>
+        <div style="display:flex;justify-content:space-between;font-size:15.5px;margin-bottom:4px">
+          <b>長期債務金額（年息 6%）：</b>
+          <b id="lblDebtAmt" style="color:var(--primary)">$1,000,000</b>
+        </div>
+        <input type="range" id="debtAmtSlider" min="0" max="4000000" step="500000" value="1000000" oninput="updateTaxShieldSim()">
+        <div id="taxShieldOutput" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">舉債 vs 股本融資判斷挑戰</span>
+        <h3 style="font-size:20.5px;margin:8px 0 10px">分辨舉債融資與股本融資的特點及適用情況（共 6 題）</h3>
+        <p id="deQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute);margin:0 0 10px"></p>
+        <div id="deQuizQ" style="font-size:17px;font-weight:700;padding:18px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:14px"></div>
+        <div id="deQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="deQuizFb" style="margin-top:14px;font-size:16px;min-height:52px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 4. 內部籌資 vs 向外籌資 ==================== -->
+<section class="view" id="sec-int-ext">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元四：內部籌資和向外籌資 ＆ 建議融資方法策略</span>
+      <h1>內部籌資與向外籌資的四大比較維度、選擇原則與建議策略</h1>
+      <p>內部籌資是指企業運用內部產生的現金流量（主要是留存利潤，其他包括出售資產套現如出售應收帳款）來應付資金需要；向外籌資是指企業向外界籌集資金。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('ie', 0, this)">四大比較維度與選擇原則</button>
+      <button onclick="switchSub('ie', 1, this)">建議融資方法排雷器與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 4A：內部籌資與向外籌資的四大比較維度與選擇原則 -->
+  <div class="sub-view active" id="ie-sub-0">
+    <div class="sidebar-layout">
+      <div class="nav-list" id="ieCompNavList"></div>
+      <div class="card" id="ieCompDetailCard" style="margin-bottom:0"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 4B：向企業建議融資方法的兩步審題排雷器與練習 -->
+  <div class="sub-view" id="ie-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">答題錦囊：向企業建議融資方法</span>
+        <h3 style="font-size:20.5px;margin:8px 0 6px">兩步審題排雷策略（1. 識別長短期需要 ➔ 2. 找出限制因素）</h3>
+        <p style="font-size:15px;color:var(--ink-sec);margin:0 0 10px">作答向企業建議融資方法的題目時，應先識別是滿足<b>長期</b>還是<b>短期</b>資金需要，再找出不適用於該公司的限制因素（如<b>企業擁有權類型、存款或留存利潤是否足夠、槓桿比率是否偏高</b>）。點擊以下個案查看拆解：</p>
+        <div class="chips" id="advCaseChips">
+          <button class="chip active" onclick="renderAdvCase(0)">個案 A：獨資寵物店 3 年開兩分店</button>
+          <button class="chip" onclick="renderAdvCase(1)">個案 B：合夥遊戲體驗館加開分店</button>
+          <button class="chip" onclick="renderAdvCase(2)">個案 C：高槓桿私人有限公司設中央廚房</button>
+        </div>
+        <div id="advCaseBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">內部 vs 向外籌資及融資建議挑戰</span>
+        <h3 style="font-size:20.5px;margin:8px 0 10px">判斷企業應採用內部還是向外籌資及選擇原因（共 5 題）</h3>
+        <p id="ieQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute);margin:0 0 10px"></p>
+        <div id="ieQuizQ" style="font-size:17px;font-weight:700;padding:18px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:14px"></div>
+        <div id="ieQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="ieQuizFb" style="margin-top:14px;font-size:16px;min-height:52px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 5. 論點建構問答工作坊 (12題) ==================== -->
+<section class="view" id="sec-builder">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-amber">實戰寫作訓練</span>
+      <h1>「一段一個獨立重點」論點建構工作坊</h1>
+      <p>收錄 4 道短答題（2 步建構 · 2 分）及 8 道進階論述題（3 步建構 · 3 分）。請選擇題目並逐步點選最準確的商業論述。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchBuilderCat('short', this)">短答題訓練 (4題)</button>
+      <button onclick="switchBuilderCat('essay', this)">進階論述題訓練 (8題)</button>
+    </div>
+  </div>
+
+  <details class="guide-Collapsible">
+    <summary>查看「一段一個重點」建構結構指南（點擊展開 / 收起）</summary>
+    <div class="grid2" style="margin-top:14px;font-size:16px">
+      <div style="background:var(--primary-light);padding:14px 18px;border-radius:10px">
+        <b style="color:var(--primary)">短答題／個案題模式（每段滿分 2 分 — 2 步建構）</b><br>
+        <span class="hl-s1">第 1 步 (1分)</span> 準確指出單一核心優缺點、原因、融資方法或問題標題<br>
+        <span class="hl-s2">第 2 步 (1分)</span> 結合題目企業情況說明為何具此優缺點或引發甚麼財務問題
+      </div>
+      <div style="background:var(--teal-light);padding:14px 18px;border-radius:10px">
+        <b style="color:var(--teal)">進階論述題模式（每段滿分 3 分 — 3 步深度建構）</b><br>
+        <span class="hl-s1">第 1 步 (1分)</span> 指出單一考慮因素（如風險、控制權、成本、抵押品、靈活性）並作雙向對比<br>
+        <span class="hl-s2">第 2 步 (1分)</span> 針對題目企業（如連鎖壽司店、紡織廠、時裝連鎖店）描述具體融資情境<br>
+        <span class="hl-s3">第 3 步 (1分)</span> 深化推論該因素如何影響企業的破產風險、決策主導權、稅務負擔或資金靈活性
+      </div>
+    </div>
+  </details>
+
+  <div class="card" style="padding:18px 22px;margin-bottom:18px">
+    <div style="font-size:15px;color:var(--mute);font-weight:700;margin-bottom:8px" id="builderCatLabel">選擇短答題（每題滿分 2 分）：</div>
+    <div class="chips" id="questionChips" style="margin:0"></div>
+  </div>
+
+  <div id="builderWorkspace"></div>
+</section>
+
+<script>
+  // Main Tab Switching
+  document.querySelectorAll('#mainTabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#mainTabs button').forEach(b => b.classList.remove('on'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+      btn.classList.add('on');
+      document.getElementById(btn.dataset.tab).classList.add('on');
+    });
+  });
+
+  // Sub-view Switching
+  function switchSub(prefix, idx, btn) {
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll(`[id^="${prefix}-sub-"]`).forEach((el, i) => {
+      el.classList.toggle('active', i === idx);
+    });
+  }
+
+  // ====== 1. 認識十種常用融資方法與三大分類 ======
+  const tenMethods = [
+    { name: "01 發行普通股", term: "長期籌資", de: "股本融資", ie: "向外籌資", desc: "<b>有限公司</b>可以透過發行普通股籌集資金（註：發行優先股不是籌集資金的常見方法）。", limit: "只適用於<b>有限公司</b>（獨資企業及合夥不能發行股票）；無須償還本金及無固定股息，但會削弱現有東主對公司的控制權。" },
+    { name: "02 發行債券", term: "長期籌資", de: "舉債融資", ie: "向外籌資", desc: "<b>有限公司（尤其是大型公司）</b>可以透過發行債券籌集資金，承諾定期支付固定利息並在債務到期日償還本金。", limit: "只適用於有限公司；如果企業<b>違約（即無法償還債務）的風險很高</b>，可能須要提供極高的債券利率，才能吸引投資者購買債券。" },
+    { name: "03 銀行貸款", term: "短期或長期籌資", de: "舉債融資", ie: "向外籌資", desc: "企業向銀行借取的款項。貸款可分為<b>短期（不多於一年）</b>和<b>長期（一年以上）</b>。", limit: "適用於各類企業（包括獨資、合夥及有限公司），申請時須提供證明文件（如財務報表或銀行帳戶結單），且通常須提供抵押品。" },
+    { name: "04 銀行透支", term: "短期籌資", de: "舉債融資", ie: "向外籌資", desc: "指企業從<b>往來存款帳戶</b>提取超出其存款額的金額。", limit: "屬於短期舉債向外籌資，靈活性高，適合應付短期的資金周轉需要。" },
+    { name: "05 留存利潤", term: "長期籌資", de: "股本融資", ie: "內部籌資", desc: "這是<b>尚未分派給股東作股息的利潤</b>。留存利潤是東主再投放於企業的資金，所以可視為股本融資的一種方式。", limit: "屬於內部籌資的主要資金來源，無須外界批准，亦不牽涉交易成本或利息支出；惟能動用的金額有限。" },
+    { name: "06 商業票據", term: "短期籌資", de: "舉債融資", ie: "向外籌資", desc: "由<b>大型銀行和知名企業</b>發放的短期貸款。", limit: "這是<b>大型企業</b>常用的短期融資方法，中小型企業較難採用。" },
+    { name: "07 應計費用", term: "短期籌資", de: "舉債融資", ie: "向外籌資", desc: "指企業在某期間招致，但在<b>期末尚未繳付的費用</b>（例如薪金）。", limit: "企業可透過延遲支付款項，在還款限期前運用那筆資金，而<b>無須就此支付利息</b>。" },
+    { name: "08 貿易賒帳", term: "短期籌資", de: "舉債融資", ie: "向外籌資", desc: "如果企業從供應商取得貿易賒帳，就能延遲支付購貨款項，無須在<b>信用期限（又稱賒帳期間）</b>內結清債務（不涉及利息支付）。", limit: "企業為了向供應商取得賒帳，必須保持良好信譽，並與供應商建立良好關係；如果企業的<b>規模較小，或與供應商初次合作</b>，供應商可能會拒絕提供貿易賒帳。" },
+    { name: "09 出售應收帳款", term: "短期籌資", de: "內部資金(資產套現)", ie: "內部籌資", desc: "又稱<b>應收帳款讓售 (Factoring)</b>，指企業把應收帳款售予財務機構（稱為<b>應收帳款收購商</b>）以獲取現金。", limit: "屬於內部籌資中「出售資產套現」的例子；企業為了提早收回現金，<b>出售應收帳款的價格通常低於帳款到期日可收取的金額</b>。" },
+    { name: "10 租購和租賃", term: "長期籌資", de: "舉債融資", ie: "向外籌資", desc: "• <b>租購 (Hire Purchase)</b>：買方協議租用，並同時分期付款購買該物品。在租購期間，買方可以使用物品，但<b>只有在付清全額後，該物品才歸其所有</b>。<br>• <b>租賃 (Leasing)</b>：與租購相似，但<b>企業並不擁有該物品</b>。", limit: "只有某些<b>須要使用昂貴資產的行業</b>（例如飛機、農業機械和醫療儀器）會較常採用租購和租賃來籌集資金。" }
+  ];
+
+  function renderTenMethod(idx) {
+    document.getElementById('tenMethodNavList').innerHTML = tenMethods.map((m, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderTenMethod(${i})">
+        <span>${m.name}</span>
+        <span class="sub-txt">${m.term.slice(0,2)}</span>
+      </button>
+    `).join('');
+    const m = tenMethods[idx];
+    document.getElementById('tenMethodDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <h3 style="color:var(--primary);font-size:21px">${m.name}</h3>
+        <div>
+          <span class="badge b-blue">期限：${m.term}</span>
+          <span class="badge b-teal">性質：${m.de}</span>
+          <span class="badge b-amber">來源：${m.ie}</span>
+        </div>
+      </div>
+      <p style="margin:0 0 12px;font-size:17.5px"><b>描述：</b>${m.desc}</p>
+      <div class="case-box"><b>適用條件與注意事項：</b>${m.limit}</div>
+    `;
+  }
+  renderTenMethod(0);
+
+  const relData = [
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:6px">關係 1：舉債融資必然是向外籌資</b>
+      • 舉債融資只屬向外籌資，而不會是內部籌資。<br>
+      • 這是因為<b>內部籌資</b>是指企業運用內部產生的現金流量來應付資金需要，而<b>舉債融資</b>是指企業從東主以外的來源籌集資金（須於日後償還）。
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:6px">關係 2：股本融資必然屬於長期籌資</b>
+      • 債務可以按照債務期限劃分為短期籌資或者長期籌資。<br>
+      • 然而，由於<b>股本證券（如普通股）及留存利潤沒有到期日</b>，因此股本融資只能是<b>長期籌資</b>。
+    </div>`,
+    `<table class="comp-table" style="font-size:15px">
+      <thead><tr><th>融資方法</th><th>短期還是長期籌資？</th><th>舉債還是股本融資？</th><th>內部還是向外籌資？</th></tr></thead>
+      <tbody>
+        <tr><td><b>留存利潤</b></td><td>長期籌資</td><td>股本融資</td><td>內部籌資</td></tr>
+        <tr><td><b>發行普通股</b></td><td>長期籌資</td><td>股本融資</td><td>向外籌資</td></tr>
+        <tr><td><b>發行債券 / 銀行長期貸款 / 租購</b></td><td>長期籌資</td><td>舉債融資</td><td>向外籌資</td></tr>
+        <tr><td><b>銀行透支 / 銀行短期貸款 / 商業票據</b></td><td>短期籌資</td><td>舉債融資</td><td>向外籌資</td></tr>
+        <tr><td><b>貿易賒帳 / 應計費用</b></td><td>短期籌資</td><td>舉債融資（不涉及利息）</td><td>向外籌資</td></tr>
+      </tbody>
+    </table>`
+  ];
+  function renderRel(idx) {
+    document.querySelectorAll('#relChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('relBox').innerHTML = relData[idx];
+  }
+  renderRel(0);
+
+  const mQuizItems = [
+    { q: "1. 下列哪兩種舉債融資方法可讓企業在還款限期前運用資金，而「無須支付任何利息」？", opts: ["A. 應計費用（如期末尚未繳付的薪金）及 貿易賒帳（供應商提供的賒購期）", "B. 銀行透支 及 發行債券"], ans: 0, exp: "正確。並非所有舉債融資方式都涉及利息支付，應計費用和貿易賒帳便不涉及利息（此外，股本融資中的發行普通股和留存利潤亦無須支付利息）。" },
+    { q: "2. 一名麵包師傅以「獨資企業」方式開設手工麵包店，現計劃搬遷至更大鋪位並購買新雪櫃和焗爐。他「不能」使用下列哪種向外籌資方法？", opts: ["A. 向親戚朋友借錢，或向銀行及金融機構借取貸款", "B. 發行普通股 或 發行債券"], ans: 1, exp: "正確。獨資企業和合夥均不能發行股票（普通股）或債券，只有有限公司才可以透過發行普通股和債券籌集資金。" },
+    { q: "3. 企業把應收帳款售予財務機構（應收帳款收購商）以提早獲取現金，這種短期融資方法稱為甚麼？按內部與向外籌資分類屬於哪一類？", opts: ["A. 商業票據 — 屬於向外籌資", "B. 出售應收帳款／應收帳款讓售 (Factoring) — 屬於內部籌資（出售資產套現）"], ans: 1, exp: "正確。把應收帳款售予財務機構套現稱為「出售應收帳款／應收帳款讓售」，歸類為內部籌資（出售資產套現）。" },
+    { q: "4. 買方協議租用昂貴資產並同時分期付款購買，在付清全額後該物品才歸買方所有；若企業最終並不擁有該物品則稱為甚麼？", opts: ["A. 付清全額後歸買方所有稱為「租購 (Hire Purchase)」；並不擁有該物品稱為「租賃 (Leasing)」", "B. 兩者均稱為商業票據"], ans: 0, exp: "正確。租購在付清全額後才歸買方所有；租賃與租購相似，但企業並不擁有該物品。" },
+    { q: "5. 請為「發行債券」選出正確的三維分類組合：", opts: ["A. 長期籌資 ・ 股本融資 ・ 內部籌資", "B. 長期籌資 ・ 舉債融資 ・ 向外籌資"], ans: 1, exp: "正確。發行債券屬於長期籌資、舉債融資和向外籌資。" },
+    { q: "6. 請為「貿易賒帳」及「銀行透支」選出正確的三維分類組合：", opts: ["A. 短期籌資 ・ 舉債融資 ・ 向外籌資", "B. 短期籌資 ・ 股本融資 ・ 向外籌資"], ans: 0, exp: "正確。貿易賒帳和銀行透支均屬於短期籌資、舉債融資和向外籌資。" }
+  ];
+  let curMQ = 0;
+  function renderMQuiz() {
+    const it = mQuizItems[curMQ];
+    document.getElementById('mQuizProg').textContent = `題目 ${curMQ + 1} / ${mQuizItems.length}`;
+    document.getElementById('mQuizQ').textContent = it.q;
+    document.getElementById('mQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:12px 16px" onclick="checkMQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('mQuizFb').innerHTML = '';
+  }
+  function checkMQuiz(idx) {
+    const it = mQuizItems[curMQ];
+    const fb = document.getElementById('mQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14.5px" onclick="curMQ=(curMQ+1)%mQuizItems.length;renderMQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderMQuiz();
+
+  // ====== 2. 短期籌資 vs 長期籌資 ======
+  const termCompCatalog = [
+    {
+      title: "比較維度 1：成本 (Cost)",
+      badge: "短期籌資成本 ＜ 長期籌資成本",
+      def: "一般來說，短期籌資的成本較長期籌資低。例如，銀行短期貸款的利率一般較長期貸款低。",
+      detail: `
+        <p style="margin:0">• <b>短期籌資的優點</b>：成本較低（此外，貿易賒帳和應計費用更無須支付利息）。<br>
+        • <b>長期籌資的缺點</b>：成本較高。</p>
+      `
+    },
+    {
+      title: "比較維度 2：風險 (Risk)",
+      badge: "短期籌資風險 ＞ 長期籌資風險",
+      def: "由於長期籌資提供的資金可供企業使用一年以上，它可為企業提供較穩定的資金來源（風險較低）。相反，如果企業採用短期籌資，須要頻繁地「再融資」（即用新的債務來取代原本的債務）。",
+      detail: `
+        <p style="margin:0 0 10px">• <b>再融資風險 (Refinancing Risk)</b>：例如當企業向銀行借取為期三個月的貸款來應付營運開支時，它就必須每隔三個月續借款項。由於企業<b>未能確定在再融資時是否能取得貸款（再融資風險），以及貸款的利率（如利率大幅上升須支付更多利息）</b>，因此企業依賴短期籌資須承擔較大風險。</p>
+      `
+    },
+    {
+      title: "比較維度 3：靈活性 (Flexibility)",
+      badge: "短期籌資靈活性 ＞ 長期籌資靈活性",
+      def: "短期籌資比長期籌資更具靈活性。如果企業採用短期籌資，便可因應短期需要增減資金。",
+      detail: `
+        <p style="margin:0">• <b>長期籌資靈活性較低的原因</b>：如果企業採用長期籌資，所得的資金可供其使用一年以上。<b>即使企業一年後不再需要該筆資金，仍須為該筆資金支付融資成本（承擔不必要的利息開支）</b>。</p>
+      `
+    },
+    {
+      title: "選擇原則：短期與長期籌資的基本原則",
+      badge: "資金需要期限配對",
+      def: "企業在選擇短期籌資或長期籌資時，應遵循以下兩項基本原則：",
+      detail: `
+        <p style="margin:0 0 10px"><b>1. 短期籌資應用於滿足短期資金需要</b>：例如企業購貨應採用貿易賒帳（因一般能在短期內售出存貨套現償還短期債務），或為短期現金短缺融資。如企業採用長期籌資來滿足短期資金需要，就要支付非必要的融資成本（因長期貸款利率通常較高，且要為閒置資金支付利息）。</p>
+        <p style="margin:0"><b>2. 長期籌資適用於有關固定資產的融資</b>：企業通常採用長期籌資來添置固定資產（如把倉庫配送系統升級、購買新的咖啡豆烘焙機），因為企業不大可能在短期內賺取足夠的現金來償還購買固定資產的費用。採用長期籌資便不用經常再融資；反之，若採用短期籌資來為購買固定資產融資，而又找不到再融資渠道或融資成本激增時，企業便可能會出現財政困難。</p>
+      `
+    }
+  ];
+
+  function renderTermComp(idx) {
+    document.getElementById('termCompNavList').innerHTML = termCompCatalog.map((t, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderTermComp(${i})">
+        <span>${t.title}</span>
+      </button>
+    `).join('');
+    const t = termCompCatalog[idx];
+    document.getElementById('termCompDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${t.title}</h3>
+        <span class="badge b-blue">${t.badge}</span>
+      </div>
+      <p style="margin:0 0 12px;font-weight:600;font-size:17.5px">${t.def}</p>
+      <div class="case-box">${t.detail}</div>
+    `;
+  }
+  renderTermComp(0);
+
+  const mismatchData = [
+    `<div class="warn-box" style="margin-top:0">
+      <b style="color:var(--red);font-size:17px">過度使用短期籌資（以半年期貸款應付新廠房／固定資產開支）：</b><br>
+      • <b>情況</b>：管理人員見半年期貸款的利率（每年 2 厘）較五年期貸款（每年 2.5 厘）低，遂選擇以半年期貸款來應付新廠房的開支。<br>
+      • <b>後果</b>：新廠房在半年內未能產生足夠現金償還貸款；半年後需要再融資時，若找不到再融資渠道（銀行拒絕批出新貸款）或半年期貸款利率大幅上升（如升至每年 3 厘以上），企業便要支付更多利息甚至因無力償還而出現財政困難。
+    </div>`,
+    `<div class="note-box" style="margin-top:0">
+      <b style="color:var(--primary);font-size:17px">過度使用長期籌資（借取長期貸款應付短期需要）：</b><br>
+      • <b>情況</b>：企業借入多年期長期貸款，但一年後已賺取足夠利潤或不再需要這些資金。<br>
+      • <b>後果</b>：由於長期籌資靈活性低，儘管企業不再需要這些資金（資金在保險箱閒置），往後數年仍要為它們支付高昂的利息，承擔非必要的融資成本。
+    </div>`,
+    `<div class="case-box" style="margin-top:0">
+      <b style="color:var(--teal);font-size:17px">案例分析：航空公司應對疫後復甦的短期現金短缺</b><br>
+      • <b>背景</b>：政府放寬入境限制，航空需求預期增長，航空公司為應對目前的現金短缺須額外融資。行政總裁提議考慮「長期籌資方法」以免頻繁再融資，但財務經理建議以其他方法（短期籌資，如銀行透支或銀行短期貸款）融資。<br>
+      • <b>支持財務經理反對長期籌資的兩個原因</b>：(1) 隨着入境限制放寬及載客量增加，現金短缺只屬<b>短期資金需要</b>，採用長期籌資靈活性低，日後現金回籠不再需要資金時仍須支付利息；(2) 長期籌資的<b>融資成本（利率）較短期籌資高</b>。
+    </div>`
+  ];
+  function renderMismatch(idx) {
+    document.querySelectorAll('#mismatchChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('mismatchBox').innerHTML = mismatchData[idx];
+  }
+  renderMismatch(0);
+
+  const termQuizItems = [
+    { q: "1. 某玩具生產商在淡季時面臨短暫的「現金短缺」，應使用短期籌資還是長期籌資？", opts: ["A. 短期籌資", "B. 長期籌資"], ans: 0, exp: "正確。淡季現金短缺屬於短期資金需要，應利用短期籌資來滿足。" },
+    { q: "2. 某製藥廠計劃投入資金「研發新藥物」，應使用短期籌資還是長期籌資？", opts: ["A. 短期籌資", "B. 長期籌資"], ans: 1, exp: "正確。研發新藥物為期多於一年，不大可能在短期內賺取足夠現金償還，應使用長期籌資。" },
+    { q: "3. 某汽車生產商「購買鋼材來生產汽車」，應使用短期籌資還是長期籌資？", opts: ["A. 短期籌資（如貿易賒帳）", "B. 長期籌資"], ans: 0, exp: "正確。購買生產原料屬於短期資金需要（短期內售出汽車套現便可償還），應使用短期籌資。" },
+    { q: "4. 某天然氣公司「投資開發天然氣井（大型固定資產）」，應使用短期籌資還是長期籌資？", opts: ["A. 短期籌資", "B. 長期籌資"], ans: 1, exp: "正確。開發天然氣井涉及固定資產及長期發展，應使用長期籌資。" },
+    { q: "5. 辨別陳述是否正確：「長期籌資的風險高於短期籌資；而一般而言，短期籌資的融資成本高於長期籌資。」", opts: ["A. 正確", "B. 不正確 — 短期籌資因須頻繁再融資，故風險高於長期籌資；而短期籌資的融資成本一般低於長期籌資"], ans: 1, exp: "正確（陳述不正確）。短期籌資的成本較低、靈活性較高，但因要頻繁再融資故風險較高。" },
+    { q: "6. 辨別陳述是否正確：「長期籌資的靈活性低於短期籌資，但企業通常採用長期籌資作為主要資金來源。」", opts: ["A. 正確", "B. 不正確"], ans: 0, exp: "正確。長遠而言，任何企業想保持競爭力和謀求長遠發展，其資金必須以長期資金為主。" }
+  ];
+  let curTQ = 0;
+  function renderTermQuiz() {
+    const it = termQuizItems[curTQ];
+    document.getElementById('termQuizProg').textContent = `題目 ${curTQ + 1} / ${termQuizItems.length}`;
+    document.getElementById('termQuizQ').textContent = it.q;
+    document.getElementById('termQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:12px 16px" onclick="checkTermQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('termQuizFb').innerHTML = '';
+  }
+  function checkTermQuiz(idx) {
+    const it = termQuizItems[curTQ];
+    const fb = document.getElementById('termQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14.5px" onclick="curTQ=(curTQ+1)%termQuizItems.length;renderTermQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderTermQuiz();
+
+  // ====== 3. 舉債融資 vs 股本融資 ======
+  const deCompCatalog = [
+    {
+      title: "比較維度 1：風險 (Risk)",
+      badge: "舉債融資風險 ＞ 股本融資風險",
+      def: "相較於股本融資，舉債融資對企業而言的風險較高（注意：不要把「企業舉債融資的風險」與「投資者投資債務證券的風險」混為一談）。",
+      detail: `
+        <p style="margin:0 0 10px">• <b>股本融資風險較低</b>：由於(i) 普通股的股息率不是固定的，加上企業不一定要派發股息（無須定期與股東分享利潤）；及(ii) 普通股沒有期限，企業無須向股東償還款項，所以發行普通股不會為企業帶來額外的財政負擔。</p>
+        <p style="margin:0">• <b>舉債融資風險較高</b>：假如企業以發行債券的方式集資，<b>無論企業是否錄得利潤，都必須按時支付利息和在債務到期日償還本金</b>。這會增加企業的財政負擔（尤其在經濟衰退時期）；如果不能如期支付利息或償還本金，便可能會<b>被迫清盤</b>。</p>
+      `
+    },
+    {
+      title: "比較維度 2：控制權 (Control)",
+      badge: "舉債不影響控制權 vs 發普通股削弱控制權",
+      def: "對公司的東主來說，舉債融資的好處是它不會影響東主對公司的控制權，因為債權人（如債券持有人）沒有投票權，不能在股東周年大會上就公司決策投票。",
+      detail: `
+        <p style="margin:0 0 10px">• <b>股本融資削弱控制權</b>：如公司發行新的普通股集資，<b>新股東便可利用手上的股東周年大會投票權來影響公司的決策</b>。因此，股本融資可能會削弱東主對公司的控制權，甚至增加公司被收購的風險。</p>
+        <p style="margin:0">• <b>補充概念 — 雙類別股權架構 (Dual-class Share Structure)</b>：企業發行新股份時，創辦人可採用雙類別股權架構（如分為僅由創辦人持有、每股投票權為 10 票的 A 股，及每股投票權只有 1 票的 B 股），讓創辦人在付出較少資本下仍能維持對企業的控制權。</p>
+      `
+    },
+    {
+      title: "比較維度 3：成本 (Cost)",
+      badge: "舉債融資成本 ＜ 股本融資成本",
+      def: "一般來說，舉債融資的成本較股本融資低。以下是兩個主要原因：",
+      detail: `
+        <p style="margin:0 0 10px">• <b>(i) 投資者對債券回報的要求較普通股低</b>：由於債券的利息收益是固定和有保證的，因此投資債券的風險一般較股票低，投資者對債券回報的要求也較普通股低。</p>
+        <p style="margin:0">• <b>(ii) 利息支出可作扣稅之用</b>：由於利息支出是扣稅項目（稅款是根據營業利潤減去利息支出的餘額計算出來的），這有助減少企業舉債融資的成本；而股息只是分派給股東的部分淨利（即扣除稅項後的利潤），不能減少稅款。</p>
+      `
+    },
+    {
+      title: "比較維度 4：抵押品 (Collateral)",
+      badge: "舉債通常須提供抵押品 vs 股本無須抵押品",
+      def: "企業借取貸款時，一般須要提供抵押品（如貨倉或廠房等貴重資產）以減低企業違約時對借款人造成的損失。若企業無法償還債務，抵押品便會被沒收成為借款人的財產。",
+      detail: `
+        <p style="margin:0">• 相反，企業進行<b>股本融資則無須提供抵押品</b>。因此，是否擁有貴重資產作抵押品是企業選擇使用舉債融資還是股本融資時的重要考慮因素。</p>
+      `
+    },
+    {
+      title: "選擇原則：破產風險與槓桿比率",
+      badge: "破產風險低選舉債・破產風險高選股本",
+      def: "選擇舉債融資或股本融資的基本原則與企業的「破產風險（及槓桿比率）」息息相關：",
+      detail: `
+        <p style="margin:0 0 10px"><b>1. 如果企業的破產風險低，就應採用舉債融資</b>：如果企業沒有過度採用舉債融資（即<b>槓桿比率低</b>），其破產風險較低，一般可以低成本（較優惠利率）舉債，應採用舉債融資。</p>
+        <p style="margin:0"><b>2. 如果企業的破產風險高，就應採用股本融資</b>：如果企業已債台高築（即<b>槓桿比率高</b>），代表其破產風險很高，須支付高昂的利息成本甚至貸款申請被拒；此時繼續舉債是不智的，應採用<b>股本融資</b>，以免再增加企業的財政負擔和破產風險。</p>
+      `
+    }
+  ];
+
+  function renderDeComp(idx) {
+    document.getElementById('deCompNavList').innerHTML = deCompCatalog.map((d, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderDeComp(${i})">
+        <span>${d.title}</span>
+      </button>
+    `).join('');
+    const d = deCompCatalog[idx];
+    document.getElementById('deCompDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${d.title}</h3>
+        <span class="badge b-blue">${d.badge}</span>
+      </div>
+      <p style="margin:0 0 12px;font-weight:600;font-size:17.5px">${d.def}</p>
+      <div class="case-box">${d.detail}</div>
+    `;
+  }
+  renderDeComp(0);
+
+  function updateTaxShieldSim() {
+    const debt = +document.getElementById('debtAmtSlider').value;
+    document.getElementById('lblDebtAmt').textContent = '$' + debt.toLocaleString('en-US');
+    const ebit = 1000000;
+    const eq = 2500000;
+    const interest = Math.round(debt * 0.06);
+    const ebt = ebit - interest;
+    const taxRate = 0.165;
+    const taxNoDebt = Math.round(ebit * taxRate); // $165,000
+    const taxWithDebt = Math.max(0, Math.round(ebt * taxRate));
+    const taxSaved = taxNoDebt - taxWithDebt;
+    const gearRatio = ((debt / (debt + eq)) * 100).toFixed(2);
+
+    document.getElementById('taxShieldOutput').innerHTML = `
+      <table class="comp-table" style="font-size:14.5px;margin-top:4px">
+        <thead><tr><th>項目</th><th>全股本（無舉債）</th><th>目前舉債 ($${debt.toLocaleString()})</th></tr></thead>
+        <tbody>
+          <tr><td>營業利潤 (息稅前利潤 EBIT)</td><td>$1,000,000</td><td>$1,000,000</td></tr>
+          <tr><td>減：財務成本（6% 利息支出 · <b>可扣稅</b>）</td><td>$0</td><td style="color:var(--red)">-$${interest.toLocaleString()}</td></tr>
+          <tr><td>稅前利潤</td><td>$1,000,000</td><td>$${ebt.toLocaleString()}</td></tr>
+          <tr><td>減：利得稅 (16.5%)</td><td>-$${taxNoDebt.toLocaleString()}</td><td style="color:var(--green)"><b>-$${taxWithDebt.toLocaleString()} (節省稅款 $${taxSaved.toLocaleString()})</b></td></tr>
+          <tr class="highlight-row"><td><b>企業目前槓桿比率</b></td><td>0.00%</td><td><b style="color:${gearRatio>=50?'var(--red)':'var(--primary)'}">${gearRatio}%</b> ${gearRatio>=50?'（高於50%，破產風險高）':'（低於50%，負債溫和）'}</td></tr>
+        </tbody>
+      </table>
+      <div class="note-box" style="margin-top:10px;font-size:15px">
+        <b>利息扣稅與破產風險解析：</b>表面利息支出為 $${interest.toLocaleString()}，但因利息支出是扣稅項目，替企業節省了 <b>$${taxSaved.toLocaleString()}</b> 稅款，減少了舉債融資的實際成本；惟當債務推高至槓桿比率超過 50% 時，破產風險大增，再集資便應採用<b>股本融資</b>。
+      </div>`;
+  }
+  updateTaxShieldSim();
+
+  const deQuizItems = [
+    { q: "1. 企業的東主希望「對企業維持高度控制權」，應使用舉債融資還是股本融資？", opts: ["A. 舉債融資（因為債權人沒有股東周年大會投票權，不會影響東主對企業的控制權）", "B. 股本融資（向新股東發行普通股）"], ans: 0, exp: "正確。舉債融資的債權人沒有投票權，不會影響東主對企業的控制權。" },
+    { q: "2. 企業希望「在不增加財務壓力（定期付息還本負擔）的情況下融資」，應使用舉債融資還是股本融資？", opts: ["A. 舉債融資", "B. 股本融資（因為普通股股息不是固定的、不一定發放股息，且普通股沒有期限無須償還本金）"], ans: 1, exp: "正確。股本融資無須定期支付固定利息及償還本金，不會為企業帶來額外財政負擔。" },
+    { q: "3. 企業「沒有貴重資產以作抵押」，應使用舉債融資還是股本融資？", opts: ["A. 股本融資（因為進行股本融資無須提供抵押品）", "B. 舉債融資"], ans: 0, exp: "正確。企業借取大額貸款時一般須提供抵押品，而進行股本融資則無須提供抵押品。" },
+    { q: "4. 辨別陳述是否正確：「由於股票投資的風險通常比債券投資高，所以股本融資的風險比舉債融資高。」", opts: ["A. 正確", "B. 不正確 — 對集資企業而言，舉債融資無論是否錄得利潤都必須按時付息及到期還本（否則可能被迫清盤），因此舉債融資的風險比股本融資高"], ans: 1, exp: "正確（陳述不正確）。切勿把「投資者投資股票的風險」與「企業使用股本融資的風險」混為一談；對企業而言，舉債融資的風險比股本融資高。" },
+    { q: "5. 辨別陳述是否正確：「由於股息不可扣稅（而利息支出可扣稅），加上投資者對普通股回報的要求較債券高，所以股本融資的成本比舉債融資高。」", opts: ["A. 正確", "B. 不正確"], ans: 0, exp: "正確。這正是舉債融資成本較股本融資低的兩個主要原因。" },
+    { q: "6. 辨別陳述是否正確：「獨資企業和合夥只能使用舉債融資，不能使用股本融資。」", opts: ["A. 正確", "B. 不正確 — 獨資企業和合夥雖然不能發行普通股，但仍可運用『留存利潤』、東主投入私人積蓄或邀請新合夥人注資來進行股本融資"], ans: 1, exp: "正確（陳述不正確）。股本融資是指從企業的東主籌集資金（包括留存利潤及東主／合夥人注資），獨資和合夥亦可使用。" }
+  ];
+  let curDEQ = 0;
+  function renderDeQuiz() {
+    const it = deQuizItems[curDEQ];
+    document.getElementById('deQuizProg').textContent = `題目 ${curDEQ + 1} / ${deQuizItems.length}`;
+    document.getElementById('deQuizQ').textContent = it.q;
+    document.getElementById('deQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:12px 16px" onclick="checkDeQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('deQuizFb').innerHTML = '';
+  }
+  function checkDeQuiz(idx) {
+    const it = deQuizItems[curDEQ];
+    const fb = document.getElementById('deQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14.5px" onclick="curDEQ=(curDEQ+1)%deQuizItems.length;renderDeQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderDeQuiz();
+
+  // ====== 4. 內部籌資 vs 向外籌資 & 建議融資方法策略 ======
+  const ieCompCatalog = [
+    {
+      title: "比較維度 1：靈活性 (Flexibility)",
+      badge: "內部籌資靈活性 ＞ 向外籌資靈活性",
+      def: "內部籌資比向外籌資更具靈活性。這是因為企業可以自行決定何時使用留存利潤，而不須事前獲取外界批准。",
+      detail: `
+        <p style="margin:0">• <b>向外籌資靈活性較低</b>：企業向外籌資通常牽涉一些手續。例如，企業發行債務證券（如商業票據和債券）或股本證券（如普通股和優先股）前，要先獲得股東批准並遵循相關法規；申請銀行貸款時亦須提供財務報表或銀行帳戶結單等證明文件。</p>
+      `
+    },
+    {
+      title: "比較維度 2：成本 (Cost)",
+      badge: "內部籌資成本 ＜ 向外籌資成本",
+      def: "內部籌資不牽涉交易成本或利息支出，所以內部籌資的成本較低。",
+      detail: `
+        <p style="margin:0">• <b>向外籌資成本較高</b>：向外籌資通常涉及交易成本。例如企業發行證券，要承擔發行證券的成本（包括支付給投資銀行和會計師樓的服務費用）；此外，向外籌資（如舉債）或會涉及利息支出。</p>
+      `
+    },
+    {
+      title: "比較維度 3：對決策的影響（決策自由 vs 決策審慎程度）",
+      badge: "內部決策自由度高 vs 向外決策較審慎",
+      def: "企業選擇內部籌資或向外籌資，會同時影響其「決策自由」和「決策的審慎程度」：",
+      detail: `
+        <p style="margin:0 0 10px">• <b>(a) 決策自由（內部籌資優點）</b>：企業使用內部資金享有較大的決策自由度，因為 (i) 企業不用披露資訊或事先取得股東／外界批准，以及 (ii) 東主人數不會增加。相反，向外籌資會削弱決策自由，因為可能須事先獲股東批准並向投資者披露集資目的，且如發行普通股集資，新股東可能會透過投票權影響企業日後的決策。</p>
+        <p style="margin:0">• <b>(b) 決策的審慎程度（向外籌資優點）</b>：由於管理人員不用經股東批准就可使用內部資金，他們<b>未必會審慎地評估投資項目，最終可能會把資金浪費在無利可圖的項目上（內部籌資缺點）</b>。相反，由於管理層向外籌資前須要仔細評估投資項目，所以<b>通常能作出更為審慎的決策（向外籌資優點）</b>。</p>
+      `
+    },
+    {
+      title: "比較維度 4：集資額與選擇原則",
+      badge: "向外籌資集資額較大・優先採用內部籌資",
+      def: "一般來說，與向外籌資相比，內部籌資所籌得的金額有限，因為企業能動用的留存利潤有限（為大型建設項目集資時，往往須要向外籌資）。",
+      detail: `
+        <p style="margin:0 0 8px"><b>選擇內部籌資和向外籌資的基本原則：</b></p>
+        <p style="margin:0">• <b>1. 企業應盡量採用內部籌資</b>：假如企業透過內部籌資所得的資金足以應付資金需要，應盡可能運用內部籌資，因為內部籌資比外部融資的成本低和靈活。<br>
+        • <b>2. 企業資金不足時才使用向外籌資</b>：雖然內部籌資是首選，但它所籌得的資金有限；如果內部資金不足，企業應向外籌資。</p>
+      `
+    }
+  ];
+
+  function renderIeComp(idx) {
+    document.getElementById('ieCompNavList').innerHTML = ieCompCatalog.map((c, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderIeComp(${i})">
+        <span>${c.title}</span>
+      </button>
+    `).join('');
+    const c = ieCompCatalog[idx];
+    document.getElementById('ieCompDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${c.title}</h3>
+        <span class="badge b-blue">${c.badge}</span>
+      </div>
+      <p style="margin:0 0 12px;font-weight:600;font-size:17.5px">${c.def}</p>
+      <div class="case-box">${c.detail}</div>
+    `;
+  }
+  renderIeComp(0);
+
+  const advCases = [
+    `<div style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line);font-size:15.5px;line-height:1.75">
+      <b style="color:var(--primary);font-size:17px">個案 A：戴文是「萌寵用品店」的唯一東主（獨資企業），打算在三年內開設兩家新分店（假設存款或留存利潤不足）。</b><br>
+      • <b>第 1 步（識別長短期需要）</b>：擴張業務涉及固定資產且為期多於一年 ➔ 應使用<b>長期籌資</b>。<br>
+      • <b>第 2 步（排查限制因素）</b>：<br>
+      &nbsp;&nbsp;— <b>不可建議「發行普通股」或「發行債券」</b>：因為獨資企業不能發行股票和債券。<br>
+      &nbsp;&nbsp;— <b>不可直接建議「親戚朋友注資／加入新合夥人」而不提改變擁有權</b>：戴文是唯一投資者，除非先改變企業擁有權類型（成立合夥或私人有限公司），否則不能向他人尋求注資。<br>
+      • <b>可行的長期融資方法建議（連缺點）</b>：<br>
+      &nbsp;&nbsp;1. <b>向親戚、朋友或銀行取得長期貸款</b>（缺點：須按時支付利息及到期還本，風險較高／須提供抵押品）；<br>
+      &nbsp;&nbsp;2. <b>成立合夥（招納新合夥人注資）</b>（缺點：削弱東主對企業的控制權）；<br>
+      &nbsp;&nbsp;3. <b>成立私人有限公司（邀請新股東注資）</b>（缺點：手續繁複、成本較高，且削弱控制權）；<br>
+      &nbsp;&nbsp;4. <b>自我融資／動用留存利潤</b>（僅限個案未提及存款不足時適用；缺點：集資額有限）。
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line);font-size:15.5px;line-height:1.75">
+      <b style="color:var(--primary);font-size:17px">個案 B：三位合夥人以「合夥」方式經營實境角色扮演遊戲館「劇本競技場」，擬在觀塘和長沙灣加開分店。</b><br>
+      • <b>可採用的三種長期融資方法及各自的一項缺點</b>：<br>
+      &nbsp;&nbsp;1. <b>邀請新合夥人加入注資（或轉為私人有限公司發行普通股）</b>：缺點是新合夥人／新股東擁有決策權，會<b>削弱原有合夥人對企業的控制權</b>。<br>
+      &nbsp;&nbsp;2. <b>向銀行借取長期貸款</b>：缺點是無論新分店是否錄得利潤，都必須按時支付利息及償還本金，<b>財務風險較高（或須提供抵押品）</b>。<br>
+      &nbsp;&nbsp;3. <b>運用內部留存利潤（或現有合夥人投入私人資金）</b>：缺點是<b>可籌得的集資額有限</b>（或管理人員未必會審慎評估投資項目，以致浪費資金）。
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line);font-size:15.5px;line-height:1.75">
+      <b style="color:var(--primary);font-size:17px">個案 C：「家常靚湯」是一家私人有限公司，計劃斥資 $600,000 設立中央廚房及購買貨車，惟公司正依賴銀行貸款提供日常營運資金，導致槓桿比率較行業平均高。</b><br>
+      • <b>為何應使用銀行貸款以外的融資方法？</b>：(1) 公司槓桿比率已較行業平均高（破產風險高），再借貸會進一步增加定期付息還本的財政負擔和破產風險；(2) 因負債偏高，銀行可能索取高昂貸款利率甚至拒絕貸款申請。<br>
+      • <b>若通過邀請新股東加入來籌集資金（屬「股本融資／發行普通股」），有哪兩個缺點？</b>：(1) 新股東擁有股東周年大會投票權，會<b>削弱現有股東對公司的控制權</b>；(2) <b>融資成本較高</b>（因股息不可扣稅，且股東要求的回報率較高）。
+    </div>`
+  ];
+  function renderAdvCase(idx) {
+    document.querySelectorAll('#advCaseChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('advCaseBox').innerHTML = advCases[idx];
+  }
+  renderAdvCase(0);
+
+  const ieQuizItems = [
+    { q: "1. 企業希望「節省籌集資金的成本」，並在籌集資金時「享有較大的靈活性」，應使用內部籌資還是向外籌資？", opts: ["A. 內部籌資（動用留存利潤不須外界批准，且不涉及任何交易成本或利息支出）", "B. 向外籌資"], ans: 0, exp: "正確。內部籌資靈活性較高且成本較低。" },
+    { q: "2. 企業正在「規劃一項需要大量資金的項目」，應使用內部籌資還是向外籌資？", opts: ["A. 內部籌資", "B. 向外籌資（因為內部籌資集資額有限，向外籌資可以籌得較多資金）"], ans: 1, exp: "正確。內部籌資所得款項有限，為大型項目集資往往須要向外籌資。" },
+    { q: "3. 企業是「新成立的」，應使用內部籌資還是向外籌資？", opts: ["A. 內部籌資", "B. 向外籌資（因為新成立企業尚未累積留存利潤可供內部動用）"], ans: 1, exp: "正確。新成立企業沒有留存利潤，須使用向外籌資。" },
+    { q: "4. 相較於內部籌資，下列哪兩項是「向外籌資」的優點？", opts: ["A. (1) 管理人員須仔細評估投資項目，所以會作出較審慎的決策；(2) 可以籌得較多資金", "B. 靈活性較高且完全不涉及任何交易成本"], ans: 0, exp: "正確。「作出較審慎的決策」和「可以籌得較多資金」正是向外籌資相較於內部籌資的兩項核心優點。" },
+    { q: "5. 某大型上市電商企業打算籌集資金進行潛在收購。解釋該企業「發行債券（向外籌資）」而非「使用留存利潤（內部籌資）」的兩個好處：", opts: ["A. (1) 發行債券可以籌得較多資金應付大型收購（留存利潤集資額有限）；(2) 管理層發債前須向投資者披露資訊並仔細評估收購項目，因此會作出較審慎的決策", "B. 發行債券無須支付任何利息及交易費用"], ans: 0, exp: "正確。這直接應用了向外籌資相較於內部籌資的兩大優點。" }
+  ];
+  let curIEQ = 0;
+  function renderIeQuiz() {
+    const it = ieQuizItems[curIEQ];
+    document.getElementById('ieQuizProg').textContent = `題目 ${curIEQ + 1} / ${ieQuizItems.length}`;
+    document.getElementById('ieQuizQ').textContent = it.q;
+    document.getElementById('ieQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:12px 16px" onclick="checkIeQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('ieQuizFb').innerHTML = '';
+  }
+  function checkIeQuiz(idx) {
+    const it = ieQuizItems[curIEQ];
+    const fb = document.getElementById('ieQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14.5px" onclick="curIEQ=(curIEQ+1)%ieQuizItems.length;renderIeQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderIeQuiz();
+
+  // ====== 5. 論點建構問答工作坊 (選項無括號自然行文・批改回饋針對作答內容直接點評) ======
+  const workshopQuestions = [
+    {
+      id: "s1", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 1：發行債券 vs 發行普通股的集資成本", topic: "舉債融資與股本融資：為何發行債券集資的成本比發行普通股低", maxMarks: 2,
+      scenario: "一家大型上市公用事業公司正考慮透過「發行債券」而非「發行普通股」來籌集長期發展資金，財務總監指出透過發行債券集資的成本比發行普通股低。",
+      question: "試以其中一項原因為例，解釋為何透過「發行債券」集資的成本比「發行普通股」低。（2 分）",
+      steps: [
+        { label: "第 1 步：指出發行債券成本較低的單一核心原因（1分）", colorClass: "hl-s1", opts: [
+          { text: "因為發行債券永遠無須向債券持有人支付任何利息或償還本金。", score: 0, status: "wrong", comment: "陳述錯誤。發行債券屬於舉債融資，公司必須定期向債券持有人支付固定利息，並在債務到期日償還本金。" },
+          { text: "因為債券的利息支出可作扣稅之用，而且投資者對債券回報的要求亦較普通股低。", score: 1, status: "best", comment: "準確指出發行債券在稅務扣減上的優勢，以及債券投資者要求回報率較普通股股東低的核心原因。" },
+          { text: "同時因為利息可扣稅、投資者要求回報較低、無須抵押品及手續最簡單。", score: 0, status: "partial", comment: "違反一段一重點原則，只羅列了多個標題，而且公開發行債券手續繁複，並非最簡單的融資方法。" }
+        ]},
+        { label: "第 2 步：對比「債券利息與普通股股息」作扼要解釋（1分）", colorClass: "hl-s2", opts: [
+          { text: "由於債券的利息支出屬於扣稅項目，在計算利得稅時有助減少公司應繳的稅款，減低實際融資成本，而派發給普通股股東的股息只是分派給股東的部分稅後淨利，不能用來減少稅款；此外，債券利息固定且有保證，投資風險較股票低，故投資者要求的回報率亦較普通股低。", score: 1, status: "best", comment: "清楚對比債券利息支出可扣減應評稅利潤與普通股股息不可扣稅的分別，並補充了債券投資風險較低故要求回報率較低的理據。" },
+          { text: "因為債券利息可以幫公司慳錢。", score: 0, status: "partial", comment: "解釋過於簡略，必須明確指出「債券利息支出可作扣稅之用，而普通股股息不可扣稅」或「債券利息固定有保證，故投資者要求的回報率較普通股低」。" },
+          { text: "因為普通股股東都屬於公司的債權人。", score: 0, status: "wrong", comment: "身份概念錯誤。普通股股東是公司的東主，債券持有人才是公司的債權人。" }
+        ]}
+      ]
+    },
+    {
+      id: "s2", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 2：綠意主題樂園（以短期貸款興建三年期酒店的問題）", topic: "短期籌資與長期籌資：以短期銀行貸款為長期工程集資的問題", maxMarks: 2,
+      scenario: "香港「綠意主題樂園」計劃興建一間全新的生態度假酒店來提升競爭力，酒店的建築工程需時大約三年。有人提議以「短期銀行貸款」為這項酒店建築工程籌集資金。",
+      question: "如果主題公園選擇以「短期銀行貸款」為需時三年的酒店建築工程籌集資金，會出現甚麼問題？試以其中一個問題為例加以解釋。（2 分）",
+      steps: [
+        { label: "第 1 步：指出以短期貸款應付長期工程的單一核心問題（1分）", colorClass: "hl-s1", opts: [
+          { text: "問題是主題公園在未來三年內都不可以提早償還貸款，靈活性極低。", score: 0, status: "wrong", comment: "期限概念顛倒。短期銀行貸款在一年內便到期，問題在於須頻繁續借及面對再融資風險，而非三年內不可還款。" },
+          { text: "主題公園須要頻繁地再融資並承擔高昂的再融資風險，而且酒店工程需時三年，短期內不大可能賺取足夠現金償還短期貸款，容易陷入財政困難。", score: 1, status: "best", comment: "準確指出以短期貸款應付三年期大型工程須頻繁再融資，以及短期內無法產生足夠現金還款的核心問題。" },
+          { text: "問題是短期銀行貸款的初始利率必定遠高於長期貸款。", score: 0, status: "wrong", comment: "說法相反。一般而言，短期銀行貸款的初始利率較長期貸款低。" }
+        ]},
+        { label: "第 2 步：扣連「需時三年的酒店建築工程」作具體解釋（1分）", colorClass: "hl-s2", opts: [
+          { text: "由於酒店建築工程長達三年，在建成開業前無法帶來收入償還短期貸款，樂園必須每隔數月不斷以新債務取代舊債務進行再融資；由於未能確定再融資時能否成功取得新貸款，或者屆時貸款利率會否大幅上升，樂園極可能出現財政困難。", score: 1, status: "best", comment: "緊扣三年期酒店建築工程在完工前無收入的特點，清楚說明每隔數月續借所面對的找不到再融資渠道及利率急升風險。" },
+          { text: "因為再融資會令主題公園很麻煩。", score: 0, status: "partial", comment: "表述過於口語化，必須具體說明「未能確定再融資時能否成功取得新貸款，以及貸款利率會否大幅上升而加重利息負擔」。" },
+          { text: "因為銀行債權人會在股東大會上投票反對興建酒店。", score: 0, status: "wrong", comment: "概念混淆。銀行只是債權人而非股東，並沒有股東周年大會的投票權。" }
+        ]}
+      ]
+    },
+    {
+      id: "s3", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 3：康健物理治療中心（邀請新合夥人加入的融資分類與好處）", topic: "舉債融資與股本融資：合夥邀請新合夥人注資的分類與好處", maxMarks: 2,
+      scenario: "「康健物理治療中心」是一家合夥企業，為了購置先進的復康治療儀器，現有合夥人決定通過「邀請新合夥人加入並注資」來籌集資金。",
+      question: "指出「邀請新合夥人加入注資」屬於哪種向外籌資方式（1分）？試解釋使用這種融資方式的一個好處（1分）。（2 分）",
+      steps: [
+        { label: "第 1 步：準確辨識該向外籌資方式的類別（1分）", colorClass: "hl-s1", opts: [
+          { text: "屬於向外籌資中的舉債融資，即債務融資。", score: 0, status: "wrong", comment: "分類錯誤。新合夥人加入後成為企業的東主，從企業東主籌集資金屬於「股本融資」而非舉債融資。" },
+          { text: "屬於向外籌資中的股本融資，又稱權益籌資。", score: 1, status: "best", comment: "準確辨識出邀請新合夥人注資屬於從企業東主籌集長期資金的「股本融資」。" },
+          { text: "屬於內部短期籌資。", score: 0, status: "wrong", comment: "分類錯誤。資金來自新加入的合夥人且沒有到期日，屬於向外長期股本融資。" }
+        ]},
+        { label: "第 2 步：解釋使用這種融資方式的一個好處（1分）", colorClass: "hl-s2", opts: [
+          { text: "好處是財務風險較低，不會增加物理治療中心的額外財政負擔：因為新合夥人投入的資本沒有到期日，中心無須償還款項，亦無須定期支付固定利息，而且進行股本融資無須提供任何資產作為抵押品。", score: 1, status: "best", comment: "清楚點出股本融資無到期日無須還本、無固定利息負擔以及無須提供抵押品的核心好處。" },
+          { text: "好處是分派給新合夥人的利潤可以用來扣減利得稅。", score: 0, status: "wrong", comment: "稅務概念錯誤。分派給合夥人的利潤屬於稅後利潤分配，不能扣減利得稅；只有債務的利息支出才可扣稅。" },
+          { text: "好處是完全不會削弱現有合夥人對物理治療中心的控制權。", score: 0, status: "wrong", comment: "優劣顛倒。新加入的合夥人有權參與中心管理及決策，會攤薄及削弱原有合夥人的控制權，這是其缺點而非好處。" }
+        ]}
+      ]
+    },
+    {
+      id: "s4", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 4：飛躍航空（疫後復甦應對短期現金短缺的融資建議）", topic: "短期籌資的應用：為何短期現金短缺不應採用長期籌資及具體建議", maxMarks: 2,
+      scenario: "在香港上市的「飛躍航空」過去數月因旅遊限制錄得現金短缺。近日政府宣布全面放寬入境限制，航班需求將迅速反彈。行政總裁建議採用「長期籌資方法」來應付目前的現金短缺以免頻繁再融資，但財務經理反對，認為應改用短期籌資方法。",
+      question: "(i) 舉出一個原因支持財務經理反對採用長期籌資來應付目前的現金短缺（1分）；(ii) 為飛躍航空建議一項應對目前現金短缺的具體短期融資方法（1分）。（2 分）",
+      steps: [
+        { label: "第 1 步：解釋為何不應以「長期籌資」應付疫後復甦的暫時性現金短缺（1分）", colorClass: "hl-s1", opts: [
+          { text: "因為長期籌資的風險遠高於短期籌資，需要每個月頻繁續借。", score: 0, status: "wrong", comment: "概念顛倒。需要頻繁續借並面對較高再融資風險的是短期籌資，而非長期籌資。" },
+          { text: "因為隨着入境限制放寬，機票銷售將在短期內帶來現金流入，目前的現金短缺只屬短期資金需要；若採用長期籌資，一來融資利率成本較高，二來靈活性較低，當日後現金充裕不再需要該筆資金時，仍須繼續為閒置資金支付利息。", score: 1, status: "best", comment: "緊扣入境放寬後機票現金流將迅速回籠的個案背景，清楚從長期籌資利率較高及靈活性較低兩方面支持財務經理的觀點。" },
+          { text: "因為上市公司在法律上被禁止使用任何長期籌資。", score: 0, status: "wrong", comment: "陳述不符事實，上市公司可以合法使用各類長期籌資方法。" }
+        ]},
+        { label: "第 2 步：為飛躍航空建議一項應對目前短期現金短缺的具體融資方法（1分）", colorClass: "hl-s2", opts: [
+          { text: "飛躍航空可採用銀行透支、向銀行借取短期貸款、發行商業票據或出售應收帳款來應付目前的短期現金短缺。", score: 1, status: "best", comment: "準確提出適合大型上市航空公司應付短期現金周轉需要的具體短期融資方法。" },
+          { text: "飛躍航空應立即發行三十年期公司債券或發行新普通股。", score: 0, status: "wrong", comment: "期限錯配。發行三十年期債券及發行普通股均屬於長期籌資，不適宜用來應付短暫的現金短缺。" },
+          { text: "飛躍航空應動用豐厚的留存利潤。", score: 0, status: "wrong", comment: "忽略了個案限制。個案已指明公司過去數月因旅遊限制錄得現金短缺，缺乏充裕的內部現金可供動用。" }
+        ]}
+      ]
+    },
+    {
+      id: "e1", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 1：鮮味日本料理連鎖店（舉債 vs 股本考慮因素一：控制權）", topic: "選擇舉債融資或股本融資的考慮因素：控制權", maxMarks: 3,
+      scenario: "「鮮味日本料理有限公司」在香港經營 12 家分店，由於業務前景明朗，計劃在未來三年增設 20 家新分店。公司現正考慮應使用「舉債融資」還是「股本融資」來籌集擴張資金。試解釋該連鎖餐廳選擇舉債融資或股本融資時應考慮的因素。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「控制權」這項考慮因素為核心，建構一個 3 分雙向對比深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一考慮因素名稱並作雙向概念對比（1分）", colorClass: "hl-s1", opts: [
+          { text: "連鎖餐廳應同時考慮風險、控制權、融資成本和抵押品四項因素。", score: 0, status: "partial", comment: "違反一段一重點原則，未有針對「控制權」這一考慮因素對比舉債與股本融資的分別。" },
+          { text: "餐廳應考慮控制權因素：採用舉債融資不會影響現有東主及股東對公司的控制權，而採用股本融資向新投資者發行普通股則會削弱現有東主對公司的控制權。", score: 1, status: "best", comment: "準確鎖定「控制權」因素，並清楚對比舉債融資不影響控制權與發行普通股削弱控制權的差異。" },
+          { text: "餐廳應考慮控制權，因為銀行借錢給餐廳後便會自動成為餐廳的最大股東。", score: 0, status: "wrong", comment: "概念錯誤。貸款銀行只是餐廳的債權人而非股東，借出貸款並不會令銀行成為股東或取得控制權。" }
+        ]},
+        { label: "第 2 步：針對「鮮味日本料理擴張集資」解釋債權人與新普通股股東的投票權差異（1分）", colorClass: "hl-s2", opts: [
+          { text: "若鮮味日本料理透過借取銀行長期貸款或發行債券籌集開分店資金，貸款銀行及債券持有人只是債權人，並沒有股東周年大會投票權，不能就公司決策投票；相反，若透過發行新普通股引入新股東，新股東便可利用手上的股東周年大會投票權來影響餐廳的決策。", score: 1, status: "best", comment: "具體結合餐廳擴張集資情境，清楚說明債權人無投票權而新普通股股東擁有股東周年大會投票權的核心差異。" },
+          { text: "因為新股東和債權人的權利不同。", score: 0, status: "partial", comment: "闡述過於含糊，必須明確指出「債權人沒有股東周年大會投票權，而新普通股股東擁有投票權可影響公司決策」。" },
+          { text: "例如餐廳在商場租用新鋪位。", score: 0, status: "wrong", comment: "只提及租用鋪位，未有解釋舉債融資與股本融資在股東投票權與控制權上的分別。" }
+        ]},
+        { label: "第 3 步：深化論述至決策主導權、被收購風險與融資選擇結論（1分）", colorClass: "hl-s3", opts: [
+          { text: "因此，假如鮮味日本料理的現有東主希望在擴充至 32 家分店的過程中，維持對公司的高度控制權並避免增加公司被收購的風險，便應優先考慮採用舉債融資而非向新投資者發行普通股。", score: 1, status: "best", comment: "清楚推演出為維持決策主導權及避免增加被收購風險，應優先考慮舉債融資的明確結論。" },
+          { text: "所以餐廳在集資時要考慮控制權。", score: 0, status: "partial", comment: "同義反覆，未有說明在重視維持控制權及防範被收購風險下應如何作出融資選擇。" },
+          { text: "這會令日本料理店的壽司食材成本下降。", score: 0, status: "wrong", comment: "推論不合邏輯，融資方式的控制權影響與食材採購成本無關。" }
+        ]}
+      ]
+    },
+    {
+      id: "e2", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 2：鮮味日本料理連鎖店（舉債 vs 股本考慮因素二：風險與財政負擔）", topic: "選擇舉債融資或股本融資的考慮因素：風險（破產風險與財政負擔）", maxMarks: 3,
+      scenario: "承上題，「鮮味日本料理有限公司」計劃在未來三年增設 20 家新分店，正考慮應使用「舉債融資」還是「股本融資」來籌集資金。除了控制權外，試以「風險」為例，解釋該公司應考慮的因素。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「風險，即強制還本付息與無固定股息及無期限的財政負擔分別」為核心，建構一個 3 分雙向對比深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一考慮因素名稱並作雙向概念對比（1分）", colorClass: "hl-s1", opts: [
+          { text: "餐廳應考慮風險因素，即財政負擔與破產風險：對集資企業而言，採用舉債融資的風險較高，而採用股本融資的風險則較低。", score: 1, status: "best", comment: "準確指出「風險」考慮因素，並清楚點出對集資企業而言舉債融資風險較高、股本融資風險較低的對比。" },
+          { text: "餐廳應考慮風險因素，因為發行普通股會令餐廳在虧損時被迫立即清盤破產。", score: 0, status: "wrong", comment: "概念顛倒。發行普通股無須償還本金亦無強制派息責任，不會引致破產清盤；無法按時支付債務利息或本金的舉債融資才會導致被迫清盤。" },
+          { text: "餐廳要考慮有沒有風險。", score: 0, status: "partial", comment: "表述空泛，未有對比舉債融資與股本融資在企業財政負擔及破產風險高低上的分別。" }
+        ]},
+        { label: "第 2 步：針對「餐廳擴張業務」對比付息還本義務與普通股派息彈性（1分）", colorClass: "hl-s2", opts: [
+          { text: "若餐廳採用舉債融資，無論新開設的 20 家分店是否錄得利潤，公司都必須按時支付利息並在債務到期日償還本金；相反，若採用股本融資發行普通股，普通股沒有期限，無須向股東償還款項，而且普通股的股息率不是固定的，餐廳不一定要派發股息。", score: 1, status: "best", comment: "緊扣餐廳開設 20 家分店的情境，清晰對比舉債融資強制定期付息還本，與普通股無到期日及不一定要派發股息的差異。" },
+          { text: "因為借錢要還，發股不用還。", score: 0, status: "partial", comment: "用詞過於口語簡略，應完整對比舉債融資「無論是否錄得利潤都必須按時支付利息及到期償還本金」與普通股「無期限無須償還本金且股息非固定」的特點。" },
+          { text: "例如餐廳為食客提供免費綠茶。", score: 0, status: "wrong", comment: "提供免費綠茶屬於日常餐飲服務，與融資方式的財務風險無關。" }
+        ]},
+        { label: "第 3 步：深化論述至現有槓桿水平、財政負擔與被迫清盤風險的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "假如餐廳目前的槓桿比率已經偏高、破產風險高，過度依賴舉債融資會增加企業的財政負擔，一旦在經濟衰退時不能如期支付利息或償還本金便可能會被迫清盤；在此情況下便應採用股本融資，以免再增加破產風險。", score: 1, status: "best", comment: "深入結合槓桿比率高低與經濟衰退時的清盤危機，清楚推演出破產風險高時應選用股本融資的原則。" },
+          { text: "所以舉債融資的風險比股本融資高。", score: 0, status: "partial", comment: "同義反覆，未有說明無力按時付息還本會引致被迫清盤的後果，以及如何根據破產風險高低作出選擇。" },
+          { text: "這會令香港所有銀行停止營業。", score: 0, status: "wrong", comment: "推論誇大且不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e3", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 3：鮮味日本料理連鎖店（舉債 vs 股本考慮因素三：抵押品）", topic: "選擇舉債融資或股本融資的考慮因素：抵押品", maxMarks: 3,
+      scenario: "承上題，「鮮味日本料理有限公司」正考慮應使用「舉債融資」還是「股本融資」來籌集未來三年增設 20 家分店的資金。試以「抵押品」為例，解釋該公司應考慮的因素。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「抵押品要求」為核心，建構一個 3 分雙向對比深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一考慮因素名稱並作雙向概念對比（1分）", colorClass: "hl-s1", opts: [
+          { text: "餐廳應考慮抵押品因素：企業採用舉債融資借取貸款時一般須要提供抵押品，而進行股本融資則無須提供抵押品。", score: 1, status: "best", comment: "準確指出「抵押品」考慮因素，並清楚對比舉債融資通常須提供抵押品與股本融資無須提供抵押品的分別。" },
+          { text: "餐廳發行普通股時，必須把總部物業抵押給所有小股東。", score: 0, status: "wrong", comment: "概念錯誤。企業發行普通股進行股本融資時，無須向股東提供任何資產作為抵押品。" },
+          { text: "餐廳要看看甚麼是抵押品。", score: 0, status: "partial", comment: "未有對比舉債融資與股本融資在是否需要提供抵押品上的分別。" }
+        ]},
+        { label: "第 2 步：針對「連鎖餐廳資產狀況」說明抵押品的作用與違約沒收風險（1分）", colorClass: "hl-s2", opts: [
+          { text: "由於增設 20 家新分店借貸金額龐大，銀行為減低餐廳違約時造成的損失，通常要求餐廳提供自置鋪位或中央廚房廠房等貴重資產作抵押品，若餐廳無法償還債務，抵押品便會被沒收成為借款人的財產；相反，發行普通股或動用留存利潤則完全不涉及資產抵押。", score: 1, status: "best", comment: "具體說明銀行要求自置鋪位或廠房作抵押以保障違約風險、無法還債時抵押品會被沒收，以及股本融資無須抵押品的差異。" },
+          { text: "因為借錢要給抵押品。", score: 0, status: "partial", comment: "闡述過於簡略，未有結合餐廳自置鋪位或廠房等貴重資產說明抵押品的作用及違約時被沒收的後果。" },
+          { text: "例如餐廳用新鮮三文魚刺身作為長期銀行貸款的抵押品。", score: 0, status: "wrong", comment: "例子不合常理，易腐爛的生鮮食材不能作為長期銀行貸款的貴重抵押品。" }
+        ]},
+        { label: "第 3 步：深化論述至企業是否擁有足夠貴重資產對融資選擇的決定性影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "因此，若鮮味日本料理現時的分店均屬租用鋪位，沒有足夠的貴重資產以作抵押，便較難向銀行借取大額長期貸款，而應考慮採用無須抵押品的股本融資來籌集擴張資金。", score: 1, status: "best", comment: "清楚推演出當餐廳缺乏自置鋪位等貴重抵押品時，難以取得大額銀行貸款而應轉用股本融資的結論。" },
+          { text: "所以抵押品是一個重要的考慮因素。" , score: 0, status: "partial", comment: "同義反覆，未有說明缺乏貴重資產作抵押對選擇舉債或股本融資的決定性影響。" },
+          { text: "這會令餐廳無須再交舖租。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e4", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 4：絲路紡織製造廠（長期 vs 短期籌資考慮因素：風險與資金性質）", topic: "選擇長期籌資或短期籌資的考慮因素：風險與固定資產期限配對", maxMarks: 3,
+      scenario: "為維持營運效率，「絲路紡織製造廠」打算購買一批昂貴的新型紡織機，以取代陳舊的紡織機。公司正考慮應採用「長期籌資」還是「短期籌資」來為購買新紡織機集資。試解釋該製造廠在選擇長期籌資或短期籌資時應考慮的因素。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「再融資風險與資金來源穩定性，配合固定資產回報期」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一考慮因素名稱並作長短期雙向對比（1分）", colorClass: "hl-s1", opts: [
+          { text: "製造廠應同時考慮成本、風險、靈活性、控制權及決策審慎度所有因素。", score: 0, status: "partial", comment: "違反一段一重點原則，未有針對長短期籌資在「風險與資金穩定性」上的分別作雙向對比。" },
+          { text: "製造廠應考慮再融資風險與資金來源穩定性因素：長期籌資提供的資金可供使用一年以上，能提供較穩定的資金來源，風險較低；而短期籌資則須頻繁地再融資，企業須承擔較大風險。", score: 1, status: "best", comment: "準確指出長短期籌資在「風險」上的差異，清楚對比長期籌資資金來源穩定與短期籌資須頻繁再融資的風險。" },
+          { text: "短期籌資的資金可供製造廠使用二十年以上，無須再融資。", score: 0, status: "wrong", comment: "期限概念錯誤。短期籌資提供的資金只供企業使用不多於一年，到期時須進行再融資。" }
+        ]},
+        { label: "第 2 步：針對「購買新型紡織機這固定資產」說明現金流與再融資風險（1分）", colorClass: "hl-s2", opts: [
+          { text: "由於新型紡織機屬於昂貴的固定資產，製造廠不大可能在短期內賺取足夠的現金來償還購買紡織機的費用；若採用短期籌資，工廠便須每隔數月以新債務取代舊債務進行再融資，面對未能確定再融資時能否取得貸款，以及貸款利率大幅上升的風險。", score: 1, status: "best", comment: "緊扣購買新型紡織機這昂貴固定資產回報期長的特點，清楚說明若誤用短期籌資須每隔數月續借所帶來的再融資風險與利率風險。" },
+          { text: "因為買紡織機需要考慮風險。", score: 0, status: "partial", comment: "描述空泛，未有說明昂貴固定資產無法在短期內賺取足夠現金償還，以及短期籌資須頻繁續借的風險。" },
+          { text: "例如製造廠以貿易賒帳購買棉花原料。", score: 0, status: "wrong", comment: "偏離題目情境。題目探討的是為購買「昂貴的新型紡織機」這固定資產集資，而非購買日常棉花原料。" }
+        ]},
+        { label: "第 3 步：深化論述至避免財政困難與匹配固定資產融資原則的結論（1分）", colorClass: "hl-s3", opts: [
+          { text: "因此，為免因找不到再融資的渠道或融資成本激增而出現財政困難，製造廠在購買新紡織機這類固定資產時，應遵循長期籌資適用於有關固定資產融資的原則，選用風險較低、資金來源穩定的長期籌資。", score: 1, status: "best", comment: "清楚推演出遵循「長期籌資適用於固定資產融資」原則，選用長期籌資以免卻再融資危機的結論。" },
+          { text: "所以長期籌資和短期籌資的風險不同。", score: 0, status: "partial", comment: "同義反覆，未有明確指出購買新紡織機應選用長期籌資以避免財政困難。" },
+          { text: "這會令舊紡織機自動變成全新機器。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e5", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 5：絲路紡織製造廠（長期 vs 短期籌資考慮因素：靈活性與成本）", topic: "選擇長期籌資或短期籌資的考慮因素：靈活性（或成本）", maxMarks: 3,
+      scenario: "承上題，「絲路紡織製造廠」正考慮應採用「長期籌資」還是「短期籌資」來籌集資金。除了風險因素外，試以「靈活性」為例，解釋該製造廠應考慮的因素。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「靈活性，即短期可按需增減與長期資金閒置仍須付息」為核心，建構一個 3 分雙向對比深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一考慮因素名稱並作長短期雙向對比（1分）", colorClass: "hl-s1", opts: [
+          { text: "製造廠應考慮靈活性因素：短期籌資比長期籌資更具靈活性；而在成本方面，一般來說短期籌資的成本亦較長期籌資低，例如銀行短期貸款的利率一般較長期貸款低。", score: 1, status: "best", comment: "準確指出短期籌資相較於長期籌資在「靈活性較高」及「融資成本較低」上的特點。" },
+          { text: "長期籌資的靈活性遠高於短期籌資，隨時借還均無須支付利息。", score: 0, status: "wrong", comment: "概念顛倒。短期籌資可因應短期需要增減資金，靈活性高於長期籌資。" },
+          { text: "製造廠要考慮靈活性。" , score: 0, status: "partial", comment: "未有比較短期籌資與長期籌資誰的靈活性較高。" }
+        ]},
+        { label: "第 2 步：對比短期籌資彈性增減資金與長期籌資鎖定資金期的機制（1分）", colorClass: "hl-s2", opts: [
+          { text: "如果製造廠採用短期籌資，便可因應短期需要靈活增減資金；相反，如果採用長期籌資，所得的資金可供使用一年以上，即使製造廠一年後賺取足夠利潤而不再需要該筆資金，仍須為該筆資金支付融資成本。", score: 1, status: "best", comment: "清楚對比短期籌資可按短期需要靈活增減資金，而長期籌資在企業不再需要資金時仍須繼續支付利息成本的差異。" },
+          { text: "因為短期籌資比較靈活。", score: 0, status: "partial", comment: "同義反覆，未有解釋為何長期籌資缺乏靈活性，即當一年後不再需要資金時仍須支付融資成本。" },
+          { text: "例如製造廠向供應商投訴布料染色不均。", score: 0, status: "wrong", comment: "向供應商投訴布料質素屬於生產與採購管理，與融資方式的靈活性無關。" }
+        ]},
+        { label: "第 3 步：深化論述至準確預計資金需要期以避免不必要利息開支的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "因此，製造廠管理層須準確預計購買紡織機及營運所需的資金金額與使用年期，避免過度使用超出實際所需的長期籌資，從而免卻往後為閒置資金承擔不必要的利息開支。", score: 1, status: "best", comment: "清楚推演出準確預計資金使用年期以避免過度借入長期資金，從而省卻為閒置資金支付不必要利息的管理啟示。" },
+          { text: "所以靈活性對製造廠很重要。" , score: 0, status: "partial", comment: "同義反覆，未有說明避免過度使用長期籌資以省卻閒置資金利息開支的影響。" },
+          { text: "這會令紡織機的耗電量減半。" , score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e6", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 6：時尚服飾連鎖店（內部 vs 向外籌資考慮因素一：對決策的影響）", topic: "選擇內部籌資或向外籌資的考慮因素：對決策的影響（決策自由與審慎程度）", maxMarks: 3,
+      scenario: "一家時裝連鎖店計劃研發手機應用程式，以促進顧客關係管理。公司正考慮應使用「內部籌資」還是「向外籌資」方法來為這項計劃集資。試解釋該時裝連鎖店在選擇使用內部籌資或向外籌資方法時應考慮的因素。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「對決策的影響，包括決策自由與決策的審慎程度」為核心，建構一個 3 分雙向對比深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一考慮因素名稱並點出「決策自由」與「決策的審慎程度」兩面影響（1分）", colorClass: "hl-s1", opts: [
+          { text: "時裝連鎖店應同時考慮靈活性、成本、對決策的影響及集資額四項因素。", score: 0, status: "partial", comment: "違反一段一重點原則，未有針對「對決策的影響」中決策自由與決策審慎程度的雙向差異作說明。" },
+          { text: "時裝連鎖店應考慮對決策的影響，包括決策自由和決策的審慎程度：使用內部籌資讓企業在決策上享有較大的自由度，但管理人員未必會審慎評估投資項目；而向外籌資雖會削弱決策自由，但通常能促使管理層作出更為審慎的決策。", score: 1, status: "best", comment: "完整指出內部籌資與向外籌資在「決策自由」及「決策的審慎程度」兩方面的雙向影響。" },
+          { text: "使用內部留存利潤必須事先向全港市民公開披露所有資訊並獲股東批准。", score: 0, status: "wrong", comment: "概念錯誤。企業動用內部留存利潤無須向外界披露資訊或事先取得外界批准。" }
+        ]},
+        { label: "第 2 步：針對「研發手機應用程式項目」對比內部與向外籌資的程序與監督差異（1分）", colorClass: "hl-s2", opts: [
+          { text: "若時裝連鎖店使用內部資金研發手機應用程式，不用披露資訊或事先取得股東批准，且東主人數不會增加，決策自由度高，但正因不用經股東批准，管理人員未必會審慎地評估該應用程式項目；相反，若向外籌資，可能須事先獲股東批准並向投資者披露集資目的，如發行普通股更會令新股東透過投票權影響決策，迫使管理層向外籌資前須仔細評估該項目。", score: 1, status: "best", comment: "緊扣研發手機應用程式項目，清楚對比內部資金無須外批但易欠審慎，與向外籌資須披露獲批故評估更為審慎的機制。" },
+          { text: "因為內部籌資比較自由，向外籌資比較審慎。" , score: 0, status: "partial", comment: "只重複了結論字眼，未有解釋為何內部籌資享有較大決策自由但易欠審慎，以及為何向外籌資會迫使管理層仔細評估項目。" },
+          { text: "例如時裝店在應用程式內售賣春季連身裙。" , score: 0, status: "wrong", comment: "未有解釋內部籌資與向外籌資對管理層決策自由及審慎程度的影響。" }
+        ]},
+        { label: "第 3 步：深化論述至權衡決策自由與避免把資金浪費在無利可圖項目上的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "因此，管理層須權衡兩者：若希望維持高度決策自由度，宜選用內部籌資；但若希望透過外部監督確保手機應用程式項目經過嚴格審視，採用向外籌資則有助避免把資金浪費在無利可圖的項目上。", score: 1, status: "best", comment: "清楚推演出維持決策自由與防止把內部資金浪費在無利可圖項目上的權衡結論。" },
+          { text: "所以這會影響時裝連鎖店的決策。", score: 0, status: "partial", comment: "同義反覆，未有說明如何權衡決策自由度與避免把資金浪費在無利可圖的項目上。" },
+          { text: "這會令手機應用程式的編程時間縮短為一秒。", score: 0, status: "wrong", comment: "推論不合常理。" }
+        ]}
+      ]
+    },
+    {
+      id: "e7", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 7：時尚服飾連鎖店（內部 vs 向外籌資考慮因素二：成本與靈活性）", topic: "選擇內部籌資或向外籌資的考慮因素：成本（或靈活性與集資額）", maxMarks: 3,
+      scenario: "承上題，該時裝連鎖店計劃研發手機應用程式，正考慮應使用「內部籌資」還是「向外籌資」來為計劃集資。除了對決策的影響外，試以「成本」為例，解釋應考慮的因素。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「成本，包括交易成本與利息支出」為核心，建構一個 3 分雙向對比深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一考慮因素名稱並作內外雙向對比（1分）", colorClass: "hl-s1", opts: [
+          { text: "時裝連鎖店應考慮成本因素：使用內部籌資的成本較低，而使用向外籌資的成本則較高。", score: 1, status: "best", comment: "準確指出「成本」考慮因素，並清楚對比內部籌資成本較低與向外籌資成本較高的分別。" },
+          { text: "使用內部留存利潤需要向投資銀行及會計師樓支付高昂的發行證券服務費。", score: 0, status: "wrong", comment: "概念混淆。向外發行新股或債券才須向投資銀行及會計師樓支付服務費；動用內部留存利潤完全不牽涉任何交易成本。" },
+          { text: "時裝連鎖店要考慮成本。", score: 0, status: "partial", comment: "未有指出內部籌資與向外籌資誰的成本較低。" }
+        ]},
+        { label: "第 2 步：針對「研發手機應用程式集資」對比交易成本與利息支出（1分）", colorClass: "hl-s2", opts: [
+          { text: "若時裝連鎖店直接動用內部留存利潤來研發手機應用程式，當中不牽涉任何交易成本或利息支出；相反，向外籌資通常涉及交易成本，例如發行證券須支付給投資銀行和會計師樓的服務費用，或者涉及銀行貸款及債券的利息支出。", score: 1, status: "best", comment: "具體對比動用內部留存利潤不涉交易成本與利息支出，而向外籌資須承擔投資銀行與會計師樓服務費或貸款利息。" },
+          { text: "因為向外籌資要給錢，內部籌資不用給錢。", score: 0, status: "partial", comment: "用詞過於口語化，必須明確寫出向外籌資涉及「交易成本（如支付給投資銀行和會計師樓的服務費）或利息支出」。" },
+          { text: "例如時裝店聘請模特兒拍攝宣傳照。", score: 0, status: "wrong", comment: "聘請模特兒拍照屬於市場推廣開支，並非籌集資金所涉及的融資交易成本。" }
+        ]},
+        { label: "第 3 步：深化論述至遵循「優先採用內部籌資」原則以減省成本的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "因此，根據選擇內部與向外籌資的基本原則，假如時裝連鎖店透過內部籌資所得的留存利潤足以應付研發手機應用程式的資金需要，便應盡量採用內部籌資，內部資金不足時才使用向外籌資，以節省籌集資金的成本。", score: 1, status: "best", comment: "清楚結合「內部資金足夠時應優先採用內部籌資，不足時才向外籌資」的選擇原則，說明如何節省集資成本。" },
+          { text: "所以內部籌資的成本比較低。", score: 0, status: "partial", comment: "同義反覆，未有說明在內部資金足夠時應優先採用內部籌資以節省成本的選擇原則。" },
+          { text: "這會令所有顧客自動下載該手機應用程式。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e8", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 8：星光立體影院（高槓桿私人有限公司的融資決策）", topic: "綜合應用：為何高槓桿企業不應再向銀行借貸及轉用股本融資的缺點", maxMarks: 3,
+      scenario: "「星光立體影院」是一家私人有限公司，在香港營運五所戲院。為把握科技機遇，影院計劃斥資一千萬元翻新戲院並引入 4D 及 VR 效果。財務經理指出：「現時我們以公司儲備及銀行借貸來支持營運。由於我們的槓桿比率遠高於行業平均值，我們不應再向銀行借貸，應向現有及新的股東尋求融資。」",
+      question: "請遵循「一段一個獨立重點」原則，解釋為何星光立體影院在「槓桿比率遠高於行業平均值」下不應再向銀行借貸，並說明向現有及新股東尋求融資進行股本融資的兩項缺點（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出影院「不應再向銀行借貸」的核心財務風險與成本原因（1分）", colorClass: "hl-s1", opts: [
+          { text: "因為向銀行借貸會令銀行獲得股東周年大會投票權，奪走常務董事的控制權。", score: 0, status: "wrong", comment: "概念錯誤。銀行作為債權人並沒有股東周年大會投票權；不應再向銀行借貸是因為公司槓桿比率已遠高於行業平均值，破產風險極高。" },
+          { text: "由於影院現時的槓桿比率已遠高於行業平均值，代表公司已債台高築、破產風險很高，若再向銀行借貸會進一步增加定期支付利息和償還本金的財政負擔與破產風險，而且銀行可能索取高昂貸款利率甚至拒絕貸款申請。", score: 1, status: "best", comment: "準確結合槓桿比率遠高於行業平均值的現況，清楚說明繼續舉債會加重還本付息負擔、推高破產風險及遭銀行索取高息或拒批。" },
+          { text: "因為私人有限公司在法律上不可以向銀行借錢。", score: 0, status: "wrong", comment: "陳述錯誤，私人有限公司是獨立法人，在法律上可以向銀行借取貸款。" }
+        ]},
+        { label: "第 2 步：扣連「一千萬元戲院 4D 翻新計劃」說明繼續舉債對清盤風險的威脅（1分）", colorClass: "hl-s2", opts: [
+          { text: "翻新五所戲院需資金高達一千萬元，若繼續以銀行貸款進行舉債融資，無論翻新後票房是否錄得利潤，影院都必須按時支付利息及償還本金；一旦票房未如預期而無法如期付息還本，影院便可能會被迫清盤。", score: 1, status: "best", comment: "緊扣一千萬元戲院翻新工程，清楚說明在票房波動下強制按時付息還本如何帶來被迫清盤的危機。" },
+          { text: "因為一千萬元是很多錢。", score: 0, status: "partial", comment: "描述過於簡略，未有說明舉債融資不論盈虧均須按時支付利息及償還本金對高槓桿影院造成的清盤威脅。" },
+          { text: "例如影院向觀眾派發免費爆谷。", score: 0, status: "wrong", comment: "派發免費爆谷屬於戲院促銷活動，與籌集一千萬元翻新資金的融資決策無關。" }
+        ]},
+        { label: "第 3 步：指出向現有及新股東尋求融資進行股本融資的兩項缺點（1分）", colorClass: "hl-s3", opts: [
+          { text: "因此，影院應改向現有及新股東尋求股本融資，發行普通股集資以免再增加破產風險；惟採用這種融資方式亦有兩項缺點：一是新股東擁有股東周年大會投票權，會削弱現有股東對影院的控制權；二是股息不可扣稅且股東要求回報率較高，導致融資成本較高。", score: 1, status: "best", comment: "完整串連改用股本融資以避免增加破產風險的決定，並準確指出引入新股東會削弱現有股東控制權及融資成本較高兩項缺點。" },
+          { text: "所以影院應該向股東尋求融資，沒有任何缺點。", score: 0, status: "partial", comment: "漏答了題目後半部分要求指出的缺點，向新股東發行普通股會削弱現有股東控制權且融資成本較高。" },
+          { text: "這會令 4D 座椅的維修費變成零。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    }
+  ];
+
+  let curBuilderCat = 'short';
+  let curQIdx = 0;
+  let userSelections = {};
+  let isSubmitted = false;
+
+  function switchBuilderCat(cat, btn) {
+    curBuilderCat = cat;
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('builderCatLabel').textContent = cat === 'short' ? '選擇短答題（每題滿分 2 分）：' : '選擇進階論述題（每題滿分 3 分）：';
+    curQIdx = cat === 'short' ? 0 : 4;
+    userSelections = {};
+    isSubmitted = false;
+    renderQuestionChips();
+    renderWorkshop();
+  }
+
+  function renderQuestionChips() {
+    document.getElementById('questionChips').innerHTML = workshopQuestions
+      .map((q, i) => ({ q, i }))
+      .filter(x => x.q.cat === curBuilderCat)
+      .map(x => `<button class="chip ${x.i===curQIdx?'active':''}" onclick="selectWorkshopQ(${x.i})">${x.q.title}</button>`)
+      .join('');
+  }
+
+  function selectWorkshopQ(idx) {
+    curQIdx = idx;
+    userSelections = {};
+    isSubmitted = false;
+    renderQuestionChips();
+    renderWorkshop();
+  }
+
+  function pickStepOption(sIdx, oIdx) {
+    userSelections[sIdx] = oIdx;
+    isSubmitted = false;
+    renderWorkshop();
+  }
+
+  function submitConstructedAnswer() {
+    const q = workshopQuestions[curQIdx];
+    if (Object.keys(userSelections).length < q.steps.length) {
+      alert(`請先完成全部 ${q.steps.length} 個步驟的選擇，再點擊批改。`);
+      return;
+    }
+    isSubmitted = true;
+    renderWorkshop();
+  }
+
+  function fillBestChoices() {
+    const q = workshopQuestions[curQIdx];
+    q.steps.forEach((st, sIdx) => {
+      userSelections[sIdx] = st.opts.findIndex(o => o.status === 'best');
+    });
+    isSubmitted = true;
+    renderWorkshop();
+  }
+
+  function renderWorkshop() {
+    const q = workshopQuestions[curQIdx];
+    const letters = ['A', 'B', 'C'];
+
+    let totalScore = 0;
+    q.steps.forEach((st, sIdx) => {
+      if (userSelections[sIdx] !== undefined) {
+        totalScore += st.opts[userSelections[sIdx]].score;
+      }
+    });
+
+    const previewParts = q.steps.map((st, sIdx) => {
+      const selIdx = userSelections[sIdx];
+      if (selIdx === undefined) {
+        return `<span style="color:var(--mute);border-bottom:1px dashed var(--mute)">［未選擇第 ${sIdx + 1} 步］</span>`;
+      }
+      return `<span class="${st.colorClass}">${st.opts[selIdx].text}</span>`;
+    });
+
+    document.getElementById('builderWorkspace').innerHTML = `
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <div>
+            <span class="badge b-blue">${q.typeBadge}</span>
+            <span class="badge b-teal">${q.topic}</span>
+          </div>
+          <b style="color:var(--primary);font-size:16px">本段滿分：${q.maxMarks} 分</b>
+        </div>
+        <div style="background:var(--surface);padding:16px 20px;border-radius:12px;border-left:4px solid var(--primary);font-size:16.5px;margin-bottom:14px"><b>背景情境：</b>${q.scenario}</div>
+        <div style="font-size:18px;font-weight:800;color:var(--ink)">${q.question}</div>
+      </div>
+
+      ${q.steps.map((st, sIdx) => {
+        const selIdx = userSelections[sIdx];
+        return `
+          <div class="builder-stage">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <h4 style="font-size:16.5px"><span class="${st.colorClass}">${st.label}</span></h4>
+              <span style="font-size:14px;font-weight:600;color:var(--mute)">${selIdx !== undefined ? '已選 ' + letters[selIdx] : '請點選一項'}</span>
+            </div>
+            ${st.opts.map((o, oIdx) => {
+              const isSel = selIdx === oIdx;
+              let gradeCls = '';
+              if (isSubmitted && isSel) {
+                gradeCls = o.status === 'best' ? 'graded-best' : o.status === 'partial' ? 'graded-partial' : 'graded-wrong';
+              }
+              return `
+                <button class="opt-card ${isSel ? 'selected' : ''} ${gradeCls}" onclick="pickStepOption(${sIdx}, ${oIdx})">
+                  <span class="opt-letter">${letters[oIdx]}</span>
+                  <span style="flex:1">${o.text}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }).join('')}
+
+      <div class="card" style="border:2px solid var(--primary);margin-bottom:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+          <h3 style="color:var(--primary);font-size:19px">建構段落預覽</h3>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-green" onclick="submitConstructedAnswer()">批改答案</button>
+            <button class="btn btn-outline" onclick="fillBestChoices()">示範完整建構</button>
+          </div>
+        </div>
+        <div style="font-size:17px;line-height:1.85;background:var(--surface);padding:18px 22px;border-radius:12px;border:1px solid var(--line)">
+          ${previewParts.join(' ')}
+        </div>
+
+        ${isSubmitted ? `
+          <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--line)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h4 style="font-size:17.5px">分步批改回饋</h4>
+              <span class="badge ${totalScore === q.maxMarks ? 'b-green' : totalScore >= 1 ? 'b-amber' : 'b-red'}" style="font-size:15px;padding:6px 14px">
+                得分：${totalScore} / ${q.maxMarks} 分
+              </span>
+            </div>
+            ${q.steps.map((st, sIdx) => {
+              const chosen = st.opts[userSelections[sIdx]];
+              const cCls = chosen.status === 'best' ? 'c-best' : chosen.status === 'partial' ? 'c-partial' : 'c-wrong';
+              return `
+                <div class="critique-item ${cCls}">
+                  <b>第 ${sIdx + 1} 步（選項 ${letters[userSelections[sIdx]]} · ${chosen.score} 分）：</b>${chosen.comment}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  renderQuestionChips();
+  renderWorkshop();
+</script>
+</body>
+</html>

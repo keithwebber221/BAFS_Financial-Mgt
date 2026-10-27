@@ -1,0 +1,1676 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>財務管理 — 財務分析</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 財務管理單元專屬配色：翡翠深綠 (Emerald) × 深海藍 (Ocean Navy) × 琥珀金 (Amber Gold) */
+      --bg: #f2f6f4;
+      --card: #ffffff;
+      --surface: #f7faf8;
+      --ink: #0f1f18;
+      --ink-sec: #2d4239;
+      --mute: #5c7267;
+      --line: #d8e4dd;
+      --primary: #065f46;
+      --primary-dark: #064e3b;
+      --primary-light: #ecfdf5;
+      --primary-border: #a7f3d0;
+      --teal: #0369a1;
+      --teal-light: #f0f9ff;
+      --teal-border: #bae6fd;
+      --amber: #b45309;
+      --amber-light: #fffbeb;
+      --green: #15803d;
+      --green-light: #f0fdf4;
+      --red: #be123c;
+      --red-light: #fff1f2;
+      --radius: 16px;
+      --shadow: 0 4px 20px -2px rgba(6, 78, 59, 0.06), 0 2px 6px -1px rgba(6, 78, 59, 0.04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.75;
+      padding-bottom: 60px;
+      font-size: 17.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4 { margin: 0; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1.35; }
+
+    /* Top Navigation Bar */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      flex-wrap: wrap;
+    }
+    .home-link {
+      text-decoration: none;
+      color: var(--ink-sec);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      transition: all 0.2s;
+    }
+    .home-link:hover { color: var(--primary); border-color: var(--primary-border); background: var(--primary-light); }
+    .brand { display: flex; align-items: center; gap: 12px; font-size: 19px; font-weight: 800; color: var(--primary-dark); }
+    .brand-tag {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .main-tabs {
+      margin-left: auto;
+      display: flex;
+      gap: 6px;
+      background: #dfe9e3;
+      padding: 5px;
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+    .main-tabs button {
+      border: 0;
+      background: none;
+      padding: 9px 15px;
+      border-radius: 9px;
+      font: 700 15px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .main-tabs button:hover { color: var(--ink); }
+    .main-tabs button.on {
+      background: var(--card);
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(6, 78, 59, 0.1);
+    }
+
+    /* Main Container & Views */
+    .view { display: none; max-width: 1160px; margin: 0 auto; padding: 28px 24px; animation: fadeIn 0.25s ease; }
+    .view.on { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Section Header Banner */
+    .sec-banner {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow);
+    }
+    .sec-banner h1 { font-size: 25px; margin: 6px 0 8px; }
+    .sec-banner p { margin: 0; color: var(--ink-sec); font-size: 16.5px; max-width: 680px; }
+
+    /* Sub-navigation Switcher */
+    .sub-nav {
+      display: inline-flex;
+      background: #eaf1ed;
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .sub-nav button {
+      border: 0;
+      background: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font: 700 15px 'Noto Sans TC', sans-serif;
+      color: var(--mute);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sub-nav button:hover { color: var(--ink); }
+    .sub-nav button.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(6, 95, 70, 0.25);
+    }
+    .sub-view { display: none; }
+    .sub-view.active { display: block; animation: fadeIn 0.2s ease; }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .sidebar-layout { display: grid; grid-template-columns: 290px 1fr; gap: 22px; align-items: start; }
+
+    /* Badges & Pills */
+    .badge {
+      display: inline-block;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-right: 8px;
+    }
+    .b-blue { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border); }
+    .b-teal { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
+    .b-amber { background: var(--amber-light); color: var(--amber); border: 1px solid #fde68a; }
+    .b-green { background: var(--green-light); color: var(--green); border: 1px solid #bbf7d0; }
+    .b-red { background: var(--red-light); color: var(--red); border: 1px solid #fecdd3; }
+
+    /* Interactive Selector Lists */
+    .nav-list { display: flex; flex-direction: column; gap: 10px; }
+    .nav-item {
+      text-align: left;
+      padding: 15px 18px;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      font: 700 16px 'Noto Sans TC', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .nav-item:hover { border-color: var(--primary); background: var(--primary-light); }
+    .nav-item.active {
+      background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 6px 16px rgba(6, 95, 70, 0.24);
+    }
+    .nav-item.active span.sub-txt { color: #d1fae5; }
+    .sub-txt { font-size: 13px; color: var(--mute); font-weight: 500; flex-shrink: 0; }
+
+    .chips { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+    .chip {
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      padding: 9px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font: 700 15.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      transition: all 0.2s;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .chip.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(6, 95, 70, 0.2);
+    }
+
+    .btn {
+      border: 0;
+      background: var(--primary);
+      color: #ffffff;
+      font: 700 16px 'Noto Sans TC', sans-serif;
+      padding: 11px 22px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-teal { background: var(--teal); }
+    .btn-teal:hover { background: #075985; }
+    .btn-green { background: var(--green); }
+    .btn-green:hover { background: #166534; }
+    .btn-outline { background: var(--card); color: var(--primary); border: 1.5px solid var(--primary); }
+    .btn-outline:hover { background: var(--primary-light); }
+
+    .note-box {
+      border-left: 4px solid var(--primary);
+      background: var(--primary-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 16px;
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+    .case-box {
+      border-left: 4px solid var(--teal);
+      background: var(--teal-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 14px;
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+
+    /* Mathematical Formula Display */
+    .formula-box {
+      background: var(--primary-light);
+      border: 1.5px solid var(--primary-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 17.5px;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 12px 0;
+      flex-wrap: wrap;
+    }
+    .frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; text-align: center; line-height: 1.3; }
+    .frac-top { border-bottom: 2px solid var(--primary); padding: 0 10px 4px; }
+    .frac-bot { padding: 4px 10px 0; }
+
+    /* Comparison Table */
+    table.comp-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 16px; }
+    table.comp-table th, table.comp-table td { padding: 12px 15px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    table.comp-table th { background: var(--surface); font-weight: 800; color: var(--ink); }
+    table.comp-table tr.highlight-row { background: var(--primary-light); }
+    table.comp-table tr.clickable-row { cursor: pointer; transition: background 0.15s; }
+    table.comp-table tr.clickable-row:hover { background: var(--primary-light); }
+    table.comp-table tr.active-row { background: #d1fae5; font-weight: 700; }
+
+    /* Calculator Inputs & Live Cards */
+    .calc-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+    .calc-field { display: flex; flex-direction: column; gap: 4px; font-size: 14.5px; }
+    .calc-field label { font-weight: 700; color: var(--ink-sec); }
+    .calc-field input[type="number"] {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1.5px solid var(--line);
+      font: 700 15.5px 'Inter', 'Noto Sans TC', sans-serif;
+      color: var(--primary);
+      background: var(--card);
+      width: 100%;
+    }
+    .derived-bar {
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-top: 14px;
+      font-size: 14.5px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      border: 1px solid var(--line);
+    }
+    .ratio-live-card {
+      background: var(--card);
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 15px;
+    }
+    .ratio-val-big { font-size: 21px; font-weight: 800; color: var(--primary); }
+
+    input[type="range"] { width: 100%; accent-color: var(--primary); cursor: pointer; }
+    .meter-bar { height: 12px; background: #dfe9e3; border-radius: 999px; overflow: hidden; margin: 8px 0; }
+    .meter-fill { height: 100%; background: var(--primary); transition: width 0.3s ease; }
+
+    /* Builder Specific */
+    .builder-stage {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .opt-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      width: 100%;
+      text-align: left;
+      padding: 15px 18px;
+      margin: 10px 0;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      font: 500 16.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1.65;
+    }
+    .opt-card:hover { border-color: var(--primary); background: var(--surface); }
+    .opt-card.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
+    .opt-card.correct, .opt-card.graded-best { border-color: var(--green); background: var(--green-light); color: #064e3b; }
+    .opt-card.graded-partial { border-color: var(--amber); background: var(--amber-light); color: #78350f; }
+    .opt-card.wrong, .opt-card.graded-wrong { border-color: var(--red); background: var(--red-light); color: #881337; }
+    .opt-letter {
+      display: inline-grid;
+      place-items: center;
+      min-width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #eaf1ed;
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 14.5px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .opt-card.selected .opt-letter { background: var(--primary); color: #ffffff; }
+
+    .hl-s1 { background: #d1fae5; color: #065f46; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s2 { background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s3 { background: #e0f2fe; color: #075985; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+
+    .critique-item {
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-left: 5px solid var(--line);
+      background: var(--card);
+    }
+    .critique-item.c-best { border-left-color: var(--green); background: var(--green-light); }
+    .critique-item.c-partial { border-left-color: var(--amber); background: var(--amber-light); }
+    .critique-item.c-wrong { border-left-color: var(--red); background: var(--red-light); }
+
+    details.guide-Collapsible {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 22px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    details.guide-Collapsible summary {
+      font-weight: 700;
+      font-size: 16.5px;
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    @media (max-width: 860px) {
+      .grid2, .grid3, .sidebar-layout, .calc-input-grid { grid-template-columns: 1fr; }
+      header { padding: 12px 18px; }
+      .main-tabs { width: 100%; justify-content: center; margin-top: 8px; }
+      .sec-banner h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="財務管理_目錄.html" class="home-link">返回單元目錄</a>
+  <select onchange="if(this.value) location.href=this.value" style="padding:7px 12px;border-radius:10px;border:1px solid var(--primary-border);background:var(--primary-light);color:var(--primary);font:700 14.5px 'Noto Sans TC',sans-serif;cursor:pointer">
+    <option value="">快速切換課室／測驗...</option>
+    <option value="財務管理_目錄.html">單元總目錄</option>
+    <option value="財務分析.html">第 1 課：財務分析</option>
+    <option value="預算編製.html">第 2 課：預算編製</option>
+    <option value="融資方式.html">第 3 課：融資方式</option>
+    <option value="資本投資評估.html">第 4 課：資本投資評估</option>
+    <option value="營運資金管理.html">第 5 課：營運資金管理</option>
+    <option value="風險管理.html">第 6 課：風險管理</option>
+    <option value="財務管理_單元綜合測驗.html">單元綜合模擬試卷 (72分)</option>
+  </select>
+  <div class="brand">
+    <span>財務管理</span>
+    <span class="brand-tag">第 1 課：財務分析</span>
+  </div>
+  <nav class="main-tabs" id="mainTabs">
+    <button class="on" data-tab="sec-role">1. 財務管理角色與四大決策</button>
+    <button data-tab="sec-stmt">2. 認識有限公司財務報表</button>
+    <button data-tab="sec-ratios">3. 會計比率計算與詮釋</button>
+    <button data-tab="sec-analysis">4. 比率分析：種類、功能與限制</button>
+    <button data-tab="sec-builder">5. 論點建構工作坊</button>
+  </nav>
+</header>
+
+<!-- ==================== 1. 財務管理角色與四大決策 ==================== -->
+<section class="view on" id="sec-role">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元一：財務管理在企業營運中所擔當的角色</span>
+      <h1>企業的最終目標與財務管理的四種主要財務決策</h1>
+      <p>財務管理（又稱企業財務管理或企業財務）指管理企業的財務資源（資金和資產）和財務責任（債務或負債），以達成企業的目標。在財務學中，企業的最終目標是為東主（或股東）賺取最大的財富，即是將每股股份的市價提升至最高。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('role', 0, this)">四種主要財務決策詳解</button>
+      <button onclick="switchSub('role', 1, this)">股息權衡模擬與決策練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 1A：四種主要財務決策詳解 -->
+  <div class="sub-view active" id="role-sub-0">
+    <div class="sidebar-layout">
+      <div class="nav-list" id="finDecNavList"></div>
+      <div class="card" id="finDecDetailCard" style="margin-bottom:0"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 1B：股息決策權衡模擬器與決策分類練習 -->
+  <div class="sub-view" id="role-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">股息決策權衡模擬</span>
+        <h3 style="font-size:21px;margin:8px 0 6px">派發股息與保留利潤作投資的長短期影響</h3>
+        <p style="font-size:15.5px;color:var(--ink-sec);margin:0 0 12px">企業可把部分淨利作為股息派發予股東（現金股息或以股代息）。拉動滑桿調整「派息率」，觀察對短期股價與一年後長期股東財富的影響：</p>
+        <div style="display:flex;justify-content:space-between;font-size:15.5px;margin-bottom:4px">
+          <b>派發股息佔淨利比例（派息率）：</b>
+          <b id="lblDivRate" style="color:var(--primary);font-size:18px">40%</b>
+        </div>
+        <input type="range" id="divSlider" min="0" max="100" step="10" value="40" oninput="updateDivSim()">
+        <div id="divSimOutput" style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line);margin-top:12px;font-size:15.5px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">財務決策配對與判斷挑戰</span>
+        <h3 style="font-size:21px;margin:8px 0 10px">辨識四種主要財務決策與核心概念（共 6 題）</h3>
+        <p id="decMatchProg" style="font-size:14.5px;font-weight:600;color:var(--mute);margin:0 0 10px"></p>
+        <div id="decMatchQ" style="font-size:17px;font-weight:700;padding:18px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:14px"></div>
+        <div id="decMatchBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="decMatchFb" style="margin-top:14px;font-size:16px;min-height:52px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 2. 認識有限公司財務報表 ==================== -->
+<section class="view" id="sec-stmt">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元二：認識財務報表（損益表與財務狀況表）</span>
+      <h1>有限公司的損益表與財務狀況表結構拆解</h1>
+      <p>在財務管理中，有限公司是較為常見的企業擁有權類型。財務管理側重於如何解釋兩份主要財務報表——「損益表（收益表）」和「財務狀況表（資產負債表）」所提供的信息。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('stmt', 0, this)">有限公司財務報表互動拆解</button>
+      <button onclick="switchSub('stmt', 1, this)">與獨資企業報表比較及計算練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 2A：有限公司損益表與財務狀況表互動拆解 -->
+  <div class="sub-view active" id="stmt-sub-0">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">損益表（收益表）</span>
+        <h3 style="font-size:20.5px;margin:8px 0 6px">點擊損益表內項目，查看計算公式與定義</h3>
+        <p style="font-size:14.5px;color:var(--mute);margin:0 0 8px">星海電玩有限公司 — 損益表（截至 2025 年 3 月 31 日止年度）：</p>
+        <table class="comp-table" style="font-size:15.5px">
+          <thead><tr><th>損益表項目（點擊查看詳解）</th><th style="text-align:right">$</th></tr></thead>
+          <tbody>
+            <tr class="clickable-row" onclick="showStmtInfo('sales')"><td><b>銷貨 (Sales)</b></td><td style="text-align:right">5,000,000</td></tr>
+            <tr class="clickable-row" onclick="showStmtInfo('cogs')"><td>減 銷貨成本（期初存貨 $460,000 + 購貨 $3,140,000 - 期末存貨 $500,000）</td><td style="text-align:right"><u>3,100,000</u></td></tr>
+            <tr class="clickable-row" onclick="showStmtInfo('gp')"><td><b>毛利 (Gross Profit)</b></td><td style="text-align:right"><b>1,900,000</b></td></tr>
+            <tr class="clickable-row active-row" onclick="showStmtInfo('opex')"><td style="color:var(--primary)"><b>減 營業費用</b>（分銷費用 $620,000 + 行政費用 $750,000 + 其他營業費用 $50,000）</td><td style="text-align:right;color:var(--primary)"><u>1,420,000</u></td></tr>
+            <tr class="clickable-row" onclick="showStmtInfo('ebit')"><td style="color:var(--primary)"><b>營業利潤（利息及稅前利潤 / 息稅前利潤 EBIT）</b></td><td style="text-align:right;color:var(--primary)"><b>480,000</b></td></tr>
+            <tr class="clickable-row" onclick="showStmtInfo('fc')"><td style="color:var(--primary)"><b>減 財務成本（利息支出）</b></td><td style="text-align:right;color:var(--primary)"><u>30,000</u></td></tr>
+            <tr class="clickable-row" onclick="showStmtInfo('ebt')"><td><b>稅前利潤（稅前淨利）</b></td><td style="text-align:right"><b>450,000</b></td></tr>
+            <tr class="clickable-row" onclick="showStmtInfo('tax')"><td>減 稅項</td><td style="text-align:right"><u>75,000</u></td></tr>
+            <tr class="clickable-row" onclick="showStmtInfo('pat')"><td style="color:var(--primary)"><b>稅後利潤</b></td><td style="text-align:right;color:var(--primary)"><b><u>375,000</u></b></td></tr>
+          </tbody>
+        </table>
+        <div id="stmtExplainBox" class="note-box" style="margin-top:12px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">財務狀況表（資產負債表）</span>
+        <h3 style="font-size:20.5px;margin:8px 0 6px">點擊財務狀況表各部分，拆解資產、權益與負債</h3>
+        <p style="font-size:14.5px;color:var(--mute);margin:0 0 8px">星海電玩有限公司 — 財務狀況表（於 2025 年 3 月 31 日）：</p>
+        <table class="comp-table" style="font-size:15.5px">
+          <thead><tr><th>資產、權益及負債項目（點擊查看詳解）</th><th style="text-align:right">$</th></tr></thead>
+          <tbody>
+            <tr class="clickable-row" onclick="showSfpInfo('nca')"><td><b>非流動（固定）資產</b>（機器及設備 $2,100,000 + 家具及裝置 $700,000）</td><td style="text-align:right">2,800,000</td></tr>
+            <tr class="clickable-row" onclick="showSfpInfo('ca')"><td><b>流動資產</b>（存貨 $500,000 + 應收貨款 $500,000 + 現金 $400,000）</td><td style="text-align:right"><u>1,400,000</u></td></tr>
+            <tr style="background:var(--surface)"><td><b>資產總額</b></td><td style="text-align:right"><b><u>4,200,000</u></b></td></tr>
+            <tr class="clickable-row active-row" onclick="showSfpInfo('eq')"><td style="color:var(--primary)"><b>權益（股東權益／股東資本）</b>（普通股股本 $1,800,000 + 優先股股本 $200,000 + 儲備 $500,000 + 留存利潤 $500,000）</td><td style="text-align:right;color:var(--primary)"><b>3,000,000</b></td></tr>
+            <tr class="clickable-row" onclick="showSfpInfo('ncl')"><td><b>非流動（長期）負債</b>：長期負債</td><td style="text-align:right">600,000</td></tr>
+            <tr class="clickable-row" onclick="showSfpInfo('cl')"><td><b>流動負債</b>（應付貨款 $314,000 + 應計費用 $211,000 + 應付稅項 $75,000）［負債總額：$1,200,000］</td><td style="text-align:right"><u>600,000</u></td></tr>
+            <tr style="background:var(--surface)"><td><b>權益及負債總額</b></td><td style="text-align:right"><b><u>4,200,000</u></b></td></tr>
+          </tbody>
+        </table>
+        <div id="sfpExplainBox" class="case-box" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 子分頁 2B：有限公司與獨資企業財務報表的主要分別 & 計算練習 -->
+  <div class="sub-view" id="stmt-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">報表比較</span>
+        <h3 style="font-size:21px;margin:8px 0 8px">有限公司財務報表與獨資企業財務報表的主要分別</h3>
+        <div class="chips" id="diffStmtChips">
+          <button class="chip active" onclick="renderStmtDiff(0)">1. 損益表的兩大分別</button>
+          <button class="chip" onclick="renderStmtDiff(1)">2. 財務狀況表的兩大分別</button>
+        </div>
+        <div id="diffStmtBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">報表項目勾稽計算練習</span>
+        <h3 style="font-size:21px;margin:8px 0 10px">計算稅前利潤、股東資本與非流動負債</h3>
+        <div class="chips" id="p12Chips">
+          <button class="chip active" onclick="renderP12(0)">練習 1：計算稅前利潤</button>
+          <button class="chip" onclick="renderP12(1)">練習 2：計算股東資本</button>
+          <button class="chip" onclick="renderP12(2)">練習 3：計算非流動負債</button>
+        </div>
+        <div id="p12Box" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 3. 會計比率計算與詮釋 ==================== -->
+<section class="view" id="sec-ratios">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元三：運用會計比率評論企業的業績</span>
+      <h1>四大類會計比率（盈利能力・變現能力・償債能力・管理效能）</h1>
+      <p>會計比率（又稱財務比率）展示財務報表上各項數字之間的關係。單一比率並不能有效說明企業的業績；要判斷某比率是高還是低，應將比率與 (i) 企業往年的比率，或 (ii) 同行其他企業的平均比率作比較。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('rat', 0, this)">10 大會計比率公式與詮釋百科</button>
+      <button onclick="switchSub('rat', 1, this)">動態計算器、實戰拆解與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 3A：10 大會計比率公式與詮釋百科 -->
+  <div class="sub-view active" id="rat-sub-0">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <div>
+          <span class="badge b-blue">公式與詮釋百科</span>
+          <h3 style="font-size:21px;margin-top:4px">先選擇四大比率類別，再點擊個別比率查看定義、公式與注意事項</h3>
+        </div>
+        <div class="chips" id="ratioCatChips" style="margin:0"></div>
+      </div>
+      <div class="chips" id="ratioItemChips" style="margin-top:12px"></div>
+      <div id="ratioDetailPanel" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:0">
+      <span class="badge b-teal">進階概念推演</span>
+      <h3 style="font-size:21px;margin:8px 0 8px">常見會計比率分子分母變動關係剖析</h3>
+      <div class="chips" id="chalChips">
+        <button class="chip active" onclick="renderChal(0)">1. 為何淨利率通常低於毛利率？</button>
+        <button class="chip" onclick="renderChal(1)">2. 當銷貨、毛利和淨利增加時，毛利率和淨利率何時會下降？</button>
+        <button class="chip" onclick="renderChal(2)">3. 獲得較佳賒帳條款為何會令應付貨款周轉率較低？</button>
+        <button class="chip" onclick="renderChal(3)">4. 銷貨增加時，總資產周轉率在甚麼情況下會下降？</button>
+      </div>
+      <div id="chalBox" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 3B：自訂數據動態 10 大會計比率計算器 + 實戰拆解與練習 -->
+  <div class="sub-view" id="rat-sub-1">
+    <div class="card" style="border:1.5px solid var(--primary)">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+        <div>
+          <span class="badge b-blue">動態計算器與同業比較</span>
+          <h3 style="font-size:21px;margin-top:4px">輸入或切換財務報表數字，即時計算全部 10 個會計比率並與行業平均水平比較</h3>
+        </div>
+        <div class="chips" style="margin:0">
+          <button class="chip active" id="presetBtn0" onclick="loadCalcPreset(0)">情境 1：星海電玩有限公司 (基準)</button>
+          <button class="chip" id="presetBtn1" onclick="loadCalcPreset(1)">情境 2：薄利多銷兼大舉借貸擴充</button>
+          <button class="chip" id="presetBtn2" onclick="loadCalcPreset(2)">情境 3：高溢價策略但存貨嚴重積壓</button>
+        </div>
+      </div>
+      <div class="grid2" style="margin-top:12px">
+        <div style="background:var(--surface);padding:16px 18px;border-radius:14px;border:1px solid var(--line)">
+          <b style="color:var(--primary);font-size:15px;display:block;margin-bottom:8px">(1) 損益表數據輸入（假設全數賒銷及賒購）：</b>
+          <div class="calc-input-grid" id="calcInputsIS"></div>
+          <b style="color:var(--teal);font-size:15px;display:block;margin:14px 0 8px">(2) 財務狀況表數據輸入（期末餘額）：</b>
+          <div class="calc-input-grid" id="calcInputsSFP"></div>
+          <div class="derived-bar" id="calcDerivedSummary"></div>
+        </div>
+        <div id="calcLiveOutput"></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">計算步驟拆解</span>
+        <h3 style="font-size:20.5px;margin:8px 0 8px">綜合計算題一步步拆解器（先求未知數 ➔ 代入公式 ➔ 加上單位）</h3>
+        <div class="chips" id="assessCalcChips"></div>
+        <div id="assessCalcBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">比率計算與判斷練習</span>
+        <h3 style="font-size:20.5px;margin:8px 0 8px">會計比率計算與概念判斷（共 8 題，計算至兩個小數位）</h3>
+        <p id="ratioQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute);margin:0 0 8px"></p>
+        <div id="ratioQuizQ" style="font-size:16.5px;700;padding:16px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:12px"></div>
+        <div id="ratioQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="ratioQuizFb" style="margin-top:12px;font-size:15.5px;min-height:48px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 4. 比率分析：種類、功能與限制 ==================== -->
+<section class="view" id="sec-analysis">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元四：比率分析（財務報表分析／財務分析）</span>
+      <h1>比率分析的種類（同業分析・時序分析）、兩大功能與五大限制</h1>
+      <p>要評論企業的業績，須同時分析各種會計比率，這種做法稱為比率分析。在進行比率分析時，不應單憑一個比率來判斷企業業績，亦須綜合運用不同類別的比率。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('ana', 0, this)">分析種類（同業・時序）與兩大功能</button>
+      <button onclick="switchSub('ana', 1, this)">比率分析的五大限制與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 4A：比率分析的種類與兩大功能 -->
+  <div class="sub-view active" id="ana-sub-0">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">比率分析的兩大功能</span>
+        <h3 style="font-size:21px;margin:8px 0 8px">展示數字關係與比較不同規模企業的表現</h3>
+        <p style="font-size:15.5px;color:var(--ink-sec);margin:0 0 10px">
+          <b>1. 展示財務報表中各項數字之間有意義的關係：</b>知道企業淨利佔銷貨的比例，比單單知道賺取的淨利金額更有意義。<br>
+          <b>2. 有助比較不同企業的財務表現：</b>會計比率可計算財務數字的<b>相對大小</b>，在比較兩家不同規模的企業時尤其重要。
+        </p>
+        <div class="chips" id="funcCaseChips">
+          <button class="chip active" onclick="renderFuncCase(0)">案例一：茶語手作 vs 果茶物語</button>
+          <button class="chip" onclick="renderFuncCase(1)">案例二：宏大物流 vs 精準速遞（不同規模）</button>
+          <button class="chip" onclick="renderFuncCase(2)">案例三：優越公司 vs 卓越公司（股東投資選擇）</button>
+        </div>
+        <div id="funcCaseBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">比率分析的兩種方法</span>
+        <h3 style="font-size:21px;margin:8px 0 8px">同業分析 vs 時序分析（趨勢分析）示範</h3>
+        <p style="font-size:15.5px;color:var(--ink-sec);margin:0 0 10px">
+          <b>1. 同業分析：</b>以特定標準（同行其他規模相若企業的平均會計比率，稱為<b>行業標準</b>或<b>行業平均水平</b>）評估企業在某段時期內的業績。<br>
+          <b>2. 時序分析（趨勢分析）：</b>以某段時期內會計比率變化的趨勢來評估業績（把企業的會計比率與往年的作比較）。
+        </p>
+        <div class="chips" id="anaDemoChips">
+          <button class="chip active" onclick="renderAnaDemo(0)">1. 同業分析：盈利能力</button>
+          <button class="chip" onclick="renderAnaDemo(1)">2. 同業分析：變現與償債</button>
+          <button class="chip" onclick="renderAnaDemo(2)">3. 同業分析：管理效能</button>
+          <button class="chip" onclick="renderAnaDemo(3)">4. 跨年度比較：時序分析</button>
+        </div>
+        <div id="anaDemoBox" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 子分頁 4B：比率分析的五大限制與練習 -->
+  <div class="sub-view" id="ana-sub-1">
+    <div class="sidebar-layout" style="margin-bottom:20px">
+      <div class="nav-list" id="limitNavList"></div>
+      <div class="card" id="limitDetailCard" style="margin-bottom:0"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="badge b-teal">比率分析限制與概念判斷練習</span>
+        <span id="limitQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute)"></span>
+      </div>
+      <div id="limitQuizQ" style="font-size:17.5px;font-weight:700;margin-bottom:14px"></div>
+      <div id="limitQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+      <div id="limitQuizFb" style="margin-top:14px;font-size:16px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 5. 論點建構問答工作坊 (12題) ==================== -->
+<section class="view" id="sec-builder">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-amber">實戰寫作訓練</span>
+      <h1>「一段一個獨立重點」論點建構工作坊</h1>
+      <p>收錄 4 道短答題（2 步建構 · 2 分）及 8 道進階論述題（3 步建構 · 3 分）。請選擇題目並逐步點選最準確的商業論述。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchBuilderCat('short', this)">短答題訓練 (4題)</button>
+      <button onclick="switchBuilderCat('essay', this)">進階論述題訓練 (8題)</button>
+    </div>
+  </div>
+
+  <details class="guide-Collapsible">
+    <summary>查看「一段一個重點」建構結構指南（點擊展開 / 收起）</summary>
+    <div class="grid2" style="margin-top:14px;font-size:16px">
+      <div style="background:var(--primary-light);padding:14px 18px;border-radius:10px">
+        <b style="color:var(--primary)">短答題／個案題模式（每段滿分 2 分 — 2 步建構）</b><br>
+        <span class="hl-s1">第 1 步 (1分)</span> 準確指出單一財務決策、會計比率定義、分析方法或改善措施名稱<br>
+        <span class="hl-s2">第 2 步 (1分)</span> 結合個案數據、情境或公式分子分母變化作清晰說明
+      </div>
+      <div style="background:var(--teal-light);padding:14px 18px;border-radius:10px">
+        <b style="color:var(--teal)">進階論述題模式（每段滿分 3 分 — 3 步深度建構）</b><br>
+        <span class="hl-s1">第 1 步 (1分)</span> 指出單一財務決策／評估表現範疇／比率分析限制名稱並界定其含義<br>
+        <span class="hl-s2">第 2 步 (1分)</span> 設定具體商業例子並列出相關會計比率，解釋其運作方式<br>
+        <span class="hl-s3">第 3 步 (1分)</span> 深化推論至財務穩健性、盈利能力或為股東賺取最大財富的影響
+      </div>
+    </div>
+  </details>
+
+  <div class="card" style="padding:18px 22px;margin-bottom:18px">
+    <div style="font-size:15px;color:var(--mute);font-weight:700;margin-bottom:8px" id="builderCatLabel">選擇短答題（每題滿分 2 分）：</div>
+    <div class="chips" id="questionChips" style="margin:0"></div>
+  </div>
+
+  <div id="builderWorkspace"></div>
+</section>
+
+<script>
+  // Main Tab Switching
+  document.querySelectorAll('#mainTabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#mainTabs button').forEach(b => b.classList.remove('on'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+      btn.classList.add('on');
+      document.getElementById(btn.dataset.tab).classList.add('on');
+    });
+  });
+
+  // Sub-view Switching
+  function switchSub(prefix, idx, btn) {
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll(`[id^="${prefix}-sub-"]`).forEach((el, i) => {
+      el.classList.toggle('active', i === idx);
+    });
+  }
+
+  // ====== 1. 財務管理角色與四大決策 ======
+  const finDecData = [
+    {
+      num: "01",
+      title: "1. 投資決策 (Investment Decision)",
+      badge: "投資哪些項目（長期資金用途）",
+      def: "投資決策就是企業選取良好的投資項目，為東主賺取最大的財富。企業可透過投資「淨現值 (NPV)」為正數的項目來增加東主的財富。",
+      scope: "<b>長短期劃分重點：</b>在財務管理中，投資決策通常<b>只涉及長期投資</b>（如添置機器設備、興建新廠房或開設新分店）。短期投資則涉及流動資產，所以納入「營運資金決策」中。"
+    },
+    {
+      num: "02",
+      title: "2. 融資決策 (Financing Decision)",
+      badge: "如何獲得資金（長期資金來源）",
+      def: "企業必須籌得資金才能進行投資（融資決策和投資決策是密切相關的）。企業通常透過發行股票（股本）和借款（債務）來籌集資金；由於東主和放債人都要求投資有一定回報，這兩種融資方法都涉及成本。",
+      scope: "<b>資本結構與長短期劃分：</b>融資決策就是企業<b>制定適當的資本結構（即股本或權益和債務的比例），以減少總資本成本</b>，從而得以開展更多有利可圖的投資項目，最終為東主帶來最大的財富。企業資金絕大部分來自長期融資，故融資決策以長期融資為主；短期融資則屬於「營運資金決策」。"
+    },
+    {
+      num: "03",
+      title: "3. 股息決策 (Dividend Decision)",
+      badge: "應派發多少股息和以哪種形式派發",
+      def: "企業可把部分淨利（又稱純利）作為股息派發予股東。股息通常以現金形式派發（稱為「現金股息」），但也可以股票形式分配（稱為「以股代息」）。股息決策主要涉及派發給股東的股息金額和派發形式。",
+      scope: "<b>派息與留存投資的權衡：</b>當企業派發更多股息給股東時，股東可賺取較大回報，股價也會趨向上升；然而，如果把較多的淨利派發給股東作股息，<b>留作將來投資的現金便會減少</b>，將來未必有能力投資有利可圖的項目，可能無法長期為股東賺取最大的財富。"
+    },
+    {
+      num: "04",
+      title: "4. 營運資金決策 (Working Capital Decision)",
+      badge: "如何管理營運資金（短期資產與負債）",
+      def: "營運資金（又稱流動資產淨值或營運資金淨額）的定義為：「營運資金 ＝ 流動資產 － 流動負債」。營運資金決策通常稱為「營運資金管理」，涉及企業對短期資產和短期負債的管理（例子包括現金、應收帳款、應付帳款和存貨）。",
+      scope: "<b>核心目的與財務計劃：</b>營運資金管理旨在<b>善用企業的資金以償還短期負債</b>，確保企業能有效地運用營運資金從而得以順利運作。此外，為了更順利地作出各項財務決策，企業須制訂財務計劃；<b>編製預算</b>有助企業計劃和控制其資金的來源和用途。"
+    }
+  ];
+
+  function renderFinDec(idx) {
+    document.getElementById('finDecNavList').innerHTML = finDecData.map((d, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderFinDec(${i})">
+        <span>${d.title}</span>
+      </button>
+    `).join('');
+    const d = finDecData[idx];
+    document.getElementById('finDecDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${d.title}</h3>
+        <span class="badge b-blue">${d.badge}</span>
+      </div>
+      <p style="margin:0 0 12px;font-weight:600;font-size:17.5px">${d.def}</p>
+      <div class="case-box">${d.scope}</div>
+    `;
+  }
+  renderFinDec(0);
+
+  function updateDivSim() {
+    const rate = +document.getElementById('divSlider').value;
+    document.getElementById('lblDivRate').textContent = rate + '%';
+    const retainRate = 100 - rate;
+    const shortBoost = Math.min(98, Math.round(15 + rate * 0.8));
+    const longWealth = rate <= 50 ? Math.round(65 + rate * 0.6) : Math.max(15, Math.round(95 - (rate - 50) * 1.6));
+    let msg = rate >= 80 ? `<b style="color:var(--red)">派息率過高警示（${rate}%）：</b>大幅增加派息率雖令短期股價急劇上升，但留作將來投資的現金只剩 <b>${retainRate}%</b>；企業缺乏資金作出新投資，一年後盈利能力很低，導致<b>股價下跌，無法長期為股東賺取最大的財富</b>。` :
+              rate === 0 ? `<b style="color:var(--amber)">零派息（保留 100% 淨利）：</b>雖保留全部淨利作將來投資，但股東短期內未能獲得任何股息回報。` :
+              `<b style="color:var(--green)">謹慎平衡的股息決策（派息 ${rate}% · 保留 ${retainRate}%）：</b>既讓股東賺取股息回報支持股價，同時保留 <b>${retainRate}%</b> 淨利作將來投資有利可圖的項目，有助<b>長期為股東賺取最大的財富</b>。`;
+    document.getElementById('divSimOutput').innerHTML = `
+      <div style="display:flex;justify-content:space-between;font-size:14.5px"><span>短期股價表現：</span><b style="color:var(--primary)">${shortBoost}%</b></div>
+      <div class="meter-bar"><div class="meter-fill" style="width:${shortBoost}%;background:var(--primary)"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:14.5px;margin-top:6px"><span>留作將來投資的現金比例：</span><b style="color:var(--teal)">${retainRate}%</b></div>
+      <div class="meter-bar"><div class="meter-fill" style="width:${retainRate}%;background:var(--teal)"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:14.5px;margin-top:6px"><span>一年後長期股東財富表現：</span><b style="color:${rate>=80?'var(--red)':'var(--green)'}">${longWealth}%</b></div>
+      <div class="meter-bar"><div class="meter-fill" style="width:${longWealth}%;background:${rate>=80?'var(--red)':'var(--green)'}"></div></div>
+      <div style="margin-top:10px;line-height:1.7">${msg}</div>`;
+  }
+  updateDivSim();
+
+  const decMatchItems = [
+    { q: "1. 上市物流集團評估應否斥資 8 億元興建智能恆溫倉庫（計算項目淨現值 NPV 是否為正數）。這屬於哪種主要財務決策？", opts: ["A. 投資決策", "B. 股息決策", "C. 營運資金決策"], ans: 0, exp: "正確。選取良好的長期投資項目（如投資淨現值為正數的項目）以增加東主財富，屬於「投資決策」。" },
+    { q: "2. 企業決定透過發行新普通股（股本）還是借取五年期銀行貸款（長期債務）籌集擴建資金，以制定適當資本結構及減少總資本成本。", opts: ["A. 投資決策", "B. 融資決策", "C. 營運資金決策"], ans: 1, exp: "正確。決定長期資金來源及制定適當資本結構（股本和債務的比例）以減少總資本成本，屬於「融資決策」。" },
+    { q: "3. 本地烘焙食材店管理日常現金結餘、向日本供應商賒購的應付貨款還款期及麵粉存貨水平，確保有足夠資金償還短期負債。", opts: ["A. 長期投資決策", "B. 股息決策", "C. 營運資金決策（營運資金管理）"], ans: 2, exp: "正確。涉及對短期資產（現金、應收帳款、存貨）和短期負債（應付帳款）的管理，屬於「營運資金決策」。" },
+    { q: "4. 董事局決定將本年度稅後利潤的 40% 以「現金股息」或「以股代息」形式派發予股東。", opts: ["A. 股息決策", "B. 融資決策", "C. 營運資金決策"], ans: 0, exp: "正確。決定派發給股東的股息金額和派發形式，屬於「股息決策」。" },
+    { q: "5. 概念判斷：「企業把所有淨利派發給股東作股息，便可長期為股東賺取最大的財富。」", opts: ["A. 正確", "B. 不正確 — 若把較多或所有淨利派發作股息，留作將來投資的現金便會減少，將來未必有能力投資有利可圖的項目"], ans: 1, exp: "正確。把過多淨利派發作股息會減少留作將來投資的現金，因此企業要謹慎地作出股息決策。" },
+    { q: "6. 概念判斷：「財務決策的主要類型包括投資決策、融資決策、保險決策和營運資金決策；而營運資金決策指制定適當的資本結構以減少總資本成本。」", opts: ["A. 正確", "B. 不正確 — 四種主要財務決策為投資決策、融資決策、股息決策和營運資金決策（不含保險決策）；制定適當資本結構是『融資決策』"], ans: 1, exp: "正確。四種主要財務決策包括投資決策、融資決策、股息決策和營運資金決策；制定適當資本結構屬於融資決策。" }
+  ];
+  let curDM = 0;
+  function renderDecMatch() {
+    const item = decMatchItems[curDM];
+    document.getElementById('decMatchProg').textContent = `題目 ${curDM + 1} / ${decMatchItems.length}`;
+    document.getElementById('decMatchQ').textContent = item.q;
+    document.getElementById('decMatchBtns').innerHTML = item.opts.map((o, i) => `
+      <button class="opt-card" style="margin:0;padding:12px 16px" onclick="checkDecMatch(${i})">${o}</button>
+    `).join('');
+    document.getElementById('decMatchFb').innerHTML = '';
+  }
+  function checkDecMatch(idx) {
+    const it = decMatchItems[curDM];
+    const fb = document.getElementById('decMatchFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14.5px" onclick="curDM=(curDM+1)%decMatchItems.length;renderDecMatch()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderDecMatch();
+
+  // ====== 2. 認識有限公司財務報表 ======
+  const stmtInfoMap = {
+    sales: "<b>銷貨 ($5,000,000)：</b>銷售貨品所得收益總額。如有銷貨退回，計算比率時應使用<b>銷貨淨額（銷貨 － 銷貨退回）</b>。",
+    cogs: "<b>銷貨成本 ($3,100,000)：</b>期初存貨 ($460,000) ＋ 購貨 ($3,140,000) － 期末存貨 ($500,000)。用於計算<b>存貨周轉率</b>。",
+    gp: "<b>毛利 ($1,900,000)：</b>銷貨 ($5,000,000) － 銷貨成本 ($3,100,000)。用於計算<b>毛利率</b>。",
+    opex: "<b>營業費用 ($1,420,000)：</b>指除銷貨成本外，企業在經營期間所產生的費用，包括：<b>分銷費用 ($620,000)、行政費用 ($750,000) 及其他營業費用 ($50,000)</b>。<br><span style='color:var(--red)'>注意：由於財務成本和稅項都不是經營期間產生的，所以它們<b>不屬於營業費用</b>。</span>",
+    ebit: "<b>營業利潤 ($480,000)：</b>又稱為<b>利息及稅前利潤、利息及稅前淨利</b>或<b>息稅前利潤 (EBIT)</b>。公式：<b>營業利潤 ＝ 毛利 ($1,900,000) － 營業費用 ($1,420,000)</b>（計算營業利潤時，無須扣除財務成本和稅項）。直接用作計算「運用資金報酬率」的分子。",
+    fc: "<b>財務成本 ($30,000)：</b>又稱為<b>利息支出</b>，由借款產生，不屬於營業費用。",
+    ebt: "<b>稅前利潤／稅前淨利 ($450,000)：</b>營業利潤 ($480,000) － 財務成本 ($30,000)。用作計算<b>「淨利率」的分子</b>。",
+    tax: "<b>稅項 ($75,000)：</b>有限公司必須在損益表中披露稅項開支。",
+    pat: "<b>稅後利潤 ($375,000)：</b>稅前利潤 ($450,000) － 稅項 ($75,000)。"
+  };
+  function showStmtInfo(k) { document.getElementById('stmtExplainBox').innerHTML = stmtInfoMap[k]; }
+  showStmtInfo('opex');
+
+  const sfpInfoMap = {
+    nca: "<b>非流動（固定）資產 ($2,800,000)：</b>機器及設備 ($2,100,000) ＋ 家具及裝置 ($700,000)。",
+    ca: "<b>流動資產 ($1,400,000)：</b>存貨 ($500,000) ＋ 應收貨款 ($500,000) ＋ 現金 ($400,000)。扣除存貨後的流動資產 ($900,000) 稱為<b>速動資產</b>。",
+    eq: "<b>股東權益／股東資本 ($3,000,000)：</b>由<b>股本（普通股股本 $1,800,000 ＋ 優先股股本 $200,000）、儲備 ($500,000) 和留存利潤／留存盈餘 ($500,000)</b> 組成（股本是股東投資在公司的資本；儲備和留存利潤是未分配給股東作為股息的公司利潤，這些利潤也是屬於股東的）。",
+    ncl: "<b>非流動（長期）負債 ($600,000)：</b>長期負債。<b>長期資本總額（有限公司運用資金）</b>＝ 非流動負債 ($600,000) ＋ 股東資本 ($3,000,000) ＝ <b>$3,600,000</b>。",
+    cl: "<b>流動負債 ($600,000)：</b>應付貨款 ($314,000) ＋ 應計費用 ($211,000) ＋ <b>應付稅項 ($75,000)</b>。"
+  };
+  function showSfpInfo(k) { document.getElementById('sfpExplainBox').innerHTML = sfpInfoMap[k]; }
+  showSfpInfo('eq');
+
+  function renderStmtDiff(m) {
+    document.querySelectorAll('#diffStmtChips .chip').forEach((c, i) => c.classList.toggle('active', i === m));
+    document.getElementById('diffStmtBox').innerHTML = m === 0 ?
+      `<table class="comp-table"><thead><tr><th>比較項目</th><th>有限公司損益表</th><th>獨資企業損益表</th></tr></thead><tbody><tr><td><b>1. 費用分類</b></td><td>費用按功能分為幾個主要類別：<b>分銷費用、行政費用及其他營業費用</b>。</td><td>逐項列出個別費用（如銷貨運費、租金及差餉、薪金、雜費）。</td></tr><tr><td><b>2. 財務成本與稅項</b></td><td><b>財務成本通常是分開展示的</b>，並且會<b>列出稅項</b>。</td><td>一般不分開展示財務成本，亦不在損益表列出利得稅項。</td></tr></tbody></table>` :
+      `<table class="comp-table"><thead><tr><th>比較項目</th><th>有限公司財務狀況表</th><th>獨資企業財務狀況表</th></tr></thead><tbody><tr><td><b>1. 權益部分</b></td><td>包括較多項目：<b>普通股股本、優先股股本、儲備、留存利潤</b>。</td><td>只有「資本」部分（期初資本餘額 ＋ 年度淨利 － 提用）。</td></tr><tr><td><b>2. 應付稅項</b></td><td>會包括<b>應付稅項</b>，並會列在<b>流動負債</b>下。</td><td>不會在流動負債下列示應付稅項。</td></tr></tbody></table>`;
+  }
+  renderStmtDiff(0);
+
+  const p12Data = [
+    { q: "<b>【報表計算挑戰 1】</b>某公司資料：銷貨 $250,000、銷貨成本 $140,000、營業費用 $65,000、財務成本 $12,000。計算該公司的<b>稅前利潤</b>：", opts: [{t:"A. $110,000（毛利）",ok:false},{t:"B. $45,000（營業利潤）",ok:false},{t:"C. $33,000（$250,000 - $140,000 - $65,000 - $12,000）",ok:true}], exp: "正確。毛利 $110,000 － 營業費用 $65,000 － 財務成本 $12,000 ＝ <b>$33,000</b>。" },
+    { q: "<b>【報表計算挑戰 2】</b>某公司資料：流動資產 $600,000、非流動資產 $1,800,000、流動負債 $350,000、股本 $300,000、儲備 $450,000、留存利潤 $650,000。計算<b>股東資本</b>：", opts: [{t:"A. $1,400,000（股本 $300,000 + 儲備 $450,000 + 留存利潤 $650,000）",ok:true},{t:"B. $750,000",ok:false},{t:"C. $2,400,000",ok:false}], exp: "正確。股東資本 ＝ 股本 $300,000 ＋ 儲備 $450,000 ＋ 留存利潤 $650,000 ＝ <b>$1,400,000</b>。" },
+    { q: "<b>【報表計算挑戰 3】</b>承上題（資產總額 $2,400,000、股東資本 $1,400,000、流動負債 $350,000）。計算該公司的<b>非流動負債</b>：", opts: [{t:"A. $1,000,000",ok:false},{t:"B. $650,000（資產總額 $2,400,000 - 股東資本 $1,400,000 - 流動負債 $350,000）",ok:true},{t:"C. $250,000",ok:false}], exp: "正確。非流動負債 ＝ $2,400,000 － $1,400,000 － $350,000 ＝ <b>$650,000</b>。" }
+  ];
+  function renderP12(idx) {
+    document.querySelectorAll('#p12Chips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const it = p12Data[idx];
+    document.getElementById('p12Box').innerHTML = `<div style="background:var(--surface);padding:14px 16px;border-radius:10px;border:1px solid var(--line);font-size:15.5px;margin-bottom:10px">${it.q}</div>${it.opts.map(o=>`<button class="opt-card" style="margin:6px 0;padding:11px 15px" onclick="document.getElementById('p12Fb').innerHTML='<div style=\\'padding:10px 14px;border-radius:8px;font-weight:700;background:${o.ok?'var(--green-light)':'var(--red-light)'};color:${o.ok?'var(--green)':'var(--red)'}\\'>${o.ok?it.exp:'答案不正確，請再計算一次。'}</div>'">${o.t}</button>`).join('')}<div id="p12Fb" style="margin-top:8px;font-size:15px"></div>`;
+  }
+  renderP12(0);
+
+  // ====== 3. 會計比率計算與詮釋 ======
+  const ratioCategories = [
+    {
+      catName: "A. 盈利能力比率 (3個)",
+      items: [
+        { name: "1. 毛利率", unit: "%", numLabel: "毛利", denLabel: "銷貨（如有銷貨退回，應使用銷貨淨額）", mult: "× 100%", def: "量度企業在<b>扣除銷貨成本後（但在扣除費用前）的盈利能力</b>。它顯示每一元的銷售收益中所獲得的毛利。企業的毛利率越高，盈利能力越強。", acctCalc: "<b>星海電玩實例：</b>($1,900,000 ÷ $5,000,000) × 100% ＝ <b>38.00%</b>（代表在每一元的銷售收益中，可賺取 38 分的毛利）。", notes: "<b>企業可透過以下方法提高毛利率：</b><br>(i) 提高貨品售價；(ii) 降低銷貨成本。" },
+        { name: "2. 淨利率（純利率）", unit: "%", numLabel: "稅前淨利", denLabel: "銷貨（如有銷貨退回，應使用銷貨淨額）", mult: "× 100%", def: "量度企業在<b>扣除所有成本和費用後的盈利能力</b>。它顯示每一元的銷售收益中所獲得的淨利。由於毛利率僅考慮銷貨成本，而淨利率把其他費用計算在內，因此<b>淨利率比毛利率更能準確反映企業的盈利能力</b>。", acctCalc: "<b>星海電玩實例：</b>($450,000 ÷ $5,000,000) × 100% ＝ <b>9.00%</b>（代表在扣除所有費用後，可從每一元銷售收益中賺取 9 分的淨利）。", notes: "<b>企業可透過以下方法提高淨利率：</b><br>(i) 提高毛利率；(ii) 增加銷貨；(iii) 減少營業費用。" },
+        { name: "3. 運用資金報酬率（動用資金報酬率）", unit: "%", numLabel: "利息及稅前淨利（營業利潤）", denLabel: "平均運用資金", mult: "× 100%", def: "量度企業<b>運用資金賺取利潤的能力</b>。它顯示企業每運用一元的資金所賺取的利息及稅前利潤。這是投資者用來評估其投資是否物有所值的重要指標；比率越高，企業運用長期資金賺取利潤的能力越強，投資者的投資回報也越高。", acctCalc: "<b>星海電玩實例：</b>[$480,000 ÷ ($600,000 + $3,000,000)] × 100% ＝ <b>13.33%</b>。", notes: "<b>運用資金（長期資本總額）的計算方法：</b><br>• 有限公司：非流動負債 ＋ 股東資本<br>• 獨資企業：資本帳餘額<br>• 合夥：資本帳餘額 ＋ 往來帳餘額（如有）" }
+      ]
+    },
+    {
+      catName: "B. 變現能力比率 (2+3個)",
+      items: [
+        { name: "1. 流動比率（營運資金比率）", unit: ": 1", numLabel: "流動資產", denLabel: "流動負債", mult: ": 1", def: "量度企業<b>償還短期債務的能力</b>。它顯示流動資產相對於流動負債的倍數。企業的流動比率越高，變現能力越強；為了儲備足夠的流動資產償還流動負債，企業應把流動比率維持在 1 以上。", acctCalc: "<b>星海電玩實例：</b>($1,400,000 ÷ $600,000) : 1 ＝ <b>2.33 : 1</b>（表示其流動資產足以償還短期債務）。", notes: "<b>兩個比率都不宜太高或太低：</b><br>• 如果太高：企業可能持有過剩的流動資產，可能沒有善用流動資產來賺取利潤。<br>• 如果太低（即 ＜ 1）：即使擁有貴重的非流動資產，也可能沒有足夠的流動資產來償還短期債務。" },
+        { name: "2. 速動比率（酸性測驗比率）", unit: ": 1", numLabel: "流動資產 － 存貨（速動資產）", denLabel: "流動負債", mult: ": 1", def: "量度企業在<b>扣除存貨後償還短期債務的能力</b>。它顯示速動資產相對於流動負債的倍數。若速動比率大於 1，表示企業有足夠的速動資產來償還短期債務。", acctCalc: "<b>星海電玩實例：</b>[($1,400,000 - $500,000) ÷ $600,000] : 1 ＝ <b>1.50 : 1</b>。", notes: "<b>為何速動比率較能反映變現能力？</b><br>因為企業需要一定的時間才能把存貨套現，在各種流動資產中，<b>存貨的變現能力最低</b>；速動比率展示在無須等待出售存貨的情況下償還流動負債的能力。" },
+        { name: "3. 三個周轉率量度變現能力", unit: "次", numLabel: "存貨周轉率 / 應收貨款周轉率 / 應付貨款周轉率", denLabel: "這三個比率越高，代表企業的變現能力越高", mult: "", def: "• <b>存貨周轉率低</b>：出售存貨轉換為現金的速度低，表示變現能力低。<br>• <b>應收貨款周轉率低</b>：向債務人收回現金的速度緩慢，表示變現能力低。<br>• <b>應付貨款周轉率低</b>：償還應付貨款的速度緩慢，或表示難以償還負債，變現能力低。", acctCalc: "如題目要求列舉變現能力比率，應<b>先提及流動比率和速動比率</b>。", notes: "這三個周轉率同時屬於「變現能力比率」和「管理效能比率」。" }
+      ]
+    },
+    {
+      catName: "C. 償債能力比率 (1個)",
+      items: [
+        { name: "1. 槓桿比率 (Gearing Ratio)", unit: "%", numLabel: "非流動負債 ＋ 優先股本（長期債務）", denLabel: "非流動負債 ＋ 股東資本（長期資本總額）", mult: "× 100%", def: "償債能力比率量度企業償還到期債務（包括短期負債和長期負債）的整體償債能力；若無力償債便很可能要清盤停業。當中<b>槓桿比率</b>量度企業的長期財務穩健性和償還長期債務的能力，顯示長期債務相對於長期資本總額的比重。", acctCalc: "<b>星海電玩實例：</b>[($600,000 + $200,000) ÷ ($600,000 + $3,000,000)] × 100% ＝ <b>22.22%</b>（不算太高，沒有長期債務問題）。", notes: "<b>重要觀念：槓桿比率越高不代表償債能力越高！</b><br>槓桿比率越高，代表採用越多長期債務籌資，要面對越高的財務風險（因無論獲利或虧損都必須支付利息和優先股股息，以及償還貸款本金），可能會難以償還長期債務。一般而言，高於 <b>50%</b> 視作負債比重偏高。" }
+      ]
+    },
+    {
+      catName: "D. 管理效能比率 (4個)",
+      items: [
+        { name: "1. 存貨周轉率", unit: "次", numLabel: "銷貨成本", denLabel: "平均存貨 ＝ (期初存貨 ＋ 期末存貨) ÷ 2", mult: "（單位：次）", def: "量度企業<b>運用存貨的效率</b>，顯示存貨相對於銷貨成本的比例。存貨周轉率越高，出售存貨的速度越快，運用存貨的效率也越高（表示只須持有較少量的存貨，便可達至相同水平的銷售收益）。", acctCalc: "<b>星海電玩實例：</b>$3,100,000 ÷ [($460,000 + $500,000) ÷ 2] ＝ <b>6.46 次</b>（表示每年平均售出存貨 6.46 次）。", notes: "不同行業的存貨周轉率可以有很大差異，須與行業平均水平作比較才能判斷高低。緊記在答案加上「次」為單位。" },
+        { name: "2. 應收貨款周轉率", unit: "次", numLabel: "賒銷（如無提供賒銷數字，採用銷貨數字）", denLabel: "平均應收貨款", mult: "（單位：次）", def: "量度企業<b>收回應收貨款的效率</b>，顯示應收貨款相對於賒銷的比例。應收貨款周轉率越高，收回應收貨款的速度越快，效率越高。", acctCalc: "<b>星海電玩實例：</b>$5,000,000 ÷ $500,000 ＝ <b>10.00 次</b>。", notes: "如題目沒有提供期初餘額計算平均數，可直接使用期末餘額計算；緊記加上「次」為單位。" },
+        { name: "3. 應付貨款周轉率", unit: "次", numLabel: "賒購（如無提供賒購數字，採用購貨數字）", denLabel: "平均應付貨款", mult: "（單位：次）", def: "量度企業<b>支付應付貨款的效率</b>，顯示應付貨款相對於賒購的比例。應付貨款周轉率越高，支付應付貨款的速度越快，效率越高。", acctCalc: "<b>星海電玩實例：</b>$3,140,000 ÷ $314,000 ＝ <b>10.00 次</b>。", notes: "有時若企業從供應商獲得較佳（較長）的賒帳條款，平均應付貨款增加，其應付貨款周轉率也可能會較低。" },
+        { name: "4. 總資產周轉率（資產周轉率）", unit: "次", numLabel: "銷貨", denLabel: "資產總額（流動資產 ＋ 非流動資產）", mult: "（單位：次）", def: "量度企業<b>運用資產賺取銷售收益的效率</b>，顯示企業每運用一元的資產所賺取的銷售收益。總資產周轉率上升，表示能夠運用較少的資產（包括流動資產和非流動資產）來賺取相同水平的銷售收益。", acctCalc: "<b>星海電玩實例：</b>$5,000,000 ÷ $4,200,000 ＝ <b>1.19 次</b>（表示每運用 $1 的資產，可賺取 $1.19 的銷售收益）。", notes: "注意：總資產周轉率反映運用「全部資產（包括流動資產和非流動資產）」而非單指流動資產的效率；單位同樣為「次」。" }
+      ]
+    }
+  ];
+
+  function renderRatioExplorer(cIdx, iIdx) {
+    document.querySelectorAll('#ratioCatChips .chip').forEach((c, i) => c.classList.toggle('active', i === cIdx));
+    const cat = ratioCategories[cIdx];
+    document.getElementById('ratioItemChips').innerHTML = cat.items.map((it, i) => `<button class="chip ${i===iIdx?'active':''}" onclick="renderRatioExplorer(${cIdx}, ${i})">${it.name}</button>`).join('');
+    const item = cat.items[iIdx];
+    document.getElementById('ratioDetailPanel').innerHTML = `
+      <div style="background:var(--surface);padding:18px 22px;border-radius:14px;border:1.5px solid var(--primary)">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <h4 style="font-size:19.5px;color:var(--primary)">${item.name}</h4>
+          <span class="badge b-blue">單位：${item.unit}</span>
+        </div>
+        <p style="margin:8px 0;font-size:16.5px">${item.def}</p>
+        <div class="formula-box">
+          <span>${item.name.split(' ')[1]} ＝</span>
+          <div class="frac"><span class="frac-top">${item.numLabel}</span><span class="frac-bot">${item.denLabel}</span></div>
+          <span>${item.mult}</span>
+        </div>
+        <div class="grid2" style="gap:14px">
+          <div style="background:var(--card);padding:12px 16px;border-radius:10px;border:1px solid var(--line);font-size:15.5px">${item.acctCalc}</div>
+          <div style="background:var(--teal-light);padding:12px 16px;border-radius:10px;border:1px solid var(--teal-border);font-size:15.5px">${item.notes}</div>
+        </div>
+      </div>`;
+  }
+  document.getElementById('ratioCatChips').innerHTML = ratioCategories.map((c, i) => `<button class="chip ${i===0?'active':''}" onclick="renderRatioExplorer(${i}, 0)">${c.catName}</button>`).join('');
+  renderRatioExplorer(0, 0);
+
+  const chalData = [
+    { title: "問題 1：解釋淨利率通常低於毛利率的原因。", ans: "兩者分母相同（均為銷貨）；但在量度盈利能力時，<b>毛利率僅考慮銷貨成本</b>，而<b>淨利率則在毛利中進一步扣除了分銷費用、行政費用、其他營業費用及財務成本</b>，使稅前淨利小於毛利，故淨利率通常低於毛利率。" },
+    { title: "問題 2：當銷貨、毛利和淨利增加時，毛利率和淨利率在甚麼情況下會下降？", ans: "當<b>毛利和稅前淨利（分子）的增加百分比，低於銷貨（分母）的增加百分比</b>時（例如企業大幅減價促銷令銷貨大增 30%，但毛利和淨利只增加 10%），毛利率和淨利率便會下降。" },
+    { title: "問題 3：如企業從供應商獲得較佳的賒帳條款，為何應付貨款周轉率可能會較低？", ans: "根據公式：<b>應付貨款周轉率 ＝ 賒購 ÷ 平均應付貨款</b>。當企業從供應商獲得較佳（即較長還款期）的賒帳條款時，企業可延遲償還貨款以保留現金，這會導致<b>「平均應付貨款」（分母）增加</b>，進而令應付貨款周轉率較低。" },
+    { title: "問題 4：在甚麼情況下，企業的銷貨增加，但總資產周轉率卻會下降？", ans: "根據公式：<b>總資產周轉率 ＝ 銷貨 ÷ 資產總額</b>。當企業<b>「資產總額」（分母，例如年內斥巨資購入大量新廠房、飛機或設備）的增加百分比，大於「銷貨」（分子）的增加百分比</b>時，總資產周轉率便會下降。" }
+  ];
+  function renderChal(idx) {
+    document.querySelectorAll('#chalChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const c = chalData[idx];
+    document.getElementById('chalBox').innerHTML = `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px"><b style="color:var(--primary);display:block;margin-bottom:6px">${c.title}</b><div>${c.ans}</div></div>`;
+  }
+  renderChal(0);
+
+  // ====== 動態 10 大會計比率計算器 ======
+  const isFields = [
+    { id: "inSales", label: "銷貨（賒銷）($)", val: 5000000, step: 50000 },
+    { id: "inPurch", label: "購貨（賒購）($)", val: 3140000, step: 50000 },
+    { id: "inOpenInv", label: "期初存貨 ($)", val: 460000, step: 20000 },
+    { id: "inCloseInv", label: "期末存貨 ($)［屬流動資產］", val: 500000, step: 20000 },
+    { id: "inOpex", label: "營業費用 ($)", val: 1420000, step: 20000 },
+    { id: "inFc", label: "財務成本（利息支出）($)", val: 30000, step: 5000 }
+  ];
+  const sfpFields = [
+    { id: "inNca", label: "非流動資產 ($)", val: 2800000, step: 50000 },
+    { id: "inAr", label: "應收貨款 ($)［屬流動資產］", val: 500000, step: 20000 },
+    { id: "inCash", label: "現金 ($)［屬流動資產］", val: 400000, step: 20000 },
+    { id: "inOrdEq", label: "普通股本＋儲備＋留存利潤 ($)", val: 2800000, step: 50000 },
+    { id: "inPrefEq", label: "優先股股本 ($)［股東資本及長期債］", val: 200000, step: 25000 },
+    { id: "inNcl", label: "非流動負債（長期負債）($)", val: 600000, step: 50000 },
+    { id: "inAp", label: "應付貨款 ($)［屬流動負債］", val: 314000, step: 20000 },
+    { id: "inOthCl", label: "其他流動負債（應計＋稅項）($)", val: 286000, step: 20000 }
+  ];
+  document.getElementById('calcInputsIS').innerHTML = isFields.map(f => `<div class="calc-field"><label>${f.label}</label><input type="number" id="${f.id}" value="${f.val}" step="${f.step}" oninput="runCustomRatioCalc()"></div>`).join('');
+  document.getElementById('calcInputsSFP').innerHTML = sfpFields.map(f => `<div class="calc-field"><label>${f.label}</label><input type="number" id="${f.id}" value="${f.val}" step="${f.step}" oninput="runCustomRatioCalc()"></div>`).join('');
+
+  const calcPresets = [
+    { inSales:5000000, inPurch:3140000, inOpenInv:460000, inCloseInv:500000, inOpex:1420000, inFc:30000, inNca:2800000, inAr:500000, inCash:400000, inOrdEq:2800000, inPrefEq:200000, inNcl:600000, inAp:314000, inOthCl:286000 },
+    { inSales:7200000, inPurch:4750000, inOpenInv:420000, inCloseInv:460000, inOpex:1550000, inFc:190000, inNca:2700000, inAr:520000, inCash:240000, inOrdEq:1500000, inPrefEq:400000, inNcl:1900000, inAp:350000, inOthCl:420000 },
+    { inSales:3800000, inPurch:2300000, inOpenInv:1150000, inCloseInv:1550000, inOpex:1300000, inFc:15000, inNca:2600000, inAr:950000, inCash:900000, inOrdEq:4300000, inPrefEq:0, inNcl:300000, inAp:360000, inOthCl:240000 }
+  ];
+  const fmtM = n => '$' + Math.round(n).toLocaleString('en-US');
+
+  function loadCalcPreset(idx) {
+    [0,1,2].forEach(i => document.getElementById('presetBtn'+i).classList.toggle('active', i === idx));
+    const p = calcPresets[idx];
+    Object.keys(p).forEach(k => document.getElementById(k).value = p[k]);
+    runCustomRatioCalc();
+  }
+
+  function runCustomRatioCalc() {
+    const g = id => Math.max(0, +document.getElementById(id).value || 0);
+    const sales = Math.max(1, g('inSales')), purch = g('inPurch'), openInv = g('inOpenInv'), closeInv = g('inCloseInv'), opex = g('inOpex'), fc = g('inFc');
+    const nca = g('inNca'), ar = Math.max(1, g('inAr')), cash = g('inCash'), ordEq = g('inOrdEq'), prefEq = g('inPrefEq'), ncl = g('inNcl'), ap = Math.max(1, g('inAp')), othCl = g('inOthCl');
+
+    const cogs = openInv + purch - closeInv, gp = sales - cogs, ebit = gp - opex, ebt = ebit - fc, avgInv = Math.max(1, (openInv + closeInv) / 2);
+    const ca = closeInv + ar + cash, quickA = ca - closeInv, totA = Math.max(1, nca + ca), totEq = ordEq + prefEq, capEmp = Math.max(1, ncl + totEq), longD = ncl + prefEq, cl = Math.max(1, ap + othCl);
+
+    const gpr = (gp/sales)*100, npr = (ebt/sales)*100, roce = (ebit/capEmp)*100, cr = ca/cl, qr = quickA/cl, gr = (longD/capEmp)*100;
+    const invT = cogs/avgInv, arT = sales/ar, apT = purch/ap, astT = sales/totA;
+
+    document.getElementById('calcDerivedSummary').innerHTML = `<span><b>銷貨成本：</b>${fmtM(cogs)}</span><span><b>毛利：</b>${fmtM(gp)}</span><span><b>營業利潤(EBIT)：</b>${fmtM(ebit)}</span><span><b>稅前淨利：</b>${fmtM(ebt)}</span><span><b>流動資產：</b>${fmtM(ca)}</span><span><b>速動資產：</b>${fmtM(quickA)}</span><span><b>股東資本：</b>${fmtM(totEq)}</span><span><b>運用資金：</b>${fmtM(capEmp)}</span><span><b>流動負債：</b>${fmtM(cl)}</span>`;
+
+    const cards = [
+      { n:"1. 毛利率", c:"盈利", v:gpr.toFixed(2)+"%", ind:"42.50%", f:`(${fmtM(gp)}÷${fmtM(sales)})×100%`, ok:gpr>=42.5, d:gpr>=42.5?"高於同業平均，毛利理想":"低於同業平均(42.50%)，可能曾割價促銷" },
+      { n:"2. 淨利率", c:"盈利", v:npr.toFixed(2)+"%", ind:"6.50%", f:`(${fmtM(ebt)}÷${fmtM(sales)})×100%`, ok:npr>=6.5, d:npr>=6.5?"高於同業平均(6.50%)，控制費用較優勝":"低於同業平均(6.50%)，宜控制營業費用" },
+      { n:"3. 運用資金報酬率", c:"盈利", v:roce.toFixed(2)+"%", ind:"10.50%", f:`(${fmtM(ebit)}÷${fmtM(capEmp)})×100%`, ok:roce>=10.5, d:roce>=10.5?"高於同業平均(10.50%)，資金回報強":"低於同業平均(10.50%)，長期資金回報偏低" },
+      { n:"4. 流動比率", c:"變現", v:cr.toFixed(2)+" : 1", ind:"1.85 : 1", f:`(${fmtM(ca)}÷${fmtM(cl)}):1`, ok:cr>=1&&cr<=3, d:cr<1?"小於1，流動資產不足還短債":cr>3?"過高，可能持有過剩流動資產":"大於1且高於同業，足以償還短債" },
+      { n:"5. 速動比率", c:"變現", v:qr.toFixed(2)+" : 1", ind:"1.15 : 1", f:`(${fmtM(quickA)}÷${fmtM(cl)}):1`, ok:qr>=1&&qr<=2.2, d:qr<1?"小於1，速動資產不足還短債":qr>2.2?"速動資產可能過剩":"大於1且高於同業，短期變現穩健" },
+      { n:"6. 槓桿比率", c:"償債", v:gr.toFixed(2)+"%", ind:"19.00%", f:`(${fmtM(longD)}÷${fmtM(capEmp)})×100%`, ok:gr<50, d:gr>=50?"高於50%！負債偏高，償債能力低":gr>19?"高於同業(19%)但＜50%，償債能力仍高":"低於同業(19%)，長期財務穩健" },
+      { n:"7. 存貨周轉率", c:"效能/變現", v:invT.toFixed(2)+" 次", ind:"7.80 次", f:`${fmtM(cogs)}÷${fmtM(avgInv)}`, ok:invT>=7.8, d:invT>=7.8?"高於同業，出售存貨速度快":"低於同業(7.80次)，可能持有太多存貨" },
+      { n:"8. 應收貨款周轉率", c:"效能/變現", v:arT.toFixed(2)+" 次", ind:"12.00 次", f:`${fmtM(sales)}÷${fmtM(ar)}`, ok:arT>=12, d:arT>=12?"高於同業，收回應收貨款速度快":"低於同業(12.00次)，收款速度較慢" },
+      { n:"9. 應付貨款周轉率", c:"效能/變現", v:apT.toFixed(2)+" 次", ind:"11.50 次", f:`${fmtM(purch)}÷${fmtM(ap)}`, ok:apT>=11.5, d:apT>=11.5?"高於同業，支付應付貨款速度快":"低於同業(11.50次)，還款速度較慢" },
+      { n:"10. 總資產周轉率", c:"管理效能", v:astT.toFixed(2)+" 次", ind:"1.95 次", f:`${fmtM(sales)}÷${fmtM(totA)}`, ok:astT>=1.95, d:astT>=1.95?"高於同業，運用總資產效率高":"低於同業(1.95次)，運用資產效率偏低" }
+    ];
+    document.getElementById('calcLiveOutput').innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${cards.map(c => `<div class="ratio-live-card"><div style="display:flex;justify-content:space-between"><b style="font-size:14.5px">${c.n}</b><span class="badge b-teal" style="margin:0;padding:2px 8px;font-size:12px">${c.c}</span></div><div style="display:flex;justify-content:space-between;align-items:baseline;margin:4px 0"><span class="ratio-val-big" style="color:${c.ok?'var(--green)':'var(--amber)'}">${c.v}</span><small style="color:var(--mute);font-size:13px">同業：<b>${c.ind}</b></small></div><div style="font-size:12px;color:var(--mute);background:var(--surface);padding:3px 6px;border-radius:5px;font-family:monospace">${c.f}</div><div style="font-size:13px;margin-top:4px;color:${c.ok?'var(--green)':'var(--red)'};font-weight:700">${c.d}</div></div>`).join('')}</div>`;
+  }
+  runCustomRatioCalc();
+
+  const assessCalcList = [
+    {
+      title: "情境 1：連鎖百貨商（流動比率與速動比率）",
+      given: "流動資產 = $24.50億、存貨 = $9.80億、負債總額 = $16.20億、非流動負債 = $4.20億",
+      step1: "<b>第 1 步（先求流動負債）：</b>流動負債 ＝ 負債總額 ($16.20億) － 非流動負債 ($4.20億) ＝ <b>$12.00億</b>",
+      step2: "<b>第 2 步（計算流動比率）：</b>($24.50億 ÷ $12.00億) : 1 ＝ <b>2.04 : 1</b>",
+      step3: "<b>第 3 步（計算速動比率）：</b>[($24.50億 － $9.80億) ÷ $12.00億] : 1 ＝ ($14.70億 ÷ $12.00億) : 1 ＝ <b>1.23 : 1</b>"
+    },
+    {
+      title: "情境 2：無優先股製造商（槓桿比率與運用資金報酬率）",
+      given: "沒有發行優先股；營業利潤 = $780,000、營業費用 = $1,120,000、股本 = $800,000、儲備 = $600,000、留存利潤 = $1,000,000、流動負債 = $500,000、負債總額 = $1,300,000",
+      step1: "<b>第 1 步（先求股東資本、非流動負債及運用資金）：</b><br>• 股東資本 ＝ 股本 $800,000 ＋ 儲備 $600,000 ＋ 留存利潤 $1,000,000 ＝ <b>$2,400,000</b><br>• 非流動負債 ＝ 負債總額 $1,300,000 － 流動負債 $500,000 ＝ <b>$800,000</b><br>• 長期資本總額（運用資金）＝ $800,000 ＋ $2,400,000 ＝ <b>$3,200,000</b>",
+      step2: "<b>第 2 步（計算槓桿比率）：</b>[($800,000 + $0) ÷ $3,200,000] × 100% ＝ <b>25.00%</b>",
+      step3: "<b>第 3 步（計算運用資金報酬率）：</b>營業利潤即利息及稅前淨利 ($780,000) ÷ $3,200,000 × 100% ＝ <b>24.38%</b>（切勿誤用營業費用）"
+    },
+    {
+      title: "情境 3：上市航運集團（總資產周轉率）",
+      given: "銷貨 = $1,440.0億、權益總額 = $820.0億、負債總額 = $1,580.0億、流動資產 = $310.0億",
+      step1: "<b>第 1 步（求資產總額）：</b>資產總額 ＝ 權益總額 ($820.0億) ＋ 負債總額 ($1,580.0億) ＝ <b>$2,400.0億</b>（「流動資產 $310.0億」已包含在資產總額內，無須重複相加）",
+      step2: "<b>第 2 步（計算總資產周轉率）：</b>銷貨 $1,440.0億 ÷ 資產總額 $2,400.0億 ＝ <b>0.60 次</b>",
+      step3: "<b>第 3 步（檢查單位）：</b>管理效能比率必須加上<b>「次」</b>為單位。"
+    },
+    {
+      title: "情境 4：食品貿易商（存貨周轉率）",
+      given: "銷貨 = $8,000,000、毛利 = $2,600,000、期初存貨 = $820,000、期末存貨 = $980,000",
+      step1: "<b>第 1 步（先求銷貨成本及平均存貨）：</b><br>• 銷貨成本 ＝ 銷貨 ($8,000,000) － 毛利 ($2,600,000) ＝ <b>$5,400,000</b><br>• 平均存貨 ＝ ($820,000 ＋ $980,000) ÷ 2 ＝ <b>$900,000</b>",
+      step2: "<b>第 2 步（計算存貨周轉率）：</b>$5,400,000 ÷ $900,000 ＝ <b>6.00 次</b>",
+      step3: "<b>第 3 步（概念連結）：</b>存貨周轉率可用來評估貿易公司的<b>管理效能（運用存貨的效率）</b>及<b>變現能力</b>。"
+    }
+  ];
+  function renderAssessCalc(idx) {
+    document.querySelectorAll('#assessCalcChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const a = assessCalcList[idx];
+    document.getElementById('assessCalcBox').innerHTML = `<div style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line);font-size:15.5px;line-height:1.75"><b style="color:var(--primary);font-size:17px">${a.title}</b><div style="margin:6px 0;color:var(--mute)"><b>已知財務數據：</b>${a.given}</div><div style="background:var(--card);padding:10px 14px;border-radius:8px;border-left:4px solid var(--primary);margin-bottom:8px">${a.step1}</div><div style="background:var(--card);padding:10px 14px;border-radius:8px;border-left:4px solid var(--teal);margin-bottom:8px">${a.step2}</div><div style="background:var(--green-light);padding:10px 14px;border-radius:8px;border-left:4px solid var(--green)">${a.step3}</div></div>`;
+  }
+  document.getElementById('assessCalcChips').innerHTML = assessCalcList.map((a, i) => `<button class="chip ${i===0?'active':''}" onclick="renderAssessCalc(${i})">${a.title.split('（')[0]}</button>`).join('');
+  renderAssessCalc(0);
+
+  const ratioQuizItems = [
+    { q: "1. 某企業資料：銷貨 $2,000,000、銷貨成本 $1,300,000、稅前利潤 $160,000、股東資本 $700,000、非流動負債 $100,000、財務成本 $20,000。計算毛利率、淨利率和運用資金報酬率：", opts: ["A. 毛利率 35.00% ｜ 淨利率 8.00% ｜ 運用資金報酬率 22.50%", "B. 毛利率 35.00% ｜ 淨利率 8.00% ｜ 運用資金報酬率 20.00%（漏加回財務成本）"], ans: 0, exp: "正確。利息及稅前淨利 ＝ 稅前利潤 $160,000 ＋ 財務成本 $20,000 ＝ $180,000；運用資金 ＝ $700,000 ＋ $100,000 ＝ $800,000；運用資金報酬率 ＝ 22.50%。" },
+    { q: "2. 某企業資料：非流動資產 $3,100,000、資產總額 $4,300,000、流動負債 $800,000、存貨 $240,000。計算流動比率和速動比率：", opts: ["A. 流動比率 5.38 : 1 ｜ 速動比率 5.08 : 1", "B. 流動比率 1.50 : 1 ｜ 速動比率 1.20 : 1"], ans: 1, exp: "正確。流動資產 ＝ 資產總額 $4,300,000 － 非流動資產 $3,100,000 ＝ $1,200,000；流動比率 ＝ 1.50 : 1，速動比率 ＝ 1.20 : 1。" },
+    { q: "3. 某企業資料：負債總額 $1,500,000、流動負債 $700,000、股東資本 $3,200,000、優先股本 $400,000。計算槓桿比率：", opts: ["A. 20.00%", "B. 30.00% [($800,000 + $400,000) ÷ ($800,000 + $3,200,000) × 100%]"], ans: 1, exp: "正確。非流動負債 ＝ $1,500,000 － $700,000 ＝ $800,000；分子（非流動負債＋優先股本）＝ $1,200,000；分母（非流動負債＋股東資本）＝ $4,000,000 ➔ 30.00%。" },
+    { q: "4. 某企業資料：銷貨成本 $480,000、期初存貨 $50,000、期末存貨 $70,000、賒銷 $540,000、賒購 $420,000、平均應收貨款 $60,000、平均應付貨款 $70,000。", opts: ["A. 存貨周轉率 8.00 次 ｜ 應收貨款周轉率 9.00 次 ｜ 應付貨款周轉率 6.00 次", "B. 存貨周轉率 6.86 次 ｜ 應收貨款周轉率 9.00 次 ｜ 應付貨款周轉率 6.00 次"], ans: 0, exp: "正確。平均存貨 ＝ ($50,000 + $70,000) ÷ 2 ＝ $60,000 ➔ 存貨周轉率 ＝ 8.00 次。" },
+    { q: "5. 某企業資料：銷貨 $720,000、年終流動資產 $400,000、年終非流動資產 $1,200,000。計算總資產周轉率：", opts: ["A. 1.80 次", "B. 0.45 次 ($720,000 ÷ $1,600,000)"], ans: 1, exp: "正確。資產總額 ＝ $400,000 ＋ $1,200,000 ＝ $1,600,000 ➔ 總資產周轉率 ＝ 0.45 次。" },
+    { q: "6. 概念判斷：「如一家企業的應付貨款周轉率遠低於行業平均水平，這代表該企業在支付應付貨款方面比競爭對手更有效率。」", opts: ["A. 正確", "B. 不正確 — 應付貨款周轉率越低，代表支付應付貨款的速度越慢、效率越低"], ans: 1, exp: "正確。應付貨款周轉率越高，支付應付貨款的速度才越快、效率越高。" },
+    { q: "7. 概念判斷：「企業的總資產周轉率上升，表示它能夠運用較少的流動資產來賺取相同水平的銷售收益。」", opts: ["A. 正確", "B. 不正確 — 總資產周轉率反映企業運用『全部資產（包括流動資產和非流動資產）』而非單指流動資產來賺取銷售收益"], ans: 1, exp: "正確。總資產周轉率上升表示能夠運用較少的總資產（包括流動資產和非流動資產）來賺取相同水平的銷售收益。" },
+    { q: "8. 概念判斷：「如一家企業的存貨周轉率高於行業平均水平，這代表該企業出售存貨的速度比競爭對手快。」", opts: ["A. 正確", "B. 不正確"], ans: 0, exp: "正確。存貨周轉率越高，出售存貨的速度便越快。" }
+  ];
+  let curRQ = 0;
+  function renderRatioQuiz() {
+    const it = ratioQuizItems[curRQ];
+    document.getElementById('ratioQuizProg').textContent = `題目 ${curRQ + 1} / ${ratioQuizItems.length}`;
+    document.getElementById('ratioQuizQ').textContent = it.q;
+    document.getElementById('ratioQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:11px 15px" onclick="checkRatioQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('ratioQuizFb').innerHTML = '';
+  }
+  function checkRatioQuiz(idx) {
+    const it = ratioQuizItems[curRQ];
+    const fb = document.getElementById('ratioQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14px" onclick="curRQ=(curRQ+1)%ratioQuizItems.length;renderRatioQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderRatioQuiz();
+
+  // ====== 4. 比率分析：種類、功能與限制 ======
+  const funcCases = [
+    { title: "案例一：茶語手作有限公司 vs 果茶物語有限公司", desc: "去年，「茶語手作」的銷貨和稅前淨利分別為 <b>$1,500萬</b> 和 <b>$90萬</b>；主要競爭對手「果茶物語」的銷貨和稅前淨利則分別為 <b>$1,200萬</b> 和 <b>$84萬</b>。", tableHtml: `<table class="comp-table"><thead><tr><th>項目</th><th>茶語手作</th><th>果茶物語</th></tr></thead><tbody><tr><td>銷貨 / 稅前淨利</td><td>$1,500萬 / <b>$90萬</b></td><td>$1,200萬 / $84萬</td></tr><tr class="highlight-row"><td><b>淨利率</b></td><td><b>6.00%</b></td><td><b style="color:var(--green)">7.00%（盈利能力較高）</b></td></tr></tbody></table>`, verdict: "雖然「茶語手作」的淨利金額（$90萬）高於「果茶物語」（$84萬），但兩家店規模（銷貨）不同；果茶物語每一元銷貨可賺取 7 分淨利，高於茶語手作的 6 分，故<b>果茶物語的盈利能力較高</b>。" },
+    { title: "案例二：宏大物流集團 vs 精準速遞公司（不同規模比較）", desc: "大型企業「宏大物流」銷貨 $3,000萬、稅前淨利 $180萬；小型企業「精準速遞」銷貨 $80萬、稅前淨利 $16萬。", tableHtml: `<table class="comp-table"><thead><tr><th>項目</th><th>宏大物流（大型）</th><th>精準速遞（小型）</th></tr></thead><tbody><tr><td>銷貨 / 稅前淨利</td><td>$3,000萬 / <b>$180萬</b></td><td>$80萬 / $16萬</td></tr><tr class="highlight-row"><td><b>淨利率</b></td><td><b>6.00%</b></td><td><b style="color:var(--green)">20.00%（盈利能力較高）</b></td></tr></tbody></table>`, verdict: "會計比率計算財務數字的<b>相對大小</b>，有助比較不同規模企業的表現，斷定精準速遞（20%）比宏大物流（6%）有較高盈利能力。" },
+    { title: "案例三：優越公司 vs 卓越公司（股東投資項目選擇）", desc: "優越公司：淨利率 5.20%、運用資金報酬率 24.80%；卓越公司：淨利率 6.10%、運用資金報酬率 17.50%。", tableHtml: `<table class="comp-table"><thead><tr><th>比率</th><th>優越公司</th><th>卓越公司</th></tr></thead><tbody><tr><td>淨利率</td><td>5.20%</td><td>6.10%</td></tr><tr class="highlight-row"><td><b>運用資金報酬率</b></td><td><b style="color:var(--green)">24.80%（較佳投資項目）</b></td><td>17.50%</td></tr></tbody></table>`, verdict: "假設你同時是兩家公司的股東，<b>優越公司是較佳的投資項目</b>：因為運用資金報酬率量度企業運用長期資金賺取利潤的能力（顯示每運用一元資金所賺取的利息及稅前利潤），優越公司的運用資金報酬率（24.80%）顯著高於卓越公司（17.50%），給予投資者的投資回報較高。" }
+  ];
+  function renderFuncCase(idx) {
+    document.querySelectorAll('#funcCaseChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const f = funcCases[idx];
+    document.getElementById('funcCaseBox').innerHTML = `<div style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line);font-size:15.5px"><b style="color:var(--primary)">${f.title}</b><p style="margin:6px 0">${f.desc}</p>${f.tableHtml}<div style="margin-top:10px;background:var(--card);padding:10px 14px;border-radius:8px;border-left:4px solid var(--green)">${f.verdict}</div></div>`;
+  }
+  renderFuncCase(0);
+
+  const anaDemos = [
+    { title: "星海電玩有限公司同業分析（一）：盈利能力", rows: [["毛利率","38.00%","42.50%","低於同業（可能曾經割價促銷）"],["淨利率","9.00%","6.50%","高於同業（控制營業費用比對手優勝）"],["運用資金報酬率","13.33%","10.50%","高於同業（給予投資者的回報較高）"]], comment: "星海電玩的盈利能力比同行的競爭對手高（淨利率和運用資金報酬率都高於行業平均水平；雖然毛利率較低，但其淨利率較高，很可能是公司在控制費用方面比競爭對手優勝）。" },
+    { title: "星海電玩有限公司同業分析（二）：變現能力與償債能力", rows: [["流動比率","2.33 : 1","1.85 : 1","高於同業（足以應付短期債務，或未善用流動資產）"],["速動比率","1.50 : 1","1.15 : 1","高於同業（短期變現能力較高）"],["槓桿比率","22.22%","19.00%","高於同業（償還長債能力較對手低，但＜50%仍頗高）"]], comment: "變現能力比競爭對手高，但應注意兩個比率高於行業平均水平，可能表示公司未能有效運用其流動資產來賺取利潤；雖然槓桿比率高於同業，但數值不算太大（＜50%），代表其償債能力仍然頗高。" },
+    { title: "星海電玩有限公司同業分析（三）：管理效能", rows: [["存貨周轉率","6.46 次","7.80 次","低於同業（出售存貨較慢，可能持有太多存貨）"],["應收貨款周轉率","10.00 次","12.00 次","低於同業（收回應收貨款較慢）"],["應付貨款周轉率","10.00 次","11.50 次","低於同業（支付應付貨款較慢）"],["總資產周轉率","1.19 次","1.95 次","低於同業（運用資產賺取銷貨的效率較低）"]], comment: "管理效能整體上比競爭對手低：公司可能持有太多存貨，並且在收回應收貨款和支付應付貨款方面遇上困難。" },
+    { title: "跨年度時序分析（2024年 vs 2025年趨勢比較）", rows: [["毛利率","39.67%","35.42%","下跌（盈利能力轉差）"],["淨利率","6.97%","5.93%","下跌（盈利能力轉差）"],["運用資金報酬率","9.77%","8.84%","下跌（盈利能力轉差）"],["流動比率 / 速動比率","2.53:1 / 1.58:1","3.85:1 / 2.21:1","上升（變現能力提高，或持有過剩流動資產）"]], comment: "2025 年三個盈利能力比率均下跌，反映盈利能力轉差；流動比率及速動比率顯著上升，變現能力提高，但應留意是否持有過剩流動資產而未能善用賺取利潤。" }
+  ];
+  function renderAnaDemo(idx) {
+    document.querySelectorAll('#anaDemoChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const d = anaDemos[idx], h1 = idx===3?"2024年":"星海電玩", h2 = idx===3?"2025年":"行業平均水平";
+    document.getElementById('anaDemoBox').innerHTML = `<div style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line);font-size:15px"><b style="color:var(--teal)">${d.title}</b><table class="comp-table" style="font-size:14.5px"><thead><tr><th>會計比率</th><th>${h1}</th><th>${h2}</th><th>分析評論</th></tr></thead><tbody>${d.rows.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</tbody></table><div style="margin-top:10px;background:var(--card);padding:10px 14px;border-radius:8px;border-left:4px solid var(--teal)">${d.comment}</div></div>`;
+  }
+  renderAnaDemo(0);
+
+  const limitData = [
+    {
+      num: "01",
+      title: "1. 會計比率不能反映企業某些不能量化的信息",
+      badge: "非量化因素無法反映",
+      desc: "會計比率是根據財務報表上的數字計算出來的。因此，這些比率未必能夠反映某些非量化因素的影響，例如<b>外在營商環境、公司管治（企業管治）、管理層的領導能力和員工士氣</b>等。雖然這些因素與企業的成敗息息相關，但它們的影響未必能即時或直接反映在財務報表上。由於會計比率只能反映量化訊息，比率分析未必能全面反映企業的表現。",
+      example: "<b>商業實例：</b>某物流公司的會計比率顯示上年度業績良好，投資者決定買入其股票；但三個月後該公司的車隊司機因士氣低落而罷工，導致股價急跌。"
+    },
+    {
+      num: "02",
+      title: "2. 不同的會計處理方法令我們難以比較不同企業的比率",
+      badge: "會計政策和標準具彈性",
+      desc: "國際會計準則讓企業在計算財務數字的方法，以至編製財務報表的程序上都享有一定的彈性。因此，<b>不同的企業可能會採用不同的會計政策和標準</b>（例如採用不同的存貨計價方法或折舊方法），這會令我們難以直接比較它們的比率。",
+      example: "<b>商業實例：</b>甲時裝店去年的存貨周轉率比主要競爭對手乙時裝店高，但由於兩家店採用了不同的存貨計價方法，因此不能單憑該比率直接斷定甲店出售存貨的速度較快。"
+    },
+    {
+      num: "03",
+      title: "3. 比率分析未必能指出實際問題所在或成功的原因",
+      badge: "只反映整體狀況而非實際根源",
+      desc: "對大型企業而言，會計比率<b>只能反映企業的整體財務狀況，未必能指出實際問題所在或成功的原因</b>。要了解企業的業績為何變佳或轉差，可能要採用更仔細的數據作進一步分析。",
+      example: "<b>商業實例：</b>淨利率下降可能表示企業的盈利能力變差，卻未能指出企業從每一元銷售收益中獲得較少淨利的具體原因；企業須深入研究，找出哪項成本增加以及導致該成本增加的原因。"
+    },
+    {
+      num: "04",
+      title: "4. 業務組合獨特的企業難以找到合適的行業標準",
+      badge: "獨特業務組合難作同業分析",
+      desc: "企業要進行同業分析，便須找到行業標準作比較之用。然而，<b>如果企業的業務或業務組合獨一無二，便很難找到合適的比較標準</b>。與歐美相比，香港每一行業的企業數量較少，因此在評估香港企業（特別是擁有獨特多元業務組合的大型綜合企業集團）的業績時，較容易遇上這個問題。",
+      example: "<b>商業實例：</b>香港某大型綜合企業集團同時經營飲料、地產、航空、海洋服務及運動用品零售業務，由於業務組合獨特，難以找到合適的行業標準進行同業分析。"
+    },
+    {
+      num: "05",
+      title: "5. 過往的數據未必能反映企業將來的財務狀況",
+      badge: "歷史數據難反映未來巨變",
+      desc: "比率分析是<b>根據企業過往數據所作的分析</b>。雖然比率分析有助評估企業過往的業績，但它<b>未必能準確反映企業將來的財務狀況</b>。因此，如知道企業剛經歷或將會經歷可影響財務報表數字的巨大轉變，詮釋比率時便要分外留神，並應作進一步分析。",
+      example: "<b>應用提示：</b>雖然比率分析存在上述五項限制，但我們不應因此而放棄使用這種分析方法；了解這些限制有助我們妥善進行比率分析，以及更有效地詮釋分析的結果。"
+    }
+  ];
+
+  function renderLimit(idx) {
+    document.getElementById('limitNavList').innerHTML = limitData.map((l, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderLimit(${i})">
+        <span>${l.title}</span>
+      </button>
+    `).join('');
+    const l = limitData[idx];
+    document.getElementById('limitDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${l.title}</h3>
+        <span class="badge b-blue">${l.badge}</span>
+      </div>
+      <p style="margin:0 0 12px;font-size:17px">${l.desc}</p>
+      <div class="case-box">${l.example}</div>
+    `;
+  }
+  renderLimit(0);
+
+  const limitQuizItems = [
+    { q: "1. 辨別陳述是否正確：「會計比率不能用於比較兩家規模不同的企業的業績。」", opts: ["A. 正確", "B. 不正確 — 會計比率可計算財務數字的相對大小，因此有助比較兩家不同規模企業的財務表現"], ans: 1, exp: "正確（陳述不正確）。會計比率計算財務數字的相對大小，正好有助比較不同規模企業的財務表現。" },
+    { q: "2. 辨別陳述是否正確：「會計比率可能無法反映企業某些可量化的信息。」", opts: ["A. 正確", "B. 不正確 — 會計比率是根據量化數字計算，不能反映的是某些『不能量化的信息（非量化因素）』"], ans: 1, exp: "正確（陳述不正確）。會計比率不能反映的是某些「不能量化的信息」（如外在營商環境、公司管治、管理層領導能力和員工士氣）。" },
+    { q: "3. 辨別陳述是否正確：「比率分析可能無法指出企業問題的實際成因。」", opts: ["A. 正確 — 會計比率只能反映整體財務狀況，未必能指出實際問題所在或成功的原因", "B. 不正確"], ans: 0, exp: "正確。比率分析只能反映整體財務狀況，未必能指出問題的實際成因。" },
+    { q: "4. 辨別陳述是否正確：「如果兩家企業採用不同的會計政策和標準，便很難比較它們的會計比率。」", opts: ["A. 正確 — 不同的會計處理方法（如不同存貨計價或折舊方法）令企業難以直接比較比率", "B. 不正確"], ans: 0, exp: "正確。不同的會計處理方法令我們難以比較不同企業的比率。" },
+    { q: "5. 某智能裝置研發公司憑藉「優秀的產品設計師和工程師團隊」及「和諧的勞資關係」取得成功，但這些優勢無法在會計比率中反映出來。這體現了比率分析的哪項限制？", opts: ["A. 會計比率不能反映企業某些不能量化的信息", "B. 不同的會計處理方法令我們難以比較不同企業的比率"], ans: 0, exp: "正確。員工質素、團隊士氣及勞資關係屬於「不能量化的信息（非量化因素）」。" },
+    { q: "6. 香港某大型企業集團同時經營渡輪、地產、酒店、超市及飛機維修業務，管理層發現很難對集團進行同業分析。這體現了比率分析的哪項限制？", opts: ["A. 過往的數據未必能反映企業將來的財務狀況", "B. 業務組合獨特的企業難以找到合適的行業標準"], ans: 1, exp: "正確。當企業的業務組合獨一無二時，便很難找到合適的行業標準作同業比較。" }
+  ];
+  let curLQ = 0;
+  function renderLimitQuiz() {
+    const it = limitQuizItems[curLQ];
+    document.getElementById('limitQuizProg').textContent = `題目 ${curLQ + 1} / ${limitQuizItems.length}`;
+    document.getElementById('limitQuizQ').textContent = it.q;
+    document.getElementById('limitQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:12px 16px" onclick="checkLimitQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('limitQuizFb').innerHTML = '';
+  }
+  function checkLimitQuiz(idx) {
+    const it = limitQuizItems[curLQ];
+    const fb = document.getElementById('limitQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14.5px" onclick="curLQ=(curLQ+1)%limitQuizItems.length;renderLimitQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderLimitQuiz();
+
+  // ====== 5. 論點建構問答工作坊 (選項無括號自然行文・批改回饋針對作答內容直接點評) ======
+  const workshopQuestions = [
+    {
+      id: "s1", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 1：日尚烘焙食材店（獨資企業的財務管理決策）", topic: "財務管理的主要決策：營運資金決策／投資決策", maxMarks: 2,
+      scenario: "「日尚烘焙食材店」是一家本地獨資企業，專門向日本供應商購入高級麵粉及宇治抹茶粉，並轉售予香港的甜品店及烘焙愛好者。",
+      question: "試以其中一種財務管理決策為例，舉例解釋該本地獨資企業須作出的財務管理決策。（2 分）",
+      steps: [
+        { label: "第 1 步：指出單一財務管理決策名稱與核心定義（1分）", colorClass: "hl-s1", opts: [
+          { text: "該獨資企業須作出股息決策，決定每年向普通股股東派發多少現金股息。", score: 0, status: "wrong", comment: "企業類型與決策錯配。獨資企業由東主一人全資擁有，並沒有發行股票或股東，因此不會涉及向股東派發股息的股息決策。" },
+          { text: "該企業須作出營運資金決策，即進行營運資金管理：這涉及對企業短期資產和短期負債的管理，旨在善用企業資金以償還短期負債，確保企業順利運作。", score: 1, status: "best", comment: "準確指出獨資企業日常必須面對的營運資金決策，並清楚說明管理短期資產與短期負債以償還短期債務及維持運作的核心目的。" },
+          { text: "該企業須同時作出投資決策、融資決策、股息決策和營運資金決策。", score: 0, status: "partial", comment: "違反一段一重點原則，只羅列了四種財務決策的名稱，而且獨資企業並不涉及派發股息的股息決策。" }
+        ]},
+        { label: "第 2 步：扣連「向日本供應商買烘焙食材轉售」舉出具體例子說明（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如企業要管理好自己的營運資金。", score: 0, status: "partial", comment: "內容流於重複題意，未有針對烘焙食材店的業務舉出如現金、存貨、應收貨款或應付貨款等具體短期資產與負債的例子。" },
+          { text: "例如在日本北海道收購一間大型乳製品加工廠。", score: 0, status: "wrong", comment: "例子錯配。跨國收購大型加工廠屬於長期的投資決策，並非管理日常短期資產與負債的營運資金決策。" },
+          { text: "例如該店須妥善管理店內的日本麵粉及抹茶粉存貨水平以免食材過期變質，並保留足夠現金以準時償還向日本供應商賒購食材的應付貨款。", score: 1, status: "best", comment: "緊扣烘焙食材店的日常營運，具體說明如何管理麵粉與抹茶粉存貨，以及保留足夠現金清償供應商的應付貨款，例子貼切。" }
+        ]}
+      ]
+    },
+    {
+      id: "s2", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 2：味美連鎖茶餐廳（比較並改善會計比率）", topic: "時序分析比較與改善淨利率的方法", maxMarks: 2,
+      scenario: "在香港上市的「味美連鎖茶餐廳」上年度銷貨為 $45.0 億，毛利為 $5.4 億，稅前利潤為 $1.40 億，上年度毛利率為 12.00%，淨利率為 3.11%。假設味美兩年前的毛利率和淨利率分別為 11.20% 和 4.20%。",
+      question: "指出味美哪一項會計比率在上年度變差並簡單解釋（1分），然後建議一種具體方法來改善這項會計比率的表現（1分）。（2 分）",
+      steps: [
+        { label: "第 1 步：比較兩年數據，指出變差的會計比率並作簡單解釋（1分）", colorClass: "hl-s1", opts: [
+          { text: "毛利率在上年度變差，因為由 11.20% 上升至 12.00%。", score: 0, status: "wrong", comment: "指標解讀方向錯誤。毛利率由 11.20% 上升至 12.00% 代表每一元銷貨所賺取的毛利增加，屬於盈利能力改善而非變差。" },
+          { text: "淨利率在上年度變差：因為味美的淨利率由兩年前的 4.20% 下跌至上年度的 3.11%，反映扣除所有費用後的盈利能力下降。", score: 1, status: "best", comment: "準確透過跨年數據對比識別出淨利率由 4.20% 下跌至 3.11%，並點出扣除所有費用後盈利能力轉差的問題。" },
+          { text: "毛利率和淨利率在上年度都變差了。", score: 0, status: "wrong", comment: "判斷不準確。數據顯示毛利率由 11.20% 升至 12.00% 有所改善，只有淨利率由 4.20% 跌至 3.11% 變差。" }
+        ]},
+        { label: "第 2 步：建議一種改善「淨利率」的具體方法（1分）", colorClass: "hl-s2", opts: [
+          { text: "味美可透過控制茶餐廳分店的電費、煤氣費、行政及分銷開支以減少營業費用，或者透過提高食物售價、降低食材銷貨成本以提高毛利率，以及增加銷貨來改善淨利率。", score: 1, status: "best", comment: "具體提出減少營業費用、提高毛利率及增加銷貨等可行措施，能直接針對淨利率下跌的問題作出改善。" },
+          { text: "味美可透過延遲向食材供應商還款三個月來提高淨利率。", score: 0, status: "wrong", comment: "概念混淆。延遲向供應商償還應付貨款只會影響短期現金流及應付貨款周轉率，並不能減少損益表內的營業費用或提高淨利率。" },
+          { text: "味美應該設法把淨利率提高。", score: 0, status: "partial", comment: "純粹重複題目要求，未有提出如減少營業費用、提高毛利率或增加銷貨等具體的改善方法。" }
+        ]}
+      ]
+    },
+    {
+      id: "s3", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 3：創科智能穿戴公司（進行比率分析的方法）", topic: "進行比率分析的兩種方法：同業分析與時序分析", maxMarks: 2,
+      scenario: "「創科智能穿戴有限公司」專門研發智能運動手環。創辦人浩然想了解公司在上年度的財務業績，財務經理提議使用財務報表的數字進行比率分析。",
+      question: "試以其中一種進行比率分析的方法為例，描述創科智能穿戴有限公司可如何進行比率分析以評估上年度的業績。（2 分）",
+      steps: [
+        { label: "第 1 步：指出單一比率分析方法的準確名稱（1分）", colorClass: "hl-s1", opts: [
+          { text: "公司可進行市場區隔分析。", score: 0, status: "wrong", comment: "概念錯配。市場區隔屬於市場營銷管理中劃分消費者群組的過程，並非進行財務比率分析的方法。" },
+          { text: "公司可採用同業分析，又或者採用時序分析，即趨勢分析來評估上年度的財務業績。", score: 1, status: "best", comment: "準確指出進行財務比率分析時常用的同業分析與時序分析方法。" },
+          { text: "公司可同時進行同業分析、時序分析及編製預算。", score: 0, status: "partial", comment: "違反一段一重點原則，而且混入了編製預算這項財務規劃工作，未有集中說明單一比率分析方法。" }
+        ]},
+        { label: "第 2 步：扣連「創科智能穿戴有限公司」描述該分析方法的具體做法（1分）", colorClass: "hl-s2", opts: [
+          { text: "把創科智能穿戴有限公司上年度的會計比率，與智能穿戴裝置行業內其他規模相若企業的平均會計比率，即行業標準或行業平均水平作比較；又或者將上年度的會計比率與公司往年的會計比率作比較，觀察變化趨勢以評估業績。", score: 1, status: "best", comment: "清楚說明將公司比率與同行規模相若企業的行業平均水平作比較，或與公司往年比率作趨勢比較的具體做法。" },
+          { text: "只單獨計算公司一個會計比率，不與任何數據比較。", score: 0, status: "wrong", comment: "做法無效。單一會計比率並不能說明企業業績的好壞，必須與公司往年比率或同行平均水平作比較才能判斷高低。" },
+          { text: "與其他公司比較一下。", score: 0, status: "partial", comment: "描述過於含糊，必須明確指出是與「同行其他規模相若企業的平均會計比率」即行業平均水平作比較。" }
+        ]}
+      ]
+    },
+    {
+      id: "s4", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 4：綠源環保包裝廠（應收貨款周轉率計算與變化原因）", topic: "應收貨款周轉率的計算與變化原因分析", maxMarks: 2,
+      scenario: "本地環保餐盒生產商「綠源」去年數據：銷貨 $9,200,000、現金銷貨 $1,100,000、平均應收貨款 $1,800,000。東主為體恤中小型餐廳客戶，決定把今年所有客戶訂單的賒帳期延長一個月，財務經理預計今年的「應收貨款周轉率」會下降。",
+      question: "(i) 計算綠源去年的應收貨款周轉率（1分）；(ii) 解釋為何預計公司今年的應收貨款周轉率會下降（1分）。（2 分）",
+      steps: [
+        { label: "第 1 步：準確計算去年的「應收貨款周轉率」（1分）", colorClass: "hl-s1", opts: [
+          { text: "應收貨款周轉率 ＝ $9,200,000 ÷ $1,800,000 ＝ 5.11 次。", score: 0, status: "wrong", comment: "分子計算有誤。計算應收貨款周轉率時應以賒銷作為分子，必須先從銷貨總額 $9,200,000 中扣除現金銷貨 $1,100,000。" },
+          { text: "賒銷 ＝ 銷貨 $9,200,000 － 現金銷貨 $1,100,000 ＝ $8,100,000；應收貨款周轉率 ＝ $8,100,000 ÷ $1,800,000 ＝ 4.50 次。", score: 1, status: "best", comment: "先扣除現金銷貨求得賒銷 $8,100,000，再除以平均應收貨款得出 4.50 次，算式、數值與單位完全準確。" },
+          { text: "應收貨款周轉率 ＝ 450.00%。", score: 0, status: "wrong", comment: "單位與表達形式錯誤。應收貨款周轉率屬於管理效能比率，應以「次」為單位計算至 4.50 次，而非百分比。" }
+        ]},
+        { label: "第 2 步：根據個案解釋今年「應收貨款周轉率」預計下降的原因（1分）", colorClass: "hl-s2", opts: [
+          { text: "因為綠源把今年所有餐廳客戶訂單的賒帳期延長一個月，令公司向客戶收回應收貨款的速度減慢，同時令分母的平均應收貨款增加，故應收貨款周轉率會下降。", score: 1, status: "best", comment: "緊扣延長客戶賒帳期一個月的決定，清楚從收款速度減慢及分母平均應收貨款增加兩方面解釋周轉率下降的原因。" },
+          { text: "因為越來越多市民買外賣令環保餐盒訂單增加。", score: 0, status: "wrong", comment: "未能解釋周轉率下降的原因，且忽略了個案中把所有客戶訂單賒帳期延長一個月的關鍵決定。" },
+          { text: "因為公司聘請了新的財務主任。", score: 0, status: "wrong", comment: "人事變動與應收貨款周轉率的計算及變化無關。" }
+        ]}
+      ]
+    },
+    {
+      id: "e1", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 1：耀華上市物流集團（財務決策一：投資決策）", topic: "財務管理的主要決策：投資決策", maxMarks: 3,
+      scenario: "一家上市跨境物流及倉儲集團的財務經理剛晉升為財務總監，他會協助集團作出各種財務決策。試舉例說明新任財務總監會協助集團作出哪些種類的主要財務管理決策。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「投資決策」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一財務管理決策名稱與核心概念（1分）", colorClass: "hl-s1", opts: [
+          { text: "財務總監會同時協助集團作出投資、融資、股息和營運資金決策。", score: 0, status: "partial", comment: "違反一段一重點原則，只羅列了四種財務決策的名稱而未有針對「投資決策」界定其含義。" },
+          { text: "財務總監會協助集團作出投資決策：這涉及企業的長期資金用途，旨在為企業選取良好的長期投資項目，例如投資淨現值為正數的項目。", score: 1, status: "best", comment: "準確指出「投資決策」涉及長期資金用途，並點出透過選取淨現值為正數的良佳長期項目來創造價值的概念。" },
+          { text: "投資決策是指管理日常零用現金交水電費。", score: 0, status: "wrong", comment: "長短期決策混淆。管理日常現金及繳付短期開支屬於營運資金決策，而投資決策通常只涉及長期投資項目。" }
+        ]},
+        { label: "第 2 步：針對「上市物流及倉儲集團」設定具體長期投資例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如幫物流集團選擇好的投資項目。", score: 0, status: "partial", comment: "只重複了定義字眼，欠缺結合跨境物流及倉儲集團業務的具體長期投資項目例子。" },
+          { text: "例如協助物流集團評估應否斥資在機場附近興建全自動智能冷鏈倉庫、添置電動貨車車隊或收購海外速遞公司，並透過計算各項目的淨現值挑選有利可圖的長期項目。", score: 1, status: "best", comment: "緊扣跨境物流及倉儲集團業務，具體舉出興建智能冷鏈倉庫、添置電動車隊及計算項目淨現值的例子，內容充實。" },
+          { text: "例如親自為物流車隊設計車身廣告標誌。", score: 0, status: "wrong", comment: "設計車身廣告標誌屬於市場營銷的推廣工作，並非財務總監負責的財務投資決策。" }
+        ]},
+        { label: "第 3 步：深化論述至增加盈利與實現股東財富最大化的最終目標（1分）", colorClass: "hl-s3", opts: [
+          { text: "透過審慎篩選並投資於淨現值為正數的高回報物流基建項目，能帶動集團未來盈利與每股股價上升，從而達成為股東賺取最大財富的企業最終目標。", score: 1, status: "best", comment: "清楚推演出投資正數淨現值項目如何提升集團盈利與每股股價，從而實現為股東賺取最大財富的最終目標。" },
+          { text: "這樣便完成了投資決策。", score: 0, status: "partial", comment: "同義反覆，未有說明選取優質長期投資項目對提升股價及為股東賺取最大財富的影響。" },
+          { text: "這會令貨車司機工資變成零元。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e2", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 2：耀華上市物流集團（財務決策二：融資決策與資本結構）", topic: "財務管理的主要決策：融資決策與資本結構", maxMarks: 3,
+      scenario: "承上題，該上市物流及倉儲集團需要龐大資金興建智能冷鏈倉庫，財務總監須協助集團作出「融資決策」及管理槓桿水平。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「融資決策」及制定適當資本結構為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出「融資決策」的定義與「資本結構」概念（1分）", colorClass: "hl-s1", opts: [
+          { text: "財務總監會協助集團作出融資決策：這涉及企業如何獲得長期資金，旨在權衡股本與債務融資，制定適當的資本結構，即股本和債務的比例，以減少總資本成本。", score: 1, status: "best", comment: "準確指出「融資決策」涉及長期資金來源，並清楚說明制定適當資本結構以減少總資本成本的核心目的。" },
+          { text: "融資決策是指決定派發多少現金股息。", score: 0, status: "wrong", comment: "決策類別混淆。決定派發給股東的股息金額和形式屬於「股息決策」，而非籌集長期資金的融資決策。" },
+          { text: "融資決策就是去籌錢。", score: 0, status: "partial", comment: "表述過於口語化，未有指出權衡股本與債務融資、制定適當「資本結構」以減少總資本成本的專業概念。" }
+        ]},
+        { label: "第 2 步：針對「上市物流集團籌資及調節槓桿水平」設定具體例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如物流集團可以借錢或發行股票。", score: 0, status: "partial", comment: "闡述過於簡略，未有結合興建智能冷鏈倉庫的資金需要以及如何根據集團槓桿水平調節股本與債務比例。" },
+          { text: "例如為籌集興建智能倉庫的資金，財務總監會比較發行新普通股進行股本融資與借取長期銀行貸款進行債務融資的成本與風險；若集團槓桿水平偏高，可建議發行新股或保留更多留存利潤以降低負債比重。", score: 1, status: "best", comment: "具體結合興建智能倉庫的籌資需要，清楚說明如何比較股本與債務融資的成本風險並調節槓桿水平。" },
+          { text: "例如調高辦公室冷氣溫度以節省電費。", score: 0, status: "wrong", comment: "節省日常電費屬於控制行政營業費用，並非籌集長期資金的融資決策。" }
+        ]},
+        { label: "第 3 步：深化論述至減低總資本成本、控制財務風險與增加股東財富的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "制定恰當的資本結構既能避免過度舉債的無力償債風險，又能減少總資本成本，使物流集團得以開展更多有利可圖的擴展項目，最終為股東帶來最大的財富。", score: 1, status: "best", comment: "清楚推演出適當資本結構如何兼顧控制財務風險與降低總資本成本，從而支援更多有利可圖的投資並增加股東財富。" },
+          { text: "這樣便籌集到資金了。", score: 0, status: "partial", comment: "停留在表面字眼，未有說明減少總資本成本、控制償債風險及開展有利可圖項目以增加股東財富的影響。" },
+          { text: "這會令股東不再要求任何投資回報。", score: 0, status: "wrong", comment: "推論錯誤，無論採用股本還是債務融資，股東和放債人都會要求一定的投資回報。" }
+        ]}
+      ]
+    },
+    {
+      id: "e3", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 3：皇冠度假酒店集團（評估表現一：盈利能力）", topic: "運用會計比率評估企業表現：盈利能力", maxMarks: 3,
+      scenario: "「皇冠度假酒店集團」運用會計比率審視年度業績。試描述會計比率可用來評估該度假酒店集團哪些方面的表現。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「盈利能力」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一評估表現範疇與核心定義（1分）", colorClass: "hl-s1", opts: [
+          { text: "會計比率可同時評估盈利能力、變現能力、償債能力及管理效能。", score: 0, status: "partial", comment: "違反一段一重點原則，未有針對「盈利能力」這一評估範疇界定其含義。" },
+          { text: "會計比率可用來評估酒店集團的盈利能力：盈利能力比率用來量度企業賺取利潤的能力，以及運用長期資金獲取回報的表現。", score: 1, status: "best", comment: "準確指出「盈利能力」評估範疇，並清楚界定量度賺取利潤與運用資金獲取回報的核心目的。" },
+          { text: "盈利能力比率是用來量度酒店大堂裝潢是否美觀。", score: 0, status: "wrong", comment: "陳述錯誤，大堂裝潢美觀程度屬於非量化因素，並非盈利能力比率的量度對象。" }
+        ]},
+        { label: "第 2 步：列舉具體「盈利能力比率」並結合酒店集團業務說明（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如計算流動比率和速動比率。", score: 0, status: "wrong", comment: "比率類別錯配。流動比率和速動比率屬於量度短期償債能力的變現能力比率，並非盈利能力比率。" },
+          { text: "例如酒店集團可計算毛利率、淨利率和運用資金報酬率，評估扣除餐飲客房成本及日常營業費用後，從每一元銷售收益中賺取毛利與淨利的能力，以及每運用一元長期資金所賺取的利息及稅前利潤。", score: 1, status: "best", comment: "完整列出毛利率、淨利率和運用資金報酬率三項指標，並緊扣酒店餐飲客房業務說明其量度內容。" },
+          { text: "例如計一下自己有沒有賺錢。", score: 0, status: "partial", comment: "描述過於籠統，必須明確列出「毛利率」、「淨利率」及「運用資金報酬率」等具體會計比率名稱。" }
+        ]},
+        { label: "第 3 步：深化論述至比較分析及協助酒店管理層決策的作用（1分）", colorClass: "hl-s3", opts: [
+          { text: "透過將這些盈利能力比率與往年數據作時序分析，或與同行平均水平作同業分析比較，管理層能判斷成本與營業費用控制是否得宜，並在淨利率下跌時及時採取減少營業費用等改善措施。", score: 1, status: "best", comment: "深入結合時序分析與同業分析的比較方法，說明管理層如何據此檢視費用控制成效並採取改善行動。" },
+          { text: "這樣便知道自己的盈利能力了。", score: 0, status: "partial", comment: "同義反覆，未有說明透過與往年或同行比較以判斷成本控制表現及採取改善措施的作用。" },
+          { text: "這會令酒店永遠不會有任何負債。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e4", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 4：皇冠度假酒店集團（評估表現二：變現能力）", topic: "運用會計比率評估企業表現：變現能力", maxMarks: 3,
+      scenario: "承上題，「皇冠度假酒店集團」運用會計比率審視年度業績。試以「變現能力」為例，描述會計比率可用來評估酒店集團哪一方面的表現。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「變現能力」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一評估表現範疇與核心定義（1分）", colorClass: "hl-s1", opts: [
+          { text: "會計比率可用來評估酒店集團的變現能力：變現能力比率用來量度企業的短期償債能力，即是否有足夠的流動資產償還短期債務，即流動負債。", score: 1, status: "best", comment: "準確界定「變現能力」旨在量度企業是否有足夠流動資產清償短期流動負債的能力。" },
+          { text: "變現能力比率量度償還十年期長期按揭貸款的能力。", score: 0, status: "wrong", comment: "期限概念混淆。十年期按揭貸款屬於非流動負債，量度長期償債能力屬於償債能力比率中的槓桿比率，而非變現能力比率。" },
+          { text: "會計比率可以評估變現能力。", score: 0, status: "partial", comment: "只重複了題目字眼，未有說明變現能力比率是用來量度企業「償還短期債務的能力」。" }
+        ]},
+        { label: "第 2 步：列舉具體「變現能力比率」並結合酒店說明（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如計算毛利率和運用資金報酬率。", score: 0, status: "wrong", comment: "比率類別錯誤。毛利率和運用資金報酬率屬於盈利能力比率，並非變現能力比率。" },
+          { text: "例如酒店集團可計算流動比率和速動比率，並配合存貨周轉率、應收貨款周轉率和應付貨款周轉率，評估手頭上的現金及應收貨款是否足以支付短期的食材供應商應付貨款及應計員工薪金。", score: 1, status: "best", comment: "準確列出流動比率和速動比率兩大核心指標及三個周轉率，並結合酒店短期應付貨款與應計薪金作具體說明。" },
+          { text: "例如看看自己夠不夠錢用。", score: 0, status: "partial", comment: "表述過於口語化，必須明確寫出「流動比率」和「速動比率」等具體會計比率名稱。" }
+        ]},
+        { label: "第 3 步：深化論述至避免資金周轉危機或流動資產過剩的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "審視變現能力有助確保流動比率和速動比率維持在 1 以上的適當水平，避免因流動資產不足而無力償還短期債務，同時防止比率太高而持有過剩流動資產、未能善用流動資產來賺取利潤。", score: 1, status: "best", comment: "全面剖析比率維持在 1 以上的安全基準，同時點出防止流動資產不足引致周轉危機及防止比率過高造成資產閒置的雙向管理意義。" },
+          { text: "這樣便評估了變現能力。", score: 0, status: "partial", comment: "同義反覆，未有說明維持比率在 1 以上且不宜太高或太低對酒店營運資金管理的啟示。" },
+          { text: "這會令固定資產折舊完全消失。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e5", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 5：皇冠度假酒店集團（評估表現三：償債能力）", topic: "運用會計比率評估企業表現：償債能力", maxMarks: 3,
+      scenario: "承上題，「皇冠度假酒店集團」運用會計比率審視年度業績。試以「償債能力」為例，描述會計比率可用來評估酒店集團哪一方面的表現。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「償債能力」及槓桿比率為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一評估表現範疇與核心定義（1分）", colorClass: "hl-s1", opts: [
+          { text: "會計比率可用來評估酒店集團的償債能力：償債能力比率量度企業償還到期債務，包括短期負債和長期負債的整體償債能力及長期財務穩健性。", score: 1, status: "best", comment: "準確界定「償債能力」量度企業清償到期債務的整體能力與長期財務穩健性。" },
+          { text: "償債能力比率量度每年平均售出存貨多少次。", score: 0, status: "wrong", comment: "概念混淆。量度每年售出存貨次數的是管理效能比率中的存貨周轉率，而非償債能力比率。" },
+          { text: "償債能力是指酒店能不能還錢。", score: 0, status: "partial", comment: "闡述過於簡略，應明確指出量度企業償還到期債務的整體償債能力及長期財務穩健性。" }
+        ]},
+        { label: "第 2 步：列舉「槓桿比率」並結合酒店集團資本結構說明（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如槓桿比率越高，代表酒店集團的償債能力越高、風險越低。", score: 0, status: "wrong", comment: "理解完全相反。槓桿比率越高代表企業採用越多長期債務籌資，面對的財務風險越高，償還長期債務的能力反而越低。" },
+          { text: "例如酒店集團可計算槓桿比率，即非流動負債加優先股本之和，除以非流動負債加股東資本之和再乘以百分之一百，檢視集團採用長期債務融資相對於長期資本總額的比重。", score: 1, status: "best", comment: "準確寫出「槓桿比率」名稱及其分子分母組成，清楚說明如何檢視長期債務佔長期資本總額的比重。" },
+          { text: "例如計算自己的償債能力比率。", score: 0, status: "partial", comment: "漏寫了「槓桿比率」這一具體償債能力比率名稱及其量度長期債務比重的內容。" }
+        ]},
+        { label: "第 3 步：深化論述至財務風險評估與避免無力償債清盤的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "由於無論獲利或虧損均須支付利息和優先股股息及償還本金，審視槓桿比率是否高於 50% 分界線能助管理層評估長期財務風險，防止因過度依賴長期債務融資而陷入無力償債甚至被迫清盤停業。", score: 1, status: "best", comment: "深入點出長期債務強制付息還本的財務風險及 50% 判斷基準，並推演至防止無力償債而被迫清盤停業的後果。" },
+          { text: "這樣管理層便知道槓桿比率是多少。", score: 0, status: "partial", comment: "同義反覆，未有說明審視槓桿比率對評估強制付息還本風險及避免無力償債清盤的作用。" },
+          { text: "這會令銀行免除所有長期貸款本金。", score: 0, status: "wrong", comment: "推論不合常理，計算槓桿比率並不會令銀行免除貸款本金。" }
+        ]}
+      ]
+    },
+    {
+      id: "e6", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 6：皇冠度假酒店集團（評估表現四：管理效能）", topic: "運用會計比率評估企業表現：管理效能", maxMarks: 3,
+      scenario: "承上題，「皇冠度假酒店集團」希望運用會計比率妥善評估集團的「管理效能」。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「管理效能」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一評估表現範疇與核心定義（1分）", colorClass: "hl-s1", opts: [
+          { text: "會計比率可用來評估企業的管理效能，又稱管理效率：管理效能比率用來量度企業運用各項資產以賺取銷售收益，或在較短時間內把資產套現的效率。", score: 1, status: "best", comment: "準確界定「管理效能」旨在量度企業運用各項資產賺取銷售收益或把資產套現的效率。" },
+          { text: "管理效能比率量度扣除稅項後的純利金額。", score: 0, status: "wrong", comment: "類別混淆。量度利潤水平屬於盈利能力比率，管理效能比率是量度資產運用與周轉效率。" },
+          { text: "企業可以用會計比率評估管理效能。", score: 0, status: "partial", comment: "只重複了題目字眼，未有界定管理效能比率「量度企業運用資產以賺取銷售收益或把資產套現的效率」的意思。" }
+        ]},
+        { label: "第 2 步：列舉具體「管理效能比率」並說明其量度內容（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如計算流動比率和槓桿比率。", score: 0, status: "wrong", comment: "比率錯配。流動比率屬於變現能力比率，槓桿比率屬於償債能力比率，兩者均非管理效能比率。" },
+          { text: "例如可計算量度運用存貨效率的存貨周轉率、量度收回應收貨款效率的應收貨款周轉率、量度支付應付貨款效率的應付貨款周轉率，以及量度運用全部資產賺取銷售收益效率的總資產周轉率。", score: 1, status: "best", comment: "完整列出存貨周轉率、應收貨款周轉率、應付貨款周轉率及總資產周轉率四項指標，並清楚交代各自的量度內容。" },
+          { text: "例如看看管理層工作效率高不高。", score: 0, status: "partial", comment: "描述空泛，必須明確列出存貨周轉率、應收貨款周轉率、應付貨款周轉率及總資產周轉率等具體比率名稱。" }
+        ]},
+        { label: "第 3 步：深化論述至識別資產積壓問題與提升營運效率的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "這些周轉率越高，代表只須運用較少存貨或總資產便可賺取相同水平的銷售收益，或能更快收回現金；若周轉率偏低，管理層便能及時察覺存貨積壓過多或收帳困難並加以改善。", score: 1, status: "best", comment: "清楚推演出高周轉率代表以較少存貨和總資產創造同等銷貨，並說明低周轉率如何協助管理層及時發現存貨積壓與收帳問題。" },
+          { text: "這樣便知道管理效能比率是多少次了。", score: 0, status: "partial", comment: "同義反覆，未有說明周轉率高低對評估資產運用效率及改善存貨與收帳問題的幫助。" },
+          { text: "這會令企業無須編製財務狀況表。", score: 0, status: "wrong", comment: "推論錯誤，計算管理效能比率必須使用財務狀況表上的資產與應付貨款數據。" }
+        ]}
+      ]
+    },
+    {
+      id: "e7", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 7：尚雅連鎖運動服飾店（比率分析限制一：不能反映非量化信息）", topic: "比率分析的限制：不能反映企業某些不能量化的信息", maxMarks: 3,
+      scenario: "一家出售專業運動服及跑鞋的「尚雅連鎖運動服飾店」運用比率分析比較自己與競爭對手的業績。試舉例解釋該連鎖店進行比率分析時的限制。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「會計比率不能反映企業某些不能量化的信息」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出比率分析的單一核心限制名稱與概念（1分）", colorClass: "hl-s1", opts: [
+          { text: "比率分析同時有五項限制。", score: 0, status: "partial", comment: "違反一段一重點原則，未有針對「會計比率不能反映企業某些不能量化的信息」這一限制說明其原因。" },
+          { text: "其中一項限制是會計比率不能反映企業某些不能量化的信息：由於會計比率是根據財務報表上的量化數字計算出來的，未必能反映某些非量化因素的影響。", score: 1, status: "best", comment: "準確指出「會計比率不能反映企業某些不能量化的信息」的限制，並點出比率僅依賴報表量化數字計算的原因。" },
+          { text: "限制是會計比率不能比較不同規模的企業。", score: 0, status: "wrong", comment: "概念錯誤。會計比率計算財務數字的相對大小，正好有助比較不同規模企業的財務表現，這屬於比率分析的功能而非限制。" }
+        ]},
+        { label: "第 2 步：針對「尚雅連鎖運動服飾店」設定具體的非量化因素例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如運動服飾店有很多不能量化的信息。", score: 0, status: "partial", comment: "只重複了不能量化信息的字眼，未有結合運動服飾店舉出如外在營商環境、公司管治、管理層領導能力或員工士氣等具體例子。" },
+          { text: "例如運動服飾店的外在營商環境轉變、公司管治水平、管理層的領導能力，以及前線售貨員的服務態度與員工士氣等非量化因素，均無法直接反映在會計比率上。", score: 1, status: "best", comment: "具體結合運動服飾店的外在營商環境、公司管治、管理層領導能力與售貨員士氣等非量化因素，例子全面準確。" },
+          { text: "例如運動服飾店去年的銷貨為 $8,000,000。", score: 0, status: "wrong", comment: "例子錯誤。銷貨 $8,000,000 屬於已經在損益表上以金錢量化的財務數據，並非不能量化的信息。" }
+        ]},
+        { label: "第 3 步：深化論述至未能全面反映表現及需考慮其他資料的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "雖然這些非量化因素與運動服飾店的成敗息息相關，例如員工士氣低落或罷工會嚴重打擊業務，但由於會計比率只能反映量化訊息，比率分析未必能全面反映企業的表現，評估業績時須同時考慮其他非財務資料。", score: 1, status: "best", comment: "清楚推演出非量化因素對企業成敗的關鍵影響，說明單靠比率分析未能全面反映表現，必須配合非財務資料綜合評估。" },
+          { text: "這樣便不能反映非量化信息。", score: 0, status: "partial", comment: "同義反覆，未有說明忽略非量化因素為何會令比率分析未能全面反映企業表現。" },
+          { text: "因此店舖應立即停止編製財務報表。", score: 0, status: "wrong", comment: "推論極端且錯誤，了解比率分析的限制是為了更審慎地詮釋結果，而非放棄編製財務報表。" }
+        ]}
+      ]
+    },
+    {
+      id: "e8", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 8：尚雅連鎖運動服飾店（比率分析限制二：不同會計處理方法）", topic: "比率分析的限制：不同的會計處理方法令我們難以比較不同企業的比率", maxMarks: 3,
+      scenario: "承上題，「尚雅連鎖運動服飾店」運用比率分析比較自己與競爭對手的業績。試以「不同的會計處理方法」為例，解釋進行同業比率比較時的限制。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「不同的會計處理方法令我們難以比較不同企業的比率」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出比率分析的單一核心限制名稱與概念（1分）", colorClass: "hl-s1", opts: [
+          { text: "另一項限制是不同的會計處理方法令我們難以比較不同企業的比率：國際會計準則讓企業在計算財務數字的方法及編製財務報表的程序上享有一定彈性，不同企業可能會採用不同的會計政策和標準。", score: 1, status: "best", comment: "準確指出「不同的會計處理方法令我們難以比較不同企業的比率」的限制，並清楚說明會計準則彈性導致不同企業採用不同會計政策的原因。" },
+          { text: "所有運動服飾店都必須採用完全相同的存貨計價方法。", score: 0, status: "wrong", comment: "陳述不符會計實務。國際會計準則容許企業在存貨計價及折舊計算等方法上享有一定彈性，不同企業未必採用相同方法。" },
+          { text: "限制是會計方法不同。", score: 0, status: "partial", comment: "表述過於簡略，必須說明國際會計準則容許彈性，令不同企業採用不同的會計政策和標準，進而難以直接比較比率。" }
+        ]},
+        { label: "第 2 步：針對「運動服飾店與競爭對手」設定具體會計政策差異例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如兩間運動服飾店售賣不同款式的跑鞋。", score: 0, status: "wrong", comment: "例子錯配。跑鞋款式不同屬於產品設計差異，並非計算財務報表數字時所採用的「會計處理方法」。" },
+          { text: "例如尚雅運動服飾店與主要競爭對手可能採用了不同的存貨計價方法來計算季末運動服存貨價值及銷貨成本，或者對店舖裝修設備採用不同的折舊計算方法，導致雙方計算出來的存貨周轉率或淨利率基準不一致。", score: 1, status: "best", comment: "緊扣運動服飾店業務，具體舉出不同存貨計價方法與不同折舊計算方法如何導致存貨周轉率及淨利率的計算基準不一致。" },
+          { text: "例如用了不同的會計方法。", score: 0, status: "partial", comment: "欠缺如「採用不同的存貨計價方法或折舊方法」等具體的會計政策差異例子。" }
+        ]},
+        { label: "第 3 步：深化論述至無法直接比較比率與可能作出錯誤結論的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "假如兩家運動服飾店採用不同的存貨計價等會計處理方法，即使尚雅的存貨周轉率表面上比競爭對手高，亦不能直接斷定其出售存貨的速度較快，令管理層難以直接比較兩者的會計比率。", score: 1, status: "best", comment: "清楚推演出當存貨計價方法不同時，表面較高的存貨周轉率並不能直接證明出售存貨速度較快，點出同業比較的局限。" },
+          { text: "這樣兩間運動服飾店便很難比較了。", score: 0, status: "partial", comment: "同義反覆，未有說明計算基準不一致如何令表面較高的比率無法直接反映真實營運表現。" },
+          { text: "這會令應付貨款自動清零。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    }
+  ];
+
+  let curBuilderCat = 'short';
+  let curQIdx = 0;
+  let userSelections = {};
+  let isSubmitted = false;
+
+  function switchBuilderCat(cat, btn) {
+    curBuilderCat = cat;
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('builderCatLabel').textContent = cat === 'short' ? '選擇短答題（每題滿分 2 分）：' : '選擇進階論述題（每題滿分 3 分）：';
+    curQIdx = cat === 'short' ? 0 : 4;
+    userSelections = {};
+    isSubmitted = false;
+    renderQuestionChips();
+    renderWorkshop();
+  }
+
+  function renderQuestionChips() {
+    document.getElementById('questionChips').innerHTML = workshopQuestions
+      .map((q, i) => ({ q, i }))
+      .filter(x => x.q.cat === curBuilderCat)
+      .map(x => `<button class="chip ${x.i===curQIdx?'active':''}" onclick="selectWorkshopQ(${x.i})">${x.q.title}</button>`)
+      .join('');
+  }
+
+  function selectWorkshopQ(idx) {
+    curQIdx = idx;
+    userSelections = {};
+    isSubmitted = false;
+    renderQuestionChips();
+    renderWorkshop();
+  }
+
+  function pickStepOption(sIdx, oIdx) {
+    userSelections[sIdx] = oIdx;
+    isSubmitted = false;
+    renderWorkshop();
+  }
+
+  function submitConstructedAnswer() {
+    const q = workshopQuestions[curQIdx];
+    if (Object.keys(userSelections).length < q.steps.length) {
+      alert(`請先完成全部 ${q.steps.length} 個步驟的選擇，再點擊批改。`);
+      return;
+    }
+    isSubmitted = true;
+    renderWorkshop();
+  }
+
+  function fillBestChoices() {
+    const q = workshopQuestions[curQIdx];
+    q.steps.forEach((st, sIdx) => {
+      userSelections[sIdx] = st.opts.findIndex(o => o.status === 'best');
+    });
+    isSubmitted = true;
+    renderWorkshop();
+  }
+
+  function renderWorkshop() {
+    const q = workshopQuestions[curQIdx];
+    const letters = ['A', 'B', 'C'];
+
+    let totalScore = 0;
+    q.steps.forEach((st, sIdx) => {
+      if (userSelections[sIdx] !== undefined) {
+        totalScore += st.opts[userSelections[sIdx]].score;
+      }
+    });
+
+    const previewParts = q.steps.map((st, sIdx) => {
+      const selIdx = userSelections[sIdx];
+      if (selIdx === undefined) {
+        return `<span style="color:var(--mute);border-bottom:1px dashed var(--mute)">［未選擇第 ${sIdx + 1} 步］</span>`;
+      }
+      return `<span class="${st.colorClass}">${st.opts[selIdx].text}</span>`;
+    });
+
+    document.getElementById('builderWorkspace').innerHTML = `
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <div>
+            <span class="badge b-blue">${q.typeBadge}</span>
+            <span class="badge b-teal">${q.topic}</span>
+          </div>
+          <b style="color:var(--primary);font-size:16px">本段滿分：${q.maxMarks} 分</b>
+        </div>
+        <div style="background:var(--surface);padding:16px 20px;border-radius:12px;border-left:4px solid var(--primary);font-size:16.5px;margin-bottom:14px"><b>背景情境：</b>${q.scenario}</div>
+        <div style="font-size:18px;font-weight:800;color:var(--ink)">${q.question}</div>
+      </div>
+
+      ${q.steps.map((st, sIdx) => {
+        const selIdx = userSelections[sIdx];
+        return `
+          <div class="builder-stage">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <h4 style="font-size:16.5px"><span class="${st.colorClass}">${st.label}</span></h4>
+              <span style="font-size:14px;font-weight:600;color:var(--mute)">${selIdx !== undefined ? '已選 ' + letters[selIdx] : '請點選一項'}</span>
+            </div>
+            ${st.opts.map((o, oIdx) => {
+              const isSel = selIdx === oIdx;
+              let gradeCls = '';
+              if (isSubmitted && isSel) {
+                gradeCls = o.status === 'best' ? 'graded-best' : o.status === 'partial' ? 'graded-partial' : 'graded-wrong';
+              }
+              return `
+                <button class="opt-card ${isSel ? 'selected' : ''} ${gradeCls}" onclick="pickStepOption(${sIdx}, ${oIdx})">
+                  <span class="opt-letter">${letters[oIdx]}</span>
+                  <span style="flex:1">${o.text}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }).join('')}
+
+      <div class="card" style="border:2px solid var(--primary);margin-bottom:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+          <h3 style="color:var(--primary);font-size:19px">建構段落預覽</h3>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-green" onclick="submitConstructedAnswer()">批改答案</button>
+            <button class="btn btn-outline" onclick="fillBestChoices()">示範完整建構</button>
+          </div>
+        </div>
+        <div style="font-size:17px;line-height:1.85;background:var(--surface);padding:18px 22px;border-radius:12px;border:1px solid var(--line)">
+          ${previewParts.join(' ')}
+        </div>
+
+        ${isSubmitted ? `
+          <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--line)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h4 style="font-size:17.5px">分步批改回饋</h4>
+              <span class="badge ${totalScore === q.maxMarks ? 'b-green' : totalScore >= 1 ? 'b-amber' : 'b-red'}" style="font-size:15px;padding:6px 14px">
+                得分：${totalScore} / ${q.maxMarks} 分
+              </span>
+            </div>
+            ${q.steps.map((st, sIdx) => {
+              const chosen = st.opts[userSelections[sIdx]];
+              const cCls = chosen.status === 'best' ? 'c-best' : chosen.status === 'partial' ? 'c-partial' : 'c-wrong';
+              return `
+                <div class="critique-item ${cCls}">
+                  <b>第 ${sIdx + 1} 步（選項 ${letters[userSelections[sIdx]]} · ${chosen.score} 分）：</b>${chosen.comment}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  renderQuestionChips();
+  renderWorkshop();
+</script>
+</body>
+</html>

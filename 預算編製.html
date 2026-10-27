@@ -1,0 +1,1623 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>財務管理 — 預算編製</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 財務管理單元專屬配色：翡翠深綠 (Emerald) × 深海藍 (Ocean Navy) × 琥珀金 (Amber Gold) */
+      --bg: #f2f6f4;
+      --card: #ffffff;
+      --surface: #f7faf8;
+      --ink: #0f1f18;
+      --ink-sec: #2d4239;
+      --mute: #5c7267;
+      --line: #d8e4dd;
+      --primary: #065f46;
+      --primary-dark: #064e3b;
+      --primary-light: #ecfdf5;
+      --primary-border: #a7f3d0;
+      --teal: #0369a1;
+      --teal-light: #f0f9ff;
+      --teal-border: #bae6fd;
+      --amber: #b45309;
+      --amber-light: #fffbeb;
+      --green: #15803d;
+      --green-light: #f0fdf4;
+      --red: #be123c;
+      --red-light: #fff1f2;
+      --radius: 16px;
+      --shadow: 0 4px 20px -2px rgba(6, 78, 59, 0.06), 0 2px 6px -1px rgba(6, 78, 59, 0.04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.75;
+      padding-bottom: 60px;
+      font-size: 17.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4 { margin: 0; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1.35; }
+
+    /* Top Navigation Bar */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      flex-wrap: wrap;
+    }
+    .home-link {
+      text-decoration: none;
+      color: var(--ink-sec);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      transition: all 0.2s;
+    }
+    .home-link:hover { color: var(--primary); border-color: var(--primary-border); background: var(--primary-light); }
+    .brand { display: flex; align-items: center; gap: 12px; font-size: 19px; font-weight: 800; color: var(--primary-dark); }
+    .brand-tag {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .main-tabs {
+      margin-left: auto;
+      display: flex;
+      gap: 6px;
+      background: #dfe9e3;
+      padding: 5px;
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+    .main-tabs button {
+      border: 0;
+      background: none;
+      padding: 9px 15px;
+      border-radius: 9px;
+      font: 700 15px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .main-tabs button:hover { color: var(--ink); }
+    .main-tabs button.on {
+      background: var(--card);
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(6, 78, 59, 0.1);
+    }
+
+    /* Main Container & Views */
+    .view { display: none; max-width: 1160px; margin: 0 auto; padding: 28px 24px; animation: fadeIn 0.25s ease; }
+    .view.on { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Section Header Banner */
+    .sec-banner {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow);
+    }
+    .sec-banner h1 { font-size: 25px; margin: 6px 0 8px; }
+    .sec-banner p { margin: 0; color: var(--ink-sec); font-size: 16.5px; max-width: 680px; }
+
+    /* Sub-navigation Switcher */
+    .sub-nav {
+      display: inline-flex;
+      background: #eaf1ed;
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .sub-nav button {
+      border: 0;
+      background: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font: 700 15px 'Noto Sans TC', sans-serif;
+      color: var(--mute);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sub-nav button:hover { color: var(--ink); }
+    .sub-nav button.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(6, 95, 70, 0.25);
+    }
+    .sub-view { display: none; }
+    .sub-view.active { display: block; animation: fadeIn 0.2s ease; }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .sidebar-layout { display: grid; grid-template-columns: 295px 1fr; gap: 22px; align-items: start; }
+
+    /* Badges & Pills */
+    .badge {
+      display: inline-block;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-right: 8px;
+    }
+    .b-blue { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border); }
+    .b-teal { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
+    .b-amber { background: var(--amber-light); color: var(--amber); border: 1px solid #fde68a; }
+    .b-green { background: var(--green-light); color: var(--green); border: 1px solid #bbf7d0; }
+    .b-red { background: var(--red-light); color: var(--red); border: 1px solid #fecdd3; }
+
+    /* Interactive Selector Lists */
+    .nav-list { display: flex; flex-direction: column; gap: 10px; }
+    .nav-item {
+      text-align: left;
+      padding: 15px 18px;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      font: 700 16px 'Noto Sans TC', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .nav-item:hover { border-color: var(--primary); background: var(--primary-light); }
+    .nav-item.active {
+      background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 6px 16px rgba(6, 95, 70, 0.24);
+    }
+    .nav-item.active span.sub-txt { color: #d1fae5; }
+    .sub-txt { font-size: 13px; color: var(--mute); font-weight: 500; flex-shrink: 0; }
+
+    .chips { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+    .chip {
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      padding: 9px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font: 700 15.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      transition: all 0.2s;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .chip.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(6, 95, 70, 0.2);
+    }
+
+    .btn {
+      border: 0;
+      background: var(--primary);
+      color: #ffffff;
+      font: 700 16px 'Noto Sans TC', sans-serif;
+      padding: 11px 22px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-teal { background: var(--teal); }
+    .btn-teal:hover { background: #075985; }
+    .btn-green { background: var(--green); }
+    .btn-green:hover { background: #166534; }
+    .btn-outline { background: var(--card); color: var(--primary); border: 1.5px solid var(--primary); }
+    .btn-outline:hover { background: var(--primary-light); }
+
+    .note-box {
+      border-left: 4px solid var(--primary);
+      background: var(--primary-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 16px;
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+    .case-box {
+      border-left: 4px solid var(--teal);
+      background: var(--teal-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 14px;
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+    .warn-box {
+      border-left: 4px solid var(--red);
+      background: var(--red-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 14px;
+      font-size: 16px;
+      color: var(--ink);
+    }
+
+    /* Comparison Table */
+    table.comp-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 16px; }
+    table.comp-table th, table.comp-table td { padding: 12px 15px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    table.comp-table th { background: var(--surface); font-weight: 800; color: var(--ink); }
+    table.comp-table tr.highlight-row { background: var(--primary-light); }
+
+    .var-badge-f { background: var(--green-light); color: var(--green); border: 1px solid #bbf7d0; padding: 3px 10px; border-radius: 6px; font-weight: 800; display: inline-block; }
+    .var-badge-u { background: var(--red-light); color: var(--red); border: 1px solid #fecdd3; padding: 3px 10px; border-radius: 6px; font-weight: 800; display: inline-block; }
+
+    input[type="range"] { width: 100%; accent-color: var(--primary); cursor: pointer; }
+
+    /* Builder Specific */
+    .builder-stage {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .opt-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      width: 100%;
+      text-align: left;
+      padding: 15px 18px;
+      margin: 10px 0;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      font: 500 16.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1.65;
+    }
+    .opt-card:hover { border-color: var(--primary); background: var(--surface); }
+    .opt-card.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
+    .opt-card.correct, .opt-card.graded-best { border-color: var(--green); background: var(--green-light); color: #064e3b; }
+    .opt-card.graded-partial { border-color: var(--amber); background: var(--amber-light); color: #78350f; }
+    .opt-card.wrong, .opt-card.graded-wrong { border-color: var(--red); background: var(--red-light); color: #881337; }
+    .opt-letter {
+      display: inline-grid;
+      place-items: center;
+      min-width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #eaf1ed;
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 14.5px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .opt-card.selected .opt-letter { background: var(--primary); color: #ffffff; }
+
+    .hl-s1 { background: #d1fae5; color: #065f46; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s2 { background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s3 { background: #e0f2fe; color: #075985; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+
+    .critique-item {
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-left: 5px solid var(--line);
+      background: var(--card);
+    }
+    .critique-item.c-best { border-left-color: var(--green); background: var(--green-light); }
+    .critique-item.c-partial { border-left-color: var(--amber); background: var(--amber-light); }
+    .critique-item.c-wrong { border-left-color: var(--red); background: var(--red-light); }
+
+    details.guide-Collapsible {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 22px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    details.guide-Collapsible summary {
+      font-weight: 700;
+      font-size: 16.5px;
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    @media (max-width: 860px) {
+      .grid2, .grid3, .sidebar-layout { grid-template-columns: 1fr; }
+      header { padding: 12px 18px; }
+      .main-tabs { width: 100%; justify-content: center; margin-top: 8px; }
+      .sec-banner h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="財務管理_目錄.html" class="home-link">返回單元目錄</a>
+  <select onchange="if(this.value) location.href=this.value" style="padding:7px 12px;border-radius:10px;border:1px solid var(--primary-border);background:var(--primary-light);color:var(--primary);font:700 14.5px 'Noto Sans TC',sans-serif;cursor:pointer">
+    <option value="">快速切換課室／測驗...</option>
+    <option value="財務管理_目錄.html">單元總目錄</option>
+    <option value="財務分析.html">第 1 課：財務分析</option>
+    <option value="預算編製.html">第 2 課：預算編製</option>
+    <option value="融資方式.html">第 3 課：融資方式</option>
+    <option value="資本投資評估.html">第 4 課：資本投資評估</option>
+    <option value="營運資金管理.html">第 5 課：營運資金管理</option>
+    <option value="風險管理.html">第 6 課：風險管理</option>
+    <option value="財務管理_單元綜合測驗.html">單元綜合模擬試卷 (72分)</option>
+  </select>
+  <div class="brand">
+    <span>財務管理</span>
+    <span class="brand-tag">第 2 課：預算編製</span>
+  </div>
+  <nav class="main-tabs" id="mainTabs">
+    <button class="on" data-tab="sec-purpose">1. 預算的概念與編製目的</button>
+    <button data-tab="sec-control">2. 預算控制的原則、用途與限制</button>
+    <button data-tab="sec-variance">3. 預算差異計算與成因</button>
+    <button data-tab="sec-remedy">4. 處理差異注意事項與補救措施</button>
+    <button data-tab="sec-builder">5. 論點建構工作坊</button>
+  </nav>
+</header>
+
+<!-- ==================== 1. 預算的概念與編製目的 ==================== -->
+<section class="view on" id="sec-purpose">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元一：預算是甚麼及編製預算的目的</span>
+      <h1>預算的定義、總預算與編製預算的三個主要目的</h1>
+      <p>預算是對未來收入和支出的預測，也是以數字（金額）形式表達的計劃。企業可根據預算分配資源以達成目標。當企業匯集和歸納銷售預算、原料預算、人工預算和市場營銷預算等各項預算後，便得出總預算 (Master Budget)。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('purp', 0, this)">預算定義與三個主要目的</button>
+      <button onclick="switchSub('purp', 1, this)">跨部門協調模擬與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 1A：預算定義與三個主要目的 -->
+  <div class="sub-view active" id="purp-sub-0">
+    <div class="sidebar-layout">
+      <div class="nav-list" id="purpNavList"></div>
+      <div class="card" id="purpDetailCard" style="margin-bottom:0"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 1B：跨部門預算委員會協調模擬與練習 -->
+  <div class="sub-view" id="purp-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">跨部門「預算委員會」協調模擬</span>
+        <h3 style="font-size:21px;margin:8px 0 8px">體驗各部門預算如何互相關聯與協調</h3>
+        <p style="font-size:15.5px;color:var(--ink-sec);margin:0 0 12px">大型企業的預算通常由<b>預算委員會</b>（成員包括行政總裁、財務總監及部門主管）編製。由於所有預算互相關聯，改變其中一項預算便會同時影響其他部門的預算。點擊下方發言查看協調過程：</p>
+        <div class="chips" id="coordChips">
+          <button class="chip active" onclick="renderCoordSim(0)">1. 行政總裁訂立目標</button>
+          <button class="chip" onclick="renderCoordSim(1)">2. 市場營銷部提出訴求</button>
+          <button class="chip" onclick="renderCoordSim(2)">3. 財務部與生產部回應</button>
+          <button class="chip" onclick="renderCoordSim(3)">4. 跨部門協調達成共識</button>
+        </div>
+        <div id="coordSimBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">編製預算目的與概念練習</span>
+        <h3 style="font-size:21px;margin:8px 0 10px">辨識編製預算的三個主要目的與基本概念（共 6 題）</h3>
+        <p id="purpMatchProg" style="font-size:14.5px;font-weight:600;color:var(--mute);margin:0 0 10px"></p>
+        <div id="purpMatchQ" style="font-size:17px;font-weight:700;padding:18px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:14px"></div>
+        <div id="purpMatchBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="purpMatchFb" style="margin-top:14px;font-size:16px;min-height:52px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 2. 預算控制的原則、用途與限制 ==================== -->
+<section class="view" id="sec-control">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元二：預算控制 (Budgetary Control)</span>
+      <h1>編製預算的七大原則、預算控制的四項用途與六大限制</h1>
+      <p>企業制定預算，然後持續地比較實際業績和預算，以確保計劃能付諸實行，這做法稱為預算控制。企業要有效地執行預算控制，應遵守編製預算的七項原則，並了解預算控制的四項用途與六項限制。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('ctrl', 0, this)">七大編製原則與四項用途</button>
+      <button onclick="switchSub('ctrl', 1, this)">預算控制的六大限制與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 2A：編製預算的七大原則與預算控制的四項用途 -->
+  <div class="sub-view active" id="ctrl-sub-0">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">編製預算的原則</span>
+        <h3 style="font-size:21px;margin:8px 0 8px">有效執行預算控制的七大編製原則</h3>
+        <div class="chips" id="prinChips">
+          <button class="chip active" onclick="renderPrin(0)">1. 七大編製原則總覽</button>
+          <button class="chip" onclick="renderPrin(1)">2. 為何須全體參與及明確界定責任？</button>
+          <button class="chip" onclick="renderPrin(2)">3. 新開業店舖為何仍須調整預算？</button>
+        </div>
+        <div id="prinBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">預算控制的四項用途</span>
+        <h3 style="font-size:21px;margin:8px 0 8px">預算控制如何發揮管理功能</h3>
+        <div class="chips" id="useChips"></div>
+        <div id="useDetailBox" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 子分頁 2B：預算控制的六大限制與練習 -->
+  <div class="sub-view" id="ctrl-sub-1">
+    <div class="sidebar-layout" style="margin-bottom:20px">
+      <div class="nav-list" id="ctrlLimNavList"></div>
+      <div class="card" id="ctrlLimDetailCard" style="margin-bottom:0"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="badge b-teal">預算控制原則、用途與限制判斷練習</span>
+        <span id="ctrlQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute)"></span>
+      </div>
+      <div id="ctrlQuizQ" style="font-size:17.5px;font-weight:700;margin-bottom:14px"></div>
+      <div id="ctrlQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+      <div id="ctrlQuizFb" style="margin-top:14px;font-size:16px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 3. 預算差異計算與成因 ==================== -->
+<section class="view" id="sec-variance">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元三：理解預算差異與預算差異的成因</span>
+      <h1>有利差異 (F) 與不利差異 (U) 的判定 ＆ 三大預算差異的常見成因</h1>
+      <p>預算數額和實際數額之間的差額稱為差異或預算差異。我們通常用「F」代表有利差異 (Favourable Variance)，用「U」代表不利差異 (Unfavourable Variance)。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('var', 0, this)">有利(F)與不利(U)計算機及產品組合模擬</button>
+      <button onclick="switchSub('var', 1, this)">三大差異成因拆解與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 3A：有利(F)與不利(U)差異計算機 & 產品組合模擬器 -->
+  <div class="sub-view active" id="var-sub-0">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">預算差異計算機</span>
+        <h3 style="font-size:20.5px;margin:8px 0 6px">輸入或調整預算與實際數據，即時判定有利 (F) 或不利 (U) 差異</h3>
+        <div style="font-size:15px;color:var(--ink-sec);margin-bottom:10px">
+          • <b>出現有利差異 (F) 的情況</b>：實際收入高於預算數額；或實際支出低於預算數額。<br>
+          • <b>出現不利差異 (U) 的情況</b>：實際收入低於預算數額；或實際支出高於預算數額。
+        </div>
+        <div id="varCalcTable"></div>
+        <div id="varCalcSummary" class="note-box" style="margin-top:12px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">產品組合 (Product Mix) 影響銷售額差異模擬器</span>
+        <h3 style="font-size:20.5px;margin:8px 0 6px">為何「實際總銷量」達到預算目標，卻會錄得不利的銷售額差異？</h3>
+        <p style="font-size:15px;color:var(--ink-sec);margin:0 0 10px">
+          假設成衣廠生產兩款運動衫：<b>高價專業款（售價 $40）</b>及<b>平價基本款（售價 $15）</b>。<b>預算總銷量為 300 件</b>（預算售出高價款 120 件 ＋ 平價款 180 件 ＝ <b>預算總銷售額 $7,500</b>）。拉動滑桿改變實際售出的「平價款」件數（保持總銷量 300 件不變）：
+        </p>
+        <div style="display:flex;justify-content:space-between;font-size:15.5px;margin-bottom:4px">
+          <b>實際售出「平價基本款 ($15)」件數：</b>
+          <b id="lblMixLow" style="color:var(--primary)">220 件</b>
+        </div>
+        <input type="range" id="mixLowSlider" min="100" max="260" step="10" value="220" oninput="updateMixSim()">
+        <div id="mixSimOutput" style="margin-top:10px"></div>
+        <div class="warn-box" style="margin-top:12px;font-size:15px">
+          <b>切勿把銷售額、利潤和銷量三個概念混淆：</b><br>
+          • <b>銷售額</b>：向顧客出售產品所賺取的金額（計算方法 ＝ <b>售價 × 銷量</b>）。<br>
+          • <b>利潤</b>：銷售額扣除銷貨成本和其他費用後的淨金額。<br>
+          • <b>銷量</b>：在某段時期（如一個月、一季或一年）售出的產品件數。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 子分頁 3B：三大預算差異成因拆解與練習 -->
+  <div class="sub-view" id="var-sub-1">
+    <div class="sidebar-layout" style="margin-bottom:20px">
+      <div class="nav-list" id="causeNavList"></div>
+      <div class="card" id="causeDetailCard" style="margin-bottom:0"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="badge b-teal">有利差異 (F) vs 不利差異 (U) 判斷挑戰</span>
+        <span id="fuQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute)"></span>
+      </div>
+      <div id="fuQuizQ" style="font-size:17.5px;font-weight:700;margin-bottom:14px"></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn btn-green" onclick="checkFuQuiz('有利差異 (F)')">有利差異 (F)</button>
+        <button class="btn" style="background:var(--red)" onclick="checkFuQuiz('不利差異 (U)')">不利差異 (U)</button>
+      </div>
+      <div id="fuQuizFb" style="margin-top:14px;font-size:16px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 4. 處理差異注意事項與補救措施 ==================== -->
+<section class="view" id="sec-remedy">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元四：處理差異時須注意的事項與補救措施</span>
+      <h1>處理差異前的三項注意事項 ＆ 針對不同差異成因的補救措施</h1>
+      <p>當企業發現某一方面的表現出現重大差異時，應進一步研究和找出箇中原因，並在必要時採取補救措施。補救措施不只限於財務和會計範疇，是否合適須視乎行業、產品性質、企業資源及營商環境而定。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('rem', 0, this)">處理差異注意事項與補救措施百科</button>
+      <button onclick="switchSub('rem', 1, this)">顧問診斷實戰練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 4A：處理差異注意事項與補救措施百科 -->
+  <div class="sub-view active" id="rem-sub-0">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">處理差異時須注意的事項</span>
+        <h3 style="font-size:21px;margin:8px 0 8px">研究差異成因或採取補救措施前的三大注意事項</h3>
+        <div class="chips" id="precChips">
+          <button class="chip active" onclick="renderPrec(0)">1. 由無法控制的因素所致</button>
+          <button class="chip" onclick="renderPrec(1)">2. 出現差異是因為預算有誤</button>
+          <button class="chip" onclick="renderPrec(2)">3. 成本大於得益／對其他差異造成不良影響</button>
+        </div>
+        <div id="precDetailBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">針對不同差異成因的補救措施</span>
+        <h3 style="font-size:21px;margin:8px 0 8px">點擊不利差異成因，查看對應的補救措施</h3>
+        <div class="chips" id="remChips">
+          <button class="chip active" onclick="renderRem(0)">1. 不利銷量差異</button>
+          <button class="chip" onclick="renderRem(1)">2A. 原料價格高於預算</button>
+          <button class="chip" onclick="renderRem(2)">2B. 原料用量多於預算</button>
+          <button class="chip" onclick="renderRem(3)">3A. 實際工資水平高於預算</button>
+          <button class="chip" onclick="renderRem(4)">3B. 實際勞工效率低於預算</button>
+        </div>
+        <div id="remDetailBox" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 子分頁 4B：顧問診斷實戰練習 -->
+  <div class="sub-view" id="rem-sub-1">
+    <div class="card" style="margin-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="badge b-teal">預算差異成因與補救措施診斷挑戰</span>
+        <span id="remQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute)"></span>
+      </div>
+      <div id="remQuizQ" style="font-size:17.5px;font-weight:700;margin-bottom:14px"></div>
+      <div id="remQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+      <div id="remQuizFb" style="margin-top:14px;font-size:16px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 5. 論點建構問答工作坊 (12題) ==================== -->
+<section class="view" id="sec-builder">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-amber">實戰寫作訓練</span>
+      <h1>「一段一個獨立重點」論點建構工作坊</h1>
+      <p>收錄 4 道短答題（2 步建構 · 2 分）及 8 道進階論述題（3 步建構 · 3 分）。請選擇題目並逐步點選最準確的商業論述。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchBuilderCat('short', this)">短答題訓練 (4題)</button>
+      <button onclick="switchBuilderCat('essay', this)">進階論述題訓練 (8題)</button>
+    </div>
+  </div>
+
+  <details class="guide-Collapsible">
+    <summary>查看「一段一個重點」建構結構指南（點擊展開 / 收起）</summary>
+    <div class="grid2" style="margin-top:14px;font-size:16px">
+      <div style="background:var(--primary-light);padding:14px 18px;border-radius:10px">
+        <b style="color:var(--primary)">短答題／個案題模式（每段滿分 2 分 — 2 步建構）</b><br>
+        <span class="hl-s1">第 1 步 (1分)</span> 準確指出單一預算目的、不可控因素、調整原因或補救措施名稱<br>
+        <span class="hl-s2">第 2 步 (1分)</span> 結合題目企業背景說明該因素如何造成差異或該措施如何解決問題
+      </div>
+      <div style="background:var(--teal-light);padding:14px 18px;border-radius:10px">
+        <b style="color:var(--teal)">進階論述題模式（每段滿分 3 分 — 3 步深度建構）</b><br>
+        <span class="hl-s1">第 1 步 (1分)</span> 指出單一差異成因、預算控制限制或補救方向並界定其含義<br>
+        <span class="hl-s2">第 2 步 (1分)</span> 針對題目行業（如烘焙店、成衣廠、保險公司、玩具廠）設定具體例子<br>
+        <span class="hl-s3">第 3 步 (1分)</span> 深化推論該措施或因素如何影響實際成本、銷售額、營業利潤或預算成效
+      </div>
+    </div>
+  </details>
+
+  <div class="card" style="padding:18px 22px;margin-bottom:18px">
+    <div style="font-size:15px;color:var(--mute);font-weight:700;margin-bottom:8px" id="builderCatLabel">選擇短答題（每題滿分 2 分）：</div>
+    <div class="chips" id="questionChips" style="margin:0"></div>
+  </div>
+
+  <div id="builderWorkspace"></div>
+</section>
+
+<script>
+  // Main Tab Switching
+  document.querySelectorAll('#mainTabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#mainTabs button').forEach(b => b.classList.remove('on'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+      btn.classList.add('on');
+      document.getElementById(btn.dataset.tab).classList.add('on');
+    });
+  });
+
+  // Sub-view Switching
+  function switchSub(prefix, idx, btn) {
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll(`[id^="${prefix}-sub-"]`).forEach((el, i) => {
+      el.classList.toggle('active', i === idx);
+    });
+  }
+
+  // ====== 1. 預算的概念與編製目的 ======
+  const purpCatalog = [
+    {
+      title: "核心概念：預算、總預算與預算期",
+      badge: "以數字形式表達的計劃",
+      def: "「預算」是對未來收入和支出的預測，我們可以將預算視為以數字（金額）形式表達的計劃。個人和企業可以根據預算分配資源，以達成計劃所訂立的目標。",
+      points: [
+        "<b>• 總預算 (Master Budget) 與預算委員會</b>：企業的預算有很多種（如銷售預算、原料預算、人工預算和市場營銷預算等）；當企業匯集和歸納各項預算後，便得出<b>總預算</b>。大型企業的預算通常由<b>預算委員會</b>編製，成員包括高級管理層（如部門主管、財務總監和行政總裁）。",
+        "<b>• 預算期</b>：預算期一般是一年；不過，年度預算很多時會再細分為季度預算或月度預算。對於興建新工廠等長期計劃來說，預算期可超過一年。"
+      ]
+    },
+    {
+      title: "目的 1：計劃 (Planning)",
+      badge: "編製預算的最基本目的",
+      def: "由於預算是以數字形式表達的計劃，所以編製預算的最基本目的就是「計劃」。企業可透過編製預算來達成以下三項工作：",
+      points: [
+        "<b>(i) 規劃財務資源，以達成目標</b>：這有助企業更有效地把資源分配給各個部門。",
+        "<b>(ii) 預測利潤或虧損，以及可能遇到的財務問題</b>：以便及早採取防範措施。",
+        "<b>(iii) 提供清晰的指引或方向</b>：讓不同部門能按照計劃達成企業的目標。"
+      ]
+    },
+    {
+      title: "目的 2：協調 (Coordination)",
+      badge: "緊密溝通・部門互相協調",
+      def: "雖然不同部門有不同的目標，但所有預算都是互相關聯的。改變其中一項預算，便會同時影響其他部門的預算。",
+      points: [
+        "因此，在編製預算的過程中，各部門的管理人員須要<b>緊密溝通</b>。這有助不同部門<b>互相協調</b>，以達成企業的目標。"
+      ]
+    },
+    {
+      title: "目的 3：控制 (Control)",
+      badge: "用作表現標準・採取補救措施",
+      def: "由於企業的不同部門通常會負責預算中的不同部分，所以預算可以用作「表現標準」。",
+      points: [
+        "<b>高級管理層只要比較實際業績和預算，便可以：</b><br>• <b>(i) 監控和評估各部門的表現</b>（如個別部門未能達到預算目標，有關管理人員就可能要為此承擔責任，確保所有部門按照計劃努力工作）；<br>• <b>(ii) 找出企業在哪方面未能達到目標，然後採取補救措施來糾正問題</b>。",
+        "<b>預算控制 (Budgetary Control) 定義</b>：企業制定預算，然後持續地比較實際業績和預算，以確保計劃能付諸實行的做法。"
+      ]
+    }
+  ];
+
+  function renderPurp(idx) {
+    document.getElementById('purpNavList').innerHTML = purpCatalog.map((p, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderPurp(${i})">
+        <span>${p.title}</span>
+      </button>
+    `).join('');
+    const p = purpCatalog[idx];
+    document.getElementById('purpDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${p.title}</h3>
+        <span class="badge b-blue">${p.badge}</span>
+      </div>
+      <p style="margin:0 0 12px;font-weight:600;font-size:17.5px">${p.def}</p>
+      <ul style="margin:0;padding-left:22px;font-size:16.5px;color:var(--ink-sec)">
+        ${p.points.map(pt => `<li style="margin-bottom:8px">${pt}</li>`).join('')}
+      </ul>
+    `;
+  }
+  renderPurp(0);
+
+  const coordSteps = [
+    { role: "行政總裁 (CEO)", speech: "「我希望公司明年的整體利潤能增加 30%。」", note: "訂立企業整體利潤目標，啟動跨部門預算編製程序。" },
+    { role: "市場營銷經理", speech: "「如要提高銷售額以達成目標，便要增加市場營銷部的廣告費預算。」", note: "改變銷售額目標，會直接影響市場營銷部的廣告費預算及生產部的產量預算。" },
+    { role: "財務經理 ＆ 生產經理", speech: "財務經理：「公司現時正從多方面削減成本。除非可以降低生產成本，否則我們不能負擔額外的廣告費開支。」<br>生產經理：「在不犧牲產品質量的前提下，實在很難再進一步降低生產成本。我們可以調整利潤目標嗎？」", note: "各部門在編製預算會議中緊密溝通，坦誠提出各自的資源與成本限制。" },
+    { role: "跨部門協調達成共識", speech: "經各部門緊密溝通後，管理層適度調整利潤目標並重新平衡廣告與生產預算，確保各部門步伐一致。", note: "體現編製預算的「協調」目的：所有預算互相關聯，各部門管理人員緊密溝通有助互相協調以達成企業目標。" }
+  ];
+  function renderCoordSim(idx) {
+    document.querySelectorAll('#coordChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const s = coordSteps[idx];
+    document.getElementById('coordSimBox').innerHTML = `<div style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line);font-size:15.5px"><b style="color:var(--primary);font-size:17px">${s.role}</b><div style="background:var(--card);padding:12px 16px;border-radius:10px;border-left:4px solid var(--primary);margin:10px 0;font-weight:600">${s.speech}</div><div style="color:var(--teal);font-weight:700">協調分析：${s.note}</div></div>`;
+  }
+  renderCoordSim(0);
+
+  const purpMatchItems = [
+    { q: "1. 連鎖餐飲集團透過編製年度預算，預先預測下半年可能遇到的現金短缺財務問題以便及早採取防範措施，並更有效地把財務資源分配給各個部門。這體現了哪個主要目的？", opts: ["A. 計劃 (Planning)", "B. 協調 (Coordination)", "C. 控制 (Control)"], ans: 0, exp: "正確。規劃財務資源分配、預測利潤或虧損及可能遇到的財務問題以便及早採取防範措施，以及提供清晰指引，屬於「計劃」目的。" },
+    { q: "2. 科技公司在編製下年度預算時，各部門的管理人員緊密溝通，確保市場營銷部的推廣預算與生產部的產量預算互相配合。這體現了哪個主要目的？", opts: ["A. 計劃 (Planning)", "B. 協調 (Coordination)", "C. 控制 (Control)"], ans: 1, exp: "正確。各部門管理人員在編製預算過程中緊密溝通，有助不同部門互相協調以達成企業目標，屬於「協調」目的。" },
+    { q: "3. 高級管理層將預算用作表現標準，比較各分店的實際業績和預算，監控和評估各部門表現，並找出未能達標的方面以採取補救措施。這體現了哪個主要目的？", opts: ["A. 計劃 (Planning)", "B. 協調 (Coordination)", "C. 控制 (Control)"], ans: 2, exp: "正確。比較實際業績和預算以監控評估部門表現及採取補救措施，屬於「控制」目的。" },
+    { q: "4. 概念判斷：「編製預算的主要目的包括計劃、控制和投資。」", opts: ["A. 正確", "B. 不正確 — 編製預算的三個主要目的是計劃、協調和控制（不包括投資）"], ans: 1, exp: "正確。編製預算的三個主要目的為計劃、協調和控制。" },
+    { q: "5. 概念判斷：「預算是為企業整體而編製的，不能用來評估個別部門的表現。」", opts: ["A. 正確", "B. 不正確 — 由於企業的不同部門通常會負責預算中的不同部分，所以預算可以用作表現標準來監控和評估各部門的表現"], ans: 1, exp: "正確。不同部門負責預算的不同部分，因此預算可用作表現標準評估個別部門的表現。" },
+    { q: "6. 概念判斷：「預算是以數字形式表達的計劃，預算期一般是一年（對於興建新工廠等長期計劃則可超過一年）。」", opts: ["A. 正確", "B. 不正確"], ans: 0, exp: "正確。預算期一般是一年（可細分為季度或月度預算），長期計劃則可超過一年。" }
+  ];
+  let curPM = 0;
+  function renderPurpMatch() {
+    const it = purpMatchItems[curPM];
+    document.getElementById('purpMatchProg').textContent = `題目 ${curPM + 1} / ${purpMatchItems.length}`;
+    document.getElementById('purpMatchQ').textContent = it.q;
+    document.getElementById('purpMatchBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:12px 16px" onclick="checkPurpMatch(${i})">${o}</button>`).join('');
+    document.getElementById('purpMatchFb').innerHTML = '';
+  }
+  function checkPurpMatch(idx) {
+    const it = purpMatchItems[curPM];
+    const fb = document.getElementById('purpMatchFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14.5px" onclick="curPM=(curPM+1)%purpMatchItems.length;renderPurpMatch()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderPurpMatch();
+
+  // ====== 2. 預算控制的原則、用途與限制 ======
+  const prinData = [
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:8px">企業有效執行預算控制應遵守的七項編製原則：</b>
+      1. <b>分析必須具前瞻性</b>：不要只依賴過往的數據，應同時預計未來的需要。<br>
+      2. <b>編製預算的過程必須有條不紊，並且應讓企業內所有部門參與</b>。<br>
+      3. <b>預算中訂立的目標，必須是可以達成的，而且要清楚表達出來</b>。<br>
+      4. <b>必須明確界定管理人員在預算中的責任範圍</b>。<br>
+      5. <b>必須比較預算數字與實際業績</b>，以有效地評估企業的表現。<br>
+      6. <b>預算應用於改善企業的表現</b>。<br>
+      7. <b>在某些情況下，預算可以在執行期間作出調整</b>（例如新分店的顧客流量遠超預期，應增加人工成本的預算來聘請更多收銀員，以免顧客投訴）。
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:8px">為何「明確界定管理人員責任範圍」及「讓所有部門參與編製」十分重要？</b>
+      • <b>明確界定管理人員在預算中的責任範圍</b>：若責任範圍含糊不清，當實際表現未達預算目標時，各部門管理人員便會互相推卸責任；明確界定責任能確保每位管理人員清楚自己負責的目標並承擔責任，方便高級管理層準確評估各主管的表現。<br>
+      • <b>讓企業內所有部門參與編製預算</b>：各部門主管最了解自己部門的日常運作、實際能力與限制。讓所有部門參與，能使預算數字更切合實際、更準確可行，同時促進跨部門溝通協調，並提升員工對達成預算目標的認同感與投入度。
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:8px">情境思考：一家雪糕店在 7 月開業一個月後，根據上月數據為來年編製了合乎實際的預算。為何店主將來可能仍須調整預算？</b>
+      1. <b>季節性因素影響</b>：7 月正值夏季炎熱高峰期，顧客對雪糕的需求極高；當踏入秋冬季天氣轉涼時，雪糕銷量會顯著下降，單憑 7 月份的數據未能反映全年的季節性波動，故將來須調整預算。<br>
+      2. <b>外在營商環境不斷變化</b>：未來一年內市場環境可能出現轉變（例如附近有新競爭對手開業、鮮奶及糖等原料價格因通脹上升，或店舖租金及水電費調整），店主須定期檢討並在執行期間調整預算。
+    </div>`
+  ];
+  function renderPrin(idx) {
+    document.querySelectorAll('#prinChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('prinBox').innerHTML = prinData[idx];
+  }
+  renderPrin(0);
+
+  const usesData = [
+    { num: 1, title: "1. 促使各部門早作規劃", desc: "為了執行預算控制，各管理人員須負責預算中的不同部分，因此企業內每個部門都會積極參與編製預算的工作。管理人員在編製預算時，會<b>仔細分析自己部門的能力和限制，這有助企業從中發現潛在問題和未來良機</b>。", ex: "<b>例子：</b>銷售及市場經理在編製預算時，意識到下月將有兩名分店經理退休，發現部門人手限制未必能達到高銷售目標，從而及早作出人事規劃。" },
+    { num: 2, title: "2. 改善企業內部的溝通和協調", desc: "由於企業的預算都是互相關聯的，所以在編製預算的過程中，<b>所有部門須共同制定商業計劃。期間，部門會互相交流，並就如何共同達成企業的目標取得共識</b>，這有助改善部門之間的溝通和協調。", ex: "<b>例子：</b>市場營銷部、生產部與財務部在編製預算時互相交流，協調推廣開支與生產能力，共同達成公司的利潤目標。" },
+    { num: 3, title: "3. 提供標準讓企業評估各部門和管理人員的表現", desc: "由於不同部門通常負責預算的不同部分，所以<b>預算可以用作表現標準（各部門須要達到的目標）</b>。如果他們的實際表現未能達到目標（例如實際費用遠高於預算費用），便可能表示表現欠佳，企業要就此作出調查並在必要時採取補救措施。", ex: "<b>例子：</b>管理層比較各分店的實際銷售額與預算標準，客觀評估各分店經理的表現。" },
+    { num: 4, title: "4. 節省管理層的時間和精力", desc: "企業的高級管理層可透過預算控制，<b>輕易找出哪些部門表現遜色。因此，他們可以集中處理這些部門的問題，並投放較少時間和精力在其他能夠達到目標的部門上</b>，更有效率地運用時間和精力。", ex: "<b>例子：</b>行政總裁審視預算報告時，只需集中精力處理實際費用嚴重超支的部門，無須花費大量時間過問其他已順利達標的部門。" }
+  ];
+  function renderUse(idx) {
+    document.querySelectorAll('#useChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const u = usesData[idx];
+    document.getElementById('useDetailBox').innerHTML = `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1.5px solid var(--teal);font-size:16px;line-height:1.75"><h4 style="color:var(--teal);font-size:18px;margin-bottom:6px">${u.title}</h4><p style="margin:0 0 10px">${u.desc}</p><div style="background:var(--card);padding:10px 14px;border-radius:8px;border:1px solid var(--line)">${u.ex}</div></div>`;
+  }
+  document.getElementById('useChips').innerHTML = usesData.map((u, i) => `<button class="chip ${i===0?'active':''}" onclick="renderUse(${i})">用途 ${u.num}</button>`).join('');
+  renderUse(0);
+
+  const ctrlLimData = [
+    {
+      num: "01",
+      title: "1. 難以預測不斷變化的營商環境",
+      badge: "環境瞬息萬變・估算變得不準確",
+      desc: "營商環境瞬息萬變。企業在編製預算後，可能很快就會發現所估計的收入和支出已變得不準確。企業不宜繼續執行已變得不切實際的預算；因此，在執行預算時應定期檢討預算，並在必要時作出調整。",
+      ex: "<b>商業實例：</b>企業應分辨清楚預算出現偏差的原因是個別部門表現欠佳，還是市場情況有所轉變（例如上月有新競爭對手進入市場，市場營銷部須增加廣告開支來維持市場佔有率，導致廣告費超出預算）。"
+    },
+    {
+      num: "02",
+      title: "2. 無法取代管理人員的智慧",
+      badge: "牽涉主觀判斷・取決於經驗與管理技巧",
+      desc: "儘管預算控制的系統非常科學化，仍然不免牽涉主觀判斷。企業能否作出明智的決策，取決於管理人員的營商經驗，以及他們的管理知識和技巧。如果管理人員沒有就眼前的情況作出明智的判斷（單靠預算行事），就可能作出不當的商業決策，局限企業的發展空間。",
+      ex: "<b>商業實例：</b>面對競爭對手展開大規模宣傳攻勢，若管理層只因「預算不足以應付這種宣傳策略的開支」而拒絕反擊，便會令客源大量流失予競爭對手。"
+    },
+    {
+      num: "03",
+      title: "3. 估計的數字可能不準確或不切實際",
+      badge: "預測過於樂觀導致預算控制失效",
+      desc: "如果企業估計的財務數字不準確或不切實際，預算便可能會出錯，企業也就不能有效地執行預算控制（為了避免這個問題，企業須向編製預算的員工提供充足的培訓）。",
+      ex: "<b>商業實例：</b>若某企業沒有進行市場研究，因而對銷售額的預測過於樂觀，那麼即使企業的員工表現良好，也難以達到預算的銷售目標。"
+    },
+    {
+      num: "04",
+      title: "4. 只着重財務表現",
+      badge: "不能評估不能量化的成就",
+      desc: "由於預算是以數字形式表達的計劃，所以預算控制只會着重企業的財務表現，不能評估企業一些不能量化的成就，例如與顧客維持緊密的關係、員工士氣高昂、產品和服務質素卓越等。",
+      ex: "<b>商業實例：</b>客戶服務部門成功與顧客建立深厚互信並提升服務質素，雖未能直接反映在短期財務預算數字上，卻對企業長遠發展極為重要。"
+    },
+    {
+      num: "05",
+      title: "5. 或會阻礙員工追求更好的表現",
+      badge: "不願超越目標・花光預算浪費資源",
+      desc: "• <b>不願超越目標</b>：員工一旦達到預算的目標，便會覺得自己已經達到那一年企業的要求，不願意在餘下的時間內繼續努力工作；此外，員工可能會擔心如本年度超越預算中的目標，來年便要達到更高的目標或面對更緊絀的預算，因此多不願意超越目前預算的要求。<br>• <b>刻意花光預算浪費資源</b>：為免將來部門獲得的撥款減少，管理人員在年底發現尚有剩餘預算時，可能會試圖花光預算的款項（如無必要地更換茶水間冰箱），浪費企業的資源。",
+      ex: "<b>應用提示：</b>作答個案題時，應只回答與題目個案相關的限制（例如若題目中的企業並沒有聘請員工，便不應回答阻礙員工追求更好表現的論點）。"
+    },
+    {
+      num: "06",
+      title: "6. 耗時和成本不菲",
+      badge: "需要大量人力物力與持續監控時間",
+      desc: "編製預算的過程需要大量人力物力，規模細小的企業未必有足夠的資源（如缺乏財務資源和專才進行市場研究和預測銷售額）來妥善編製預算；在這情況下，執行預算控制的成本可能大於得益。此外，持續監控各部門以確保預算如實執行，亦要花費大量時間。",
+      ex: "<b>商業實例：</b>小本經營的獨資甜品店缺乏專門財務人員，若花費大量時間與金錢編製繁複的分項預算，成本可能大於得益。"
+    }
+  ];
+
+  function renderCtrlLim(idx) {
+    document.getElementById('ctrlLimNavList').innerHTML = ctrlLimData.map((l, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderCtrlLim(${i})">
+        <span>${l.title}</span>
+      </button>
+    `).join('');
+    const l = ctrlLimData[idx];
+    document.getElementById('ctrlLimDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${l.title}</h3>
+        <span class="badge b-blue">${l.badge}</span>
+      </div>
+      <p style="margin:0 0 12px;font-size:17px">${l.desc}</p>
+      <div class="case-box">${l.ex}</div>
+    `;
+  }
+  renderCtrlLim(0);
+
+  const ctrlQuizItems = [
+    { q: "1. 辨別陳述是否正確：「企業編製預算的過程只應讓行政總裁和財務部參與。」", opts: ["A. 正確", "B. 不正確 — 編製預算的過程必須有條不紊，並且應讓企業內所有部門參與"], ans: 1, exp: "正確（陳述不正確）。應讓企業內所有部門參與編製預算。" },
+    { q: "2. 辨別陳述是否正確：「企業不應在執行預算期間修改預算。」", opts: ["A. 正確", "B. 不正確 — 在某些情況下（如營商環境改變或新店顧客流量遠超預期），預算可以在執行期間作出調整"], ans: 1, exp: "正確（陳述不正確）。企業應定期檢討預算，並在必要時作出調整。" },
+    { q: "3. 下列哪項屬於「預算控制的用途」？", opts: ["A. 促使各部門及早規劃、改善內部溝通協調、提供評估部門和管理人員表現的標準，以及幫助高級管理層節省時間和精力", "B. 完全取代管理人員的智慧並準確評估所有不能量化的成就"], ans: 0, exp: "正確。A 完整涵蓋了預算控制的四項主要用途。" },
+    { q: "4. 某部門主管在年底發現部門還剩下 $3,000 預算，為免明年部門獲得的撥款減少，決定用這些錢更換茶水間完好無損的冰箱。這反映了預算控制的甚麼問題？", opts: ["A. 為免將來獲得的撥款減少，管理人員試圖花光預算的款項，浪費企業的資源", "B. 有效節省了企業資源"], ans: 0, exp: "正確。這種「花光預算以免來年被削支」的心態會浪費企業資源。" },
+    { q: "5. 圈出正確概念：「由於營商環境瞬息萬變，預算內的估計數字或會變得不準確；而且預算控制不能用作評估企業一些不能量化的成就，亦不能取代管理人員的智慧。」", opts: ["A. 完全正確", "B. 不正確"], ans: 0, exp: "正確。這三點正是預算控制的常見限制。" },
+    { q: "6. 新任行政總裁不讓各部門經理參與，自行將所有部門費用預算削減 5% 及把目標銷售額提高 8%；五個月後設計部因生意大增、設計師嚴重超時工作而申請增聘人手，總裁卻以「必須嚴格按預算行事」為由拒絕。總裁執行預算控制時出現了甚麼問題？", opts: ["A. (1) 沒有讓各部門經理參與編製預算；(2) 未能因應業務量劇增在執行期間靈活調整預算", "B. 總裁的做法完全沒有問題"], ans: 0, exp: "正確。這違反了「應讓企業內所有部門參與」及「在某些情況下預算可在執行期間作出調整」的原則。" }
+  ];
+  let curCQ = 0;
+  function renderCtrlQuiz() {
+    const it = ctrlQuizItems[curCQ];
+    document.getElementById('ctrlQuizProg').textContent = `題目 ${curCQ + 1} / ${ctrlQuizItems.length}`;
+    document.getElementById('ctrlQuizQ').textContent = it.q;
+    document.getElementById('ctrlQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:12px 16px" onclick="checkCtrlQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('ctrlQuizFb').innerHTML = '';
+  }
+  function checkCtrlQuiz(idx) {
+    const it = ctrlQuizItems[curCQ];
+    const fb = document.getElementById('ctrlQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14.5px" onclick="curCQ=(curCQ+1)%ctrlQuizItems.length;renderCtrlQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderCtrlQuiz();
+
+  // ====== 3. 預算差異計算與成因 ======
+  const varItemsInit = [
+    { name: "銷售額（與收入相關）", type: "rev", bud: 6000000, act: 5200000 },
+    { name: "原料成本（與支出相關）", type: "exp", bud: 2200000, act: 3000000 },
+    { name: "人工成本（與支出相關）", type: "exp", bud: 1500000, act: 1200000 },
+    { name: "分銷成本（與支出相關）", type: "exp", bud: 600000, act: 920000 },
+    { name: "電費（與支出相關）", type: "exp", bud: 300000, act: 160000 }
+  ];
+  const fmtN = n => '$' + Math.abs(Math.round(n)).toLocaleString('en-US');
+
+  function renderVarCalc() {
+    let budProfit = varItemsInit[0].bud, actProfit = varItemsInit[0].act;
+    for (let i = 1; i < varItemsInit.length; i++) {
+      budProfit -= varItemsInit[i].bud;
+      actProfit -= varItemsInit[i].act;
+    }
+    const rowsHtml = varItemsInit.map((it, idx) => {
+      const diff = it.type === 'rev' ? (it.act - it.bud) : (it.bud - it.act);
+      const isFav = diff >= 0;
+      return `<tr>
+        <td><b>${it.name}</b></td>
+        <td><input type="number" value="${it.bud}" step="20000" style="width:110px;padding:6px 8px;border-radius:6px;border:1.5px solid var(--line);font-weight:700;font-size:14.5px;color:var(--primary)" oninput="varItemsInit[${idx}].bud=+this.value||0;renderVarCalc()"></td>
+        <td><input type="number" value="${it.act}" step="20000" style="width:110px;padding:6px 8px;border-radius:6px;border:1.5px solid var(--line);font-weight:700;font-size:14.5px;color:var(--primary)" oninput="varItemsInit[${idx}].act=+this.value||0;renderVarCalc()"></td>
+        <td><span class="${isFav?'var-badge-f':'var-badge-u'}">${fmtN(diff)} ${isFav?'F (有利)':'U (不利)'}</span></td>
+      </tr>`;
+    }).join('');
+
+    const profDiff = actProfit - budProfit;
+    const profFav = profDiff >= 0;
+
+    document.getElementById('varCalcTable').innerHTML = `
+      <table class="comp-table" style="font-size:14.5px">
+        <thead><tr><th>項目</th><th>預算數額 ($)</th><th>實際數額 ($)</th><th>預算差異 (F / U)</th></tr></thead>
+        <tbody>
+          ${rowsHtml}
+          <tr class="highlight-row" style="font-weight:800">
+            <td>營業利潤（收入減總支出）</td>
+            <td>${fmtN(budProfit)}</td>
+            <td>${fmtN(actProfit)}</td>
+            <td><span class="${profFav?'var-badge-f':'var-badge-u'}">${fmtN(profDiff)} ${profFav?'F (有利)':'U (不利)'}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+    const uCauses = varItemsInit.filter(it => (it.type === 'rev' ? it.act < it.bud : it.act > it.bud)).map(it => it.name.split('（')[0]);
+    document.getElementById('varCalcSummary').innerHTML = `<b>差異診斷：</b>目前營業利潤錄得 <b>${fmtN(profDiff)} ${profFav?'有利差異 (F)':'不利差異 (U)'}</b>。${uCauses.length ? `導致營業利潤低於預算的不利差異項目包括：<b>${uCauses.join('、')}</b>（實際收入低於預算數額，或實際支出高於預算數額）。` : '所有項目均錄得有利差異。'}`;
+  }
+  renderVarCalc();
+
+  function updateMixSim() {
+    const actLow = +document.getElementById('mixLowSlider').value;
+    const actHigh = 300 - actLow;
+    document.getElementById('lblMixLow').textContent = `${actLow} 件 (佔 ${Math.round(actLow/3)}%)`;
+
+    const budRev = 40 * 120 + 15 * 180; // $4,800 + $2,700 = $7,500
+    const actRev = 40 * actHigh + 15 * actLow;
+    const diff = actRev - budRev;
+    const isFav = diff >= 0;
+
+    document.getElementById('mixSimOutput').innerHTML = `
+      <table class="comp-table" style="font-size:14.5px;margin-top:4px">
+        <thead><tr><th>運動衫款式（售價）</th><th>預算銷量（銷售額）</th><th>實際銷量（銷售額）</th></tr></thead>
+        <tbody>
+          <tr><td><b>高價專業款 ($40)</b></td><td>120 件 ($4,800)</td><td><b>${actHigh} 件</b> ($${(actHigh*40).toLocaleString()})</td></tr>
+          <tr><td><b>平價基本款 ($15)</b></td><td>180 件 ($2,700)</td><td><b>${actLow} 件</b> ($${(actLow*15).toLocaleString()})</td></tr>
+          <tr class="highlight-row">
+            <td><b>合計（總銷量皆為 300 件）</b></td>
+            <td><b>300 件 ($7,500)</b></td>
+            <td><b>300 件 ($${actRev.toLocaleString()})</b> ➔ <span class="${isFav?'var-badge-f':'var-badge-u'}">${fmtN(diff)} ${isFav?'F':'U'}</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;font-size:15px;background:var(--surface);padding:12px 16px;border-radius:10px;border-left:4px solid ${isFav?'var(--green)':'var(--red)'}">
+        ${actLow > 180 ? `<b>不利銷售額差異解析（$${Math.abs(diff).toLocaleString()} U）：</b>雖然實際總銷量（300件）達到預算目標，而且兩款售價不變，但由於<b>售價較低的平價款銷量佔整體銷量的比例（${actLow}件）高於預算（180件）</b>，導致實際總銷售額（$${actRev.toLocaleString()}）低於預算銷售額（$7,500）。` :
+          actLow < 180 ? `<b>有利銷售額差異解析（$${Math.abs(diff).toLocaleString()} F）：</b>由於售價較高的專業款銷量佔整體銷量的比例（${actHigh}件）高於預算（120件），帶動實際總銷售額高於預算。` :
+          `<b>無差異：</b>實際售出產品組合比例與預算完全一致，實際銷售額等於預算銷售額 $7,500。`}
+      </div>
+    `;
+  }
+  updateMixSim();
+
+  const causeCatalog = [
+    {
+      title: "01 銷售額差異 (Sales Revenue Variance)",
+      badge: "售價・銷量・產品組合",
+      def: "銷售額差異指實際銷售額與預算銷售額之間的差異。不利銷售額差異有三個常見成因（當情況相反時，便可能出現有利差異）：",
+      content: `
+        <ul style="margin:0;padding-left:20px;font-size:16px;line-height:1.8">
+          <li><b>1. 售價</b>：當銷量保持不變時，如<b>實際售價低於預算</b>，實際銷售額便會低於預算銷售額。</li>
+          <li><b>2. 銷量</b>：當售價保持不變時，如<b>實際銷量低於預算</b>，實際銷售額便會低於預算銷售額。</li>
+          <li><b>3. 產品組合</b>：當企業出售多於一種產品時，其銷售額或會受到售出產品的比例所影響。例如，如<b>售價低的產品的銷量佔整體銷量的比例高於預算</b>，那麼即使總銷量達到預算目標，實際銷售額也會低於預算銷售額。</li>
+        </ul>
+      `
+    },
+    {
+      title: "02 原料成本差異 (Materials Variance)",
+      badge: "原料價格・原料用量",
+      def: "原料成本差異（又稱材料成本差異）指實際原料成本與預算原料成本之間的差異。不利原料成本差異有兩個常見成因：",
+      content: `
+        <div style="margin-bottom:12px;font-size:16px;line-height:1.8">
+          <b style="color:var(--primary)">1. 原料價格（如實際原料價格高於預算，實際原料成本便會高於預算）：</b><br>
+          可能導致這情況的原因包括：<br>
+          • <b>(i) 通脹高於預期</b>；<br>
+          • <b>(ii) 企業從原料供應商獲得的折扣少於預期</b>；<br>
+          • <b>(iii) 企業因減少每次購入原料的數量而得不到折扣優惠</b>。
+        </div>
+        <div style="font-size:16px;line-height:1.8">
+          <b style="color:var(--teal)">2. 原料用量（如企業生產每件產品所用的原料多於預算，實際原料成本便會高於預算）：</b><br>
+          可能導致這情況的原因包括：<br>
+          • <b>(i) 企業採用品質低劣的原料</b>；<br>
+          • <b>(ii) 企業聘用不熟練的員工</b>；<br>
+          • <b>(iii) 原料失竊</b>。
+        </div>
+      `
+    },
+    {
+      title: "03 人工差異 (Labour Variance)",
+      badge: "工資水平・勞工效率",
+      def: "人工差異指實際人工成本與預算人工成本之間的差異。不利人工差異有兩個常見成因：",
+      content: `
+        <div style="margin-bottom:12px;font-size:16px;line-height:1.8">
+          <b style="color:var(--primary)">1. 工資水平（如實際工資水平高於預算，實際人工成本便會高於預算）：</b><br>
+          可能導致這情況的原因包括：<br>
+          • <b>(i) 企業聘用的員工級別高於所需</b>；<br>
+          • <b>(ii) 工會要求加薪</b>（例如工會組織罷工爭取更好待遇，企業提高員工的工資水平）。
+        </div>
+        <div style="font-size:16px;line-height:1.8">
+          <b style="color:var(--teal)">2. 勞工效率（如實際勞工效率低於預算，即生產每件產品需要較長的工作時間，實際人工成本便會高於預算）：</b><br>
+          可能導致這情況的原因包括：<br>
+          • <b>(i) 企業聘用不勝任的員工</b>；<br>
+          • <b>(ii) 員工培訓不足</b>；<br>
+          • <b>(iii) 員工士氣低落</b>；<br>
+          • <b>(iv) 員工刻意放慢工作以賺取更多超時津貼</b>。
+        </div>
+      `
+    }
+  ];
+
+  function renderCause(idx) {
+    document.getElementById('causeNavList').innerHTML = causeCatalog.map((c, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderCause(${i})">
+        <span>${c.title}</span>
+      </button>
+    `).join('');
+    const c = causeCatalog[idx];
+    document.getElementById('causeDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${c.title}</h3>
+        <span class="badge b-blue">${c.badge}</span>
+      </div>
+      <p style="margin:0 0 12px;font-weight:600;font-size:17px">${c.def}</p>
+      <div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line)">${c.content}</div>
+    `;
+  }
+  renderCause(0);
+
+  const fuQuizItems = [
+    { q: "1. 企業本年度的「實際行政費用」高於預算數額。", ans: "不利差異 (U)", exp: "正確。行政費用屬於支出，實際支出高於預算數額屬於「不利差異 (U)」。" },
+    { q: "2. 製造商本季度的「實際原料成本」比預期（預算）低。", ans: "有利差異 (F)", exp: "正確。原料成本屬於支出，實際支出低於預算數額屬於「有利差異 (F)」。" },
+    { q: "3. 零售店上月的「實際銷售收益」高於預算數額。", ans: "有利差異 (F)", exp: "正確。銷售收益屬於收入，實際收入高於預算數額屬於「有利差異 (F)」。" },
+    { q: "4. 貿易公司本年度的「實際毛利」比預期（預算）低。", ans: "不利差異 (U)", exp: "正確。實際毛利低於預算屬於「不利差異 (U)」。" },
+    { q: "5. 企業出售兩款產品，當總銷量與售價不變時，售價較低的產品銷量佔整體銷量的比例高於預算（對銷售額差異的影響）。", ans: "不利差異 (U)", exp: "正確。低價產品佔總銷量比例高於預算，會令實際總銷售額低於預算銷售額，造成「不利的銷售額差異 (U)」。" },
+    { q: "6. 某企業的廠房更換新型號機器，但沒有向工人提供充足培訓教導他們如何使用新機器（對人工差異的影響）。", ans: "不利差異 (U)", exp: "正確。員工培訓不足會令實際勞工效率低於預算（生產每件產品需較長工作時間），造成「不利的人工差異 (U)」。" },
+    { q: "7. 一家清潔服務公司在員工罷工爭取權益後，決定提高所有清潔工人的時薪（對人工差異的影響）。", ans: "不利差異 (U)", exp: "正確。提高時薪會令實際工資水平高於預算，造成「不利的人工差異 (U)」。" },
+    { q: "8. 一家企業替換高級管理層後，員工的士氣有所提升，生產每件產品需要較短的工作時間（對人工差異的影響）。", ans: "有利差異 (F)", exp: "正確。員工士氣提升令勞工效率高於預算（生產每件產品需要較短的工作時間），造成「有利的人工差異 (F)」。" }
+  ];
+  let curFU = 0;
+  function renderFuQuiz() {
+    document.getElementById('fuQuizProg').textContent = `題目 ${curFU + 1} / ${fuQuizItems.length}`;
+    document.getElementById('fuQuizQ').textContent = fuQuizItems[curFU].q;
+    document.getElementById('fuQuizFb').innerHTML = '';
+  }
+  function checkFuQuiz(choice) {
+    const it = fuQuizItems[curFU];
+    const fb = document.getElementById('fuQuizFb');
+    if (choice === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14.5px" onclick="curFU=(curFU+1)%fuQuizItems.length;renderFuQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確，應為「${it.ans}」。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderFuQuiz();
+
+  // ====== 4. 處理差異注意事項與補救措施 ======
+  const precData = [
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:6px">注意事項 (i)：差異可能是由「無法控制的因素」所致</b>
+      • 有些預算差異是由外在環境或突發事件引起，<b>完全超出企業的控制範圍</b>。<br>
+      • <b>商業實例：</b><br>
+      &nbsp;&nbsp;1. <b>金融危機或油價上升</b>：例如金融危機可能導致很多企業的銷售額下降；對巴士公司或航空公司來說，國際油價上升或極端惡劣天氣是無法控制的因素，可能導致利潤出現不利差異。<br>
+      &nbsp;&nbsp;2. <b>茶餐廳的人工成本不利差異</b>：例如政府立法調高「法定最低工資水平」，或勞工市場出現嚴重人手短缺推高全行時薪。
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:6px">注意事項 (ii)：出現差異可能是因為「預算有誤」</b>
+      • 有時候出現不利差異並非因為部門員工表現欠佳，而是<b>最初編製預算時估計有誤</b>。<br>
+      • <b>商業實例：</b>例如若企業對銷售額的預測過於樂觀，令預算的銷售目標難以達成，便可能會出現不利的銷售額差異；在這情況下，企業應調整不切實際的預算，而非盲目採取補救措施。
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:6px">注意事項 (iii)：研究差異成因和採取補救措施所涉及的「成本可能大於得益」（或對其他差異造成不良影響）</b>
+      • <b>成本與得益權衡</b>：例如若某項費用的金額很小，研究或糾正該項費用的差異便不符合成本效益（成本大於得益）。<br>
+      • <b>對其他差異造成不良影響</b>：用來糾正某項差異的補救措施，<b>有可能會對企業其他方面的差異造成不良影響</b>。例如玩具廠為降低原料成本而改向規模較小的供應商採購較便宜但品質低劣的原料，結果影響產品質量並浪費更多原料（導致不利的原料用量差異）。
+    </div>`
+  ];
+  function renderPrec(idx) {
+    document.querySelectorAll('#precChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('precDetailBox').innerHTML = precData[idx];
+  }
+  renderPrec(0);
+
+  const remData = [
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1.5px solid var(--primary);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:6px">1. 面對「不利的銷量差異」（如因競爭對手擴充規模、搶奪客源所致）：</b>
+      企業的市場營銷和營業部可考慮採取以下的補救措施：<br>
+      • <b>(i) 提高品牌知名度</b><br>
+      • <b>(ii) 投放更多廣告</b><br>
+      • <b>(iii) 提供更多折扣</b><br>
+      • <b>(iv) 降低售價以採取更進取的定價策略</b><br>
+      <span style="color:var(--red);font-size:15px">注意：提供更多折扣和降低售價會對銷售額造成負面影響，因此採用這些方法來糾正不利的銷量差異未必可以改善銷售額。</span>
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1.5px solid var(--primary);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:6px">2A. 面對「不利的原料成本差異 — 成因：實際原料價格高於預算」：</b>
+      • <b>(i) 增加每次購入原料的數量，以獲取較大的價格折扣</b><br>
+      • <b>(ii) 物色提供更便宜原料的供應商</b>
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1.5px solid var(--primary);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:6px">2B. 面對「不利的原料成本差異 — 成因：企業生產每件產品所用的原料多於預算」：</b>
+      • <b>(i) 向員工提供更多培訓，以減少浪費原料</b><br>
+      • <b>(ii) 將生產機器更換為效率較高的型號</b><br>
+      • （如因原料被盜失竊所致：則應<b>加強倉庫保安措施、安裝閉路電視及限制非授權人員進出</b>）
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1.5px solid var(--primary);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:6px">3A. 面對「不利的人工差異 — 成因：實際工資水平高於預算」：</b>
+      • <b>(i) 把部分生產工序轉移或外判至工資水平較低的地區</b><br>
+      • <b>(ii) 若企業在淡季時有過剩的人力，可聘請兼職員工取代部分全職員工</b>
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1.5px solid var(--primary);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px;display:block;margin-bottom:6px">3B. 面對「不利的人工差異 — 成因：實際勞工效率低於預算」：</b>
+      • <b>(i) 向員工提供更多培訓，提升他們的工作效率</b><br>
+      • <b>(ii) 把部分生產程序自動化，以專門的機器或設備來代替人手工作</b>
+    </div>`
+  ];
+  function renderRem(idx) {
+    document.querySelectorAll('#remChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('remDetailBox').innerHTML = remData[idx];
+  }
+  renderRem(0);
+
+  const remQuizItems = [
+    { q: "1. 某汽車生產商發現因「鋼材價格上升」，導致生產商錄得不利的原料成本差異。生產商可採取甚麼補救措施？", opts: ["A. 增加每次購入鋼材原料的數量以獲取較大的價格折扣，或物色提供更便宜鋼材的供應商", "B. 解僱所有市場營銷部員工"], ans: 0, exp: "正確。針對「實際原料價格高於預算」，應增加每次購入原料的數量以獲取較大價格折扣，或物色提供更便宜原料的供應商。" },
+    { q: "2. 上述汽車生產商在某個新市場因「品牌知名度低」，導致在該市場的銷量錄得不利差異。公司可採取甚麼補救措施？", opts: ["A. 將工廠機器更換為昂貴型號", "B. 投放更多廣告、舉辦推廣活動以提高品牌知名度，或提供更多折扣／降低售價"], ans: 1, exp: "正確。針對不利銷量差異，可提高品牌知名度、投放更多廣告、提供更多折扣或降低售價。" },
+    { q: "3. 上述汽車生產商「聘用了很多不熟練的生產工人」，因而錄得不利的人工差異。最合適的補救措施是？", opts: ["A. 向生產工人提供更多培訓以提升他們的工作效率，或把部分生產程序自動化以專門機器代替人手工作", "B. 把所有汽車售價提高兩倍"], ans: 0, exp: "正確。針對不熟練工人導致實際勞工效率低於預算，應向員工提供更多培訓提升效率，或把部分生產程序自動化。" },
+    { q: "4. 某鋼鐵廠去年因「被盜去部分原料」，導致原料用量高於預算。鋼鐵廠可採取哪兩項補救措施？", opts: ["A. (1) 加強倉庫保安（如安裝閉路電視、把倉庫上鎖及聘請保安員）；(2) 限制非授權員工進出倉庫並定期進行存貨盤點", "B. 減少每次採購鋼鐵的數量"], ans: 0, exp: "正確。針對「原料失竊」造成的不利原料用量差異，應加強倉庫保安設備及嚴格限制出入與定期盤點。" },
+    { q: "5. 某手機店錄得不利的銷售額差異後，選擇「不採取任何補救措施」來糾正差異。下列哪項是合理原因？", opts: ["A. (1) 差異是由無法控制的因素所致；(2) 出現差異是因為預算有誤（預測過於樂觀）；(3) 研究差異成因和採取補救措施所涉及的成本大於得益", "B. 預算控制規定所有企業永遠不能採取任何補救措施"], ans: 0, exp: "正確。這涵蓋了處理差異時須注意的三個主要事項。" },
+    { q: "6. 某成衣廠上年度實際生產及售出 60,000 件 T 恤，與預算總銷量完全相同，但卻錄得 $800,000 U（不利）的銷售額差異。最可能的原因是？", opts: ["A. 實際售價低於預算，或售價較低的 T 恤款式銷量佔整體銷量的比例高於預算（產品組合改變）", "B. 電費錄得有利差異 $140,000 F"], ans: 0, exp: "正確。當總銷量與預算相同時，實際售價低於預算或低價款式佔總銷量比例高於預算，會造成不利的銷售額差異。" }
+  ];
+  let curRMQ = 0;
+  function renderRemQuiz() {
+    const it = remQuizItems[curRMQ];
+    document.getElementById('remQuizProg').textContent = `題目 ${curRMQ + 1} / ${remQuizItems.length}`;
+    document.getElementById('remQuizQ').textContent = it.q;
+    document.getElementById('remQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:12px 16px" onclick="checkRemQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('remQuizFb').innerHTML = '';
+  }
+  function checkRemQuiz(idx) {
+    const it = remQuizItems[curRMQ];
+    const fb = document.getElementById('remQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14.5px" onclick="curRMQ=(curRMQ+1)%remQuizItems.length;renderRemQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderRemQuiz();
+
+  // ====== 5. 論點建構問答工作坊 (選項無括號自然行文・批改回饋針對作答內容直接點評) ======
+  const workshopQuestions = [
+    {
+      id: "s1", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 1：日昇精密五金廠（原料失竊的補救措施）", topic: "原料成本差異（原料用量超標）的補救措施", maxMarks: 2,
+      scenario: "「日昇精密五金廠」去年發現倉庫被盜去部分高價純銅原料，導致全年的實際原料用量高於預算，錄得不利的原料成本差異。",
+      question: "試以其中一項補救措施為例，建議五金廠可如何防止同類不利差異再次發生。（2 分）",
+      steps: [
+        { label: "第 1 步：指出針對「原料失竊」的單一核心補救方向（1分）", colorClass: "hl-s1", opts: [
+          { text: "向供應商每次大批量購入純銅原料，以爭取更大價格折扣。", score: 0, status: "wrong", comment: "措施未能對症下藥。大批量購貨是用來壓低原料採購單價，並不能解決倉庫純銅原料被盜導致實際用量超標的問題。" },
+          { text: "加強原料倉庫的保安及出入監控措施，並實行嚴格的存貨出入庫記錄與定期盤點制度。", score: 1, status: "best", comment: "準確針對倉庫純銅原料失竊的根源，提出加強倉庫保安、限制出入及定期盤點的監控方向。" },
+          { text: "同時加強保安、更換生產機器、外判工序及投放更多廣告。", score: 0, status: "partial", comment: "違反一段一重點原則，而且混入了更換生產機器、外判工序與投放廣告等與防止原料被盜無關的措施。" }
+        ]},
+        { label: "第 2 步：扣連「五金廠倉庫被盜純銅原料」說明具體做法（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如在純銅原料倉庫安裝 24 小時閉路電視監察系統及防盜門鎖，並限制只有獲授權的倉務人員才可進入倉庫提取原料，從而防止原料再次被盜。", score: 1, status: "best", comment: "緊扣五金廠高價純銅原料被盜的情境，具體說明安裝閉路電視、防盜門鎖及限制提取權限如何杜絕失竊損耗。" },
+          { text: "例如叫員工不要偷純銅原料。", score: 0, status: "partial", comment: "建議過於空泛被動，欠缺如安裝閉路電視、把倉庫上鎖或限制非授權員工進出等具體的保安監控制度。" },
+          { text: "例如把五金產品的售價調低一成。", score: 0, status: "wrong", comment: "調低產品售價屬於價格策略，與防止倉庫純銅原料失竊毫無關聯。" }
+        ]}
+      ]
+    },
+    {
+      id: "s2", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 2：茶木坊港式餐廳（人工成本不利差異的不可控因素）", topic: "導致人工成本出現不利差異的「無法控制因素」", maxMarks: 2,
+      scenario: "「茶木坊」是一家經營早午晚市的本地港式餐廳。店東發現餐廳去年的人工成本錄得不利差異，實際人工成本高於預算，而這是由一些餐廳無法控制的外在因素所致。",
+      question: "試以其中一種「無法控制的因素」為例，解釋為何茶木坊去年的人工成本會錄得不利差異。（2 分）",
+      steps: [
+        { label: "第 1 步：指出造成不利人工差異的單一「外在無法控制因素」（1分）", colorClass: "hl-s1", opts: [
+          { text: "因為餐廳店長自行決定聘用職級過高的五星級酒店大廚負責洗碗工作。", score: 0, status: "wrong", comment: "因素性質判斷錯誤。店長自行聘用過高職級員工屬於餐廳內部可控制的人事決策失誤，並非題目要求的外在無法控制因素。" },
+          { text: "政府立法調高法定最低工資水平，又或者飲食業勞工市場出現嚴重人手短缺及通脹高企，推高了全行市場工資水平。", score: 1, status: "best", comment: "準確指出政府調高法定最低工資及勞工市場整體人手短缺等完全超出單一餐廳控制範圍的外在因素。" },
+          { text: "因為餐廳沒有向侍應提供足夠的落單機操作培訓。", score: 0, status: "wrong", comment: "內部員工培訓是否充足屬於餐廳管理層自身可控制的內部管理因素，並非無法控制的外在因素。" }
+        ]},
+        { label: "第 2 步：扣連「茶木坊港式餐廳」解釋該因素如何令實際人工高於預算（1分）", colorClass: "hl-s2", opts: [
+          { text: "由於政府法例強制規定或飲食業市場整體時薪上升，茶木坊必須跟隨法例或市場水平調高前線侍應、收銀員及清潔工人的時薪以留住人手，導致實際支付的工資水平高於原先預算。", score: 1, status: "best", comment: "清楚解釋外在法令規定或市場薪酬上漲如何迫使餐廳調高侍應與清潔工時薪，從而令實際人工開支超出預算。" },
+          { text: "因為這是餐廳完全無法控制的。", score: 0, status: "partial", comment: "只重複了題目字眼，未有解釋該外在因素如何推高餐廳侍應及廚工的實際工資水平。" },
+          { text: "因為食客在餐廳點了太多特價午餐。", score: 0, status: "wrong", comment: "食客選購特價午餐影響的是餐飲銷售額差異，並非導致人工成本超支的外在因素。" }
+        ]}
+      ]
+    },
+    {
+      id: "s3", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 3：漫遊精品書店（不採取補救措施糾正差異的原因）", topic: "處理差異時須注意的事項（為何選擇不採取補救措施）", maxMarks: 2,
+      scenario: "「漫遊精品書店」上月錄得不利的銷售額差異，即實際銷售額低於預算數額，但店主在仔細審視後，選擇不採取任何補救措施來糾正這項差異。",
+      question: "試以其中一個合理原因為例，解釋為何書店店主在錄得不利的銷售額差異後，選擇不採取任何補救措施。（2 分）",
+      steps: [
+        { label: "第 1 步：指出不採取補救措施的單一核心原因（1分）", colorClass: "hl-s1", opts: [
+          { text: "研究差異成因和採取補救措施所涉及的成本可能大於得益，又或者該不利差異是由無法控制的短暫外在因素所致，以及出現差異是因為原定預算過於樂觀有誤。", score: 1, status: "best", comment: "準確指出採取補救措施的成本大於得益、差異源於不可控因素或原定預算估計過於樂觀等合理原因。" },
+          { text: "因為不利的銷售額差異代表實際銷售額高於預算，對書店非常有利。", score: 0, status: "wrong", comment: "概念顛倒。不利的銷售額差異代表實際銷售額低於預算數額，對書店盈利有負面影響。" },
+          { text: "因為店主同時考慮了成本效益、不可控因素及預算有誤三個原因。", score: 0, status: "partial", comment: "違反一段一重點原則，只羅列了三個原因的簡稱而未有鎖定單一原因作具體闡釋。" }
+        ]},
+        { label: "第 2 步：扣連「漫遊精品書店」情境作扼要解釋（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如書店上月實際銷售額只比預算輕微低了 $500，差額極小；若花費數萬元聘請顧問進行市場調查及大搞促銷活動去糾正這微小差異，所花費的成本將遠高於帶來的收益，不符合成本效益。", score: 1, status: "best", comment: "緊扣書店情境，以輕微相差 $500 與花費數萬元調查促銷作對比，清楚說明為何成本大於得益而不應盲目採取行動。" },
+          { text: "因為採取補救措施要花錢。", score: 0, status: "partial", comment: "闡述過於簡略，必須點出「差異金額微小，使研究成因及採取補救措施的成本大於所得得益，不符合成本效益」。" },
+          { text: "因為書店準備把所有書籍免費派發給市民。", score: 0, status: "wrong", comment: "推論不合商業常理。" }
+        ]}
+      ]
+    },
+    {
+      id: "s4", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 4：星耀廣告設計公司（自上而下編製預算的問題與改善好處）", topic: "編製預算的原則與預算控制的用途", maxMarks: 2,
+      scenario: "新任行政總裁接管「星耀廣告設計公司」後，認為員工不思進取，決定不讓各部門經理參與，自行編製所有預算，把各部門費用削減 5%，但目標銷售額提高 8%。五個月後，設計部因公司接獲大量新訂單導致工作量暴增，設計師日夜加班瀕臨辭職，總監申請增聘人手，卻遭行政總裁以「必須嚴格按原定預算行事」為由拒絕。",
+      question: "(i) 指出行政總裁執行預算控制時出現的一項問題（1分）；(ii) 解釋若解決該問題對廣告公司有何好處（1分）。（2 分）",
+      steps: [
+        { label: "第 1 步：根據個案指出行政總裁執行預算控制時的一項問題（1分）", colorClass: "hl-s1", opts: [
+          { text: "問題是行政總裁沒有向部門經理說明他們各自須就預算的哪部分承擔責任。", score: 0, status: "wrong", comment: "未能切中個案要害。個案中行政總裁的核心問題在於不讓各部門經理參與編製預算，以及在訂單暴增下拒絕於執行期間調整預算。" },
+          { text: "行政總裁沒有讓各部門經理參與編製預算的過程，自行閉門削支並調高銷售目標，而且在生意大增、營商環境改變時，拒絕在執行預算期間作出調整。", score: 1, status: "best", comment: "準確指出行政總裁違反了「讓企業內所有部門參與編製預算」以及「在執行期間因應情況調整預算」的核心原則。" },
+          { text: "問題是行政總裁為公司編製了預算。", score: 0, status: "wrong", comment: "編製預算本身是良好的管理工具，問題出於總裁獨斷專行不讓部門參與及拒絕靈活調整預算。" }
+        ]},
+        { label: "第 2 步：解釋解決該問題後對「星耀廣告設計公司」的一項好處（1分）", colorClass: "hl-s2", opts: [
+          { text: "若讓各部門經理參與編製預算並在必要時調整預算，他們可根據部門實際能力與工作量提供意見，使制定出來的費用與人手預算更切合實際和可行，同時提升員工士氣與對達成預算目標的投入感，減少設計師因超負荷而辭職。", score: 1, status: "best", comment: "清楚說明讓部門參與及靈活調整預算如何使人手與費用預算更切合實際，並改善設計師士氣與留任率。" },
+          { text: "解決問題後公司就會變得更好。", score: 0, status: "partial", comment: "評語過於空泛，未有具體說明對提高預算準確性、改善跨部門協調或挽留設計師維持士氣的實質好處。" },
+          { text: "這會令廣告公司無須再向客戶收取任何廣告設計費。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e1", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 1：鮮麥連鎖烘焙工房（麵粉費用超支成因與補救一：原料價格）", topic: "原料成本差異：實際原料價格高於預算的成因與補救", maxMarks: 3,
+      scenario: "「鮮麥連鎖烘焙工房」的管理人員進行預算控制時，發現公司去年採購日本高筋麵粉的實際總費用比預算高出 20%，錄得不利的原料成本差異。試舉出可能造成麵粉費用差異的原因，並就該原因提出一項補救措施。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「實際麵粉採購價格高於預算」及其補救措施為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出造成不利麵粉費用差異的單一「原料價格」成因（1分）", colorClass: "hl-s1", opts: [
+          { text: "麵粉費用比預算高出 20%，同時是因為麵粉價格上升、烘焙師浪費麵粉、倉庫麵粉被偷及工人要求加薪所致。", score: 0, status: "partial", comment: "違反一段一重點原則，而且混入了工人要求加薪這項人工差異成因。" },
+          { text: "可能成因之一是實際麵粉價格高於預算：例如烘焙工房去年減少了每次向供應商購入麵粉的數量而得不到批量購貨折扣優惠，或者因國際小麥通脹高於預期，供應商調高了麵粉售價。", score: 1, status: "best", comment: "準確指出「實際麵粉價格高於預算」的成因，並具體說明減少每次購貨量失去折扣或通脹高於預期的原因。" },
+          { text: "可能成因是實際麵粉價格遠低於預算水平。", score: 0, status: "wrong", comment: "因果顛倒。若實際麵粉價格低於預算，會節省原料開支並帶來有利差異，而非高出預算 20% 的不利差異。" }
+        ]},
+        { label: "第 2 步：針對「實際麵粉價格高於預算」提出具體的烘焙店補救措施（1分）", colorClass: "hl-s2", opts: [
+          { text: "補救措施是向烘焙學徒提供搓麵團培訓。", score: 0, status: "wrong", comment: "成因與補救措施錯配。培訓學徒是用來減少浪費麵粉以改善「原料用量」，並不能解決供應商麵粉「採購單價高於預算」的問題。" },
+          { text: "針對麵粉採購單價上漲的問題，烘焙工房可採取的補救措施是集中進行大批量採購，增加每次購入麵粉的數量以向供應商爭取較大的價格折扣，或者物色及轉用其他提供更便宜麵粉的合資格供應商。", score: 1, status: "best", comment: "提出的增加每次購貨量爭取批量折扣及物色更便宜供應商，與第一步指出的麵粉單價上漲成因緊密配對。" },
+          { text: "補救措施是叫供應商不要收錢。", score: 0, status: "partial", comment: "建議不切實際，商業採購必須透過增加每次訂貨量爭取折扣或轉換收費較相宜的供應商來壓低單價。" }
+        ]},
+        { label: "第 3 步：深化論述至壓低單位採購成本與消除不利原料差異的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "透過大批量採購獲取批量折扣或轉用收費較相宜的麵粉供應商，烘焙工房能有效壓低每公斤麵粉的實際採購單價，使未來的實際麵粉開支回落至預算水平之內，從而糾正不利的原料成本差異並保障毛利率。", score: 1, status: "best", comment: "清楚推演出大批量採購與轉換供應商如何壓低每公斤麵粉單價，使實際麵粉開支回落至預算水平。" },
+          { text: "這樣烘焙工房便採取了補救措施。", score: 0, status: "partial", comment: "同義反覆，未有說明措施如何壓低每公斤麵粉採購單價及消除不利的原料成本差異。" },
+          { text: "這會令麵包店的店舖租金自動減半。", score: 0, status: "wrong", comment: "推論不合邏輯，麵粉採購成本與商場業主收取的店舖租金無關。" }
+        ]}
+      ]
+    },
+    {
+      id: "e2", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 2：鮮麥連鎖烘焙工房（麵粉費用超支成因與補救二：原料用量）", topic: "原料成本差異：每件產品所用原料多於預算的成因與補救", maxMarks: 3,
+      scenario: "承上題，「鮮麥連鎖烘焙工房」發現去年採購麵粉的實際總費用比預算高出 20%。除了麵粉單價因素外，試從「原料用量」角度舉出另一個可能造成麵粉費用超支的原因，並就該原因提出一項補救措施。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「生產每個麵包所用的麵粉多於預算」及其補救措施為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出造成不利麵粉費用差異的單一「原料用量」成因（1分）", colorClass: "hl-s1", opts: [
+          { text: "另一個可能成因是企業生產每件產品所用的原料多於預算，即實際麵粉用量超標：例如工房聘用了不熟練的烘焙員工，在調配麵團及烘烤時經常出錯烤焦而須棄置重做，又或者攪拌機與焗爐老化失準造成大量麵粉損耗。", score: 1, status: "best", comment: "準確指出生產每個麵包所用麵粉多於預算的成因，並結合不熟練烘焙員工出錯重做及焗爐老化造成損耗作說明。" },
+          { text: "另一個可能成因是顧客喜歡購買售價較低的菠蘿包。", score: 0, status: "wrong", comment: "概念混淆。顧客偏好購買低價菠蘿包影響的是產品組合與銷售額差異，並非導致麵粉用量超標的原因。" },
+          { text: "另一個成因是麵粉用得太多。", score: 0, status: "partial", comment: "只重複了題目字眼，未有指出為何生產每件產品所用麵粉會多於預算，如聘用不熟練員工、採用劣質原料或機器失準。" }
+        ]},
+        { label: "第 2 步：針對「不熟練員工或機器導致麵粉浪費」提出具體補救措施（1分）", colorClass: "hl-s2", opts: [
+          { text: "針對生產過程浪費麵粉的問題，烘焙工房可採取的補救措施是向烘焙員工提供更多專業烘焙及操作培訓，以及將老化的麵團分割機及智能恆溫焗爐更換為效率較高的新型號。", score: 1, status: "best", comment: "準確提出向烘焙員工提供培訓及更換高效率烘焙設備兩項措施，直接針對生產過程中的麵粉浪費。" },
+          { text: "補救措施是把部分烘焙工序外判至海外地區。", score: 0, status: "wrong", comment: "措施不切合新鮮烘焙店運作，而且外判至低工資地區是用來處理工資水平高於預算的人工差異。" },
+          { text: "補救措施是在電視台投放更多麵包廣告。", score: 0, status: "wrong", comment: "投放電視廣告是用來改善不利的銷量差異，並不能減少廚房內烘焙師傅浪費麵粉的情況。" }
+        ]},
+        { label: "第 3 步：深化論述至減少廢料損耗與控制實際原料成本的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "透過系統化培訓提升烘焙師的技術熟練度，配合精準高效的烘焙設備，能大幅減少因烤焦失敗或稱重不準而造成的麵粉浪費，使生產每個麵包的實際麵粉用量回落至預算標準，有效控制整體原料成本。", score: 1, status: "best", comment: "清楚推演出員工培訓與設備升級如何減少烤焦失敗及廢料損耗，令實際麵粉用量回落至預算標準。" },
+          { text: "這樣員工便不會再浪費麵粉了。", score: 0, status: "partial", comment: "同義反覆，未有說明減少廢料損耗如何令每件產品的原料用量回落至預算標準及控制總原料成本。" },
+          { text: "這會令麵粉供應商自動將麵粉價格調低一半。", score: 0, status: "wrong", comment: "推論不合邏輯，減少內部浪費並不會令外部供應商把麵粉半價出售。" }
+        ]}
+      ]
+    },
+    {
+      id: "e3", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 3：環球保險公司（評估市場營銷部表現的預算控制限制）", topic: "預算控制的限制：只着重財務表現", maxMarks: 3,
+      scenario: "一家跨國保險公司以預算控制來評估旗下市場營銷部的表現。試舉例解釋該保險公司採用預算控制來評估市場營銷部表現時的限制。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「預算控制只着重財務表現而忽略不能量化的成就」這項限制為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出預算控制的單一核心限制名稱與概念（1分）", colorClass: "hl-s1", opts: [
+          { text: "採用預算控制同時有難以預測環境、無法取代管理智慧、數字不準確、只着重財務表現及阻礙員工表現等限制。", score: 0, status: "partial", comment: "違反一段一重點原則，只羅列了多項限制標題而未有針對「只着重財務表現」作具體界定。" },
+          { text: "其中一項限制是預算控制只着重財務表現：由於預算是以金額數字形式表達的計劃，預算控制只集中衡量可量化的財務收支數字，而不能評估部門一些不能量化的成就。", score: 1, status: "best", comment: "準確指出「預算控制只着重財務表現」的限制，並清楚說明預算以金額數字表達故無法評估不能量化成就的原因。" },
+          { text: "預算控制的限制是完全不能比較實際保費收入與預算保費收入。", score: 0, status: "wrong", comment: "陳述錯誤。比較實際保費收入與預算保費收入正是預算控制最核心的基本功能。" }
+        ]},
+        { label: "第 2 步：針對「保險公司市場營銷部」設定具體的非量化成就例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如市場營銷部有很多不能量化的成就。", score: 0, status: "partial", comment: "只重複了不能量化成就的字眼，未有結合保險公司市場營銷部舉出如建立顧客關係、提升品牌信任度或服務質素等具體例子。" },
+          { text: "例如保險公司的市場營銷部舉辦了多場社區健康理財講座及客戶關懷活動，成功提升了大眾對保險品牌的信任度、改善了企業服務質素形象，並與投保客戶維持緊密的長遠關係，這些重要成就均無法即時以當季的財務預算數字量度出來。", score: 1, status: "best", comment: "緊扣保險公司市場營銷部工作，具體舉出提升品牌信任度、改善服務形象與維繫投保客戶長遠關係等不能量化的成就。" },
+          { text: "例如保險公司上季的實際保費收入為 $20,000,000。", score: 0, status: "wrong", comment: "例子錯誤。保費收入 $20,000,000 屬於可以用金錢直接量度的財務表現，並非不能量化的成就。" }
+        ]},
+        { label: "第 3 步：深化論述至評估片面與打擊部門積極性的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "若管理層單憑當月保單銷售額或廣告費支出等短期財務預算數字來評估市場營銷部的表現，便會忽略該部門在建立長遠客戶關係與提升服務質素上的貢獻，導致績效評估流於片面，甚至打擊營銷人員維繫客戶關係的積極性。", score: 1, status: "best", comment: "清楚推演出單憑短期財務預算數字評估表現如何忽略長遠客戶關係貢獻，導致評估片面並打擊員工積極性。" },
+          { text: "這樣保險公司便不能評估非量化成就了。", score: 0, status: "partial", comment: "同義反覆，未有說明忽略非量化成就對部門績效評估公平性及員工士氣的負面影響。" },
+          { text: "這會令所有投保人立即取消保單。", score: 0, status: "wrong", comment: "推論過於極端且不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e4", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 4：巧手朱古力專門店（小型店舖執行預算控制的限制）", topic: "預算控制的限制：無法取代管理人員的智慧", maxMarks: 3,
+      scenario: "「巧手朱古力專門店」是尖沙咀一家由資深糕餅師志凱獨資經營的小型餅店。志凱精於製作手工朱古力蛋糕，但他的商業管理知識並不豐富，店舖人手與資源亦十分有限。試解釋該專門店執行預算控制時的限制。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「預算控制無法取代管理人員的智慧」為核心，結合小型手工餅店背景建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出切合小型餅店背景的單一預算控制限制（1分）", colorClass: "hl-s1", opts: [
+          { text: "預算控制無法取代管理人員的智慧：儘管預算控制系統科學化，但仍牽涉主觀判斷；企業能否作出明智決策，取決於管理人員的營商經驗、管理知識和技巧。", score: 1, status: "best", comment: "準確指出「無法取代管理人員的智慧」這一限制，完美呼應個案中東主志凱商業管理知識並不豐富的背景。" },
+          { text: "預算控制會令該店的跨國分公司區域經理之間出現溝通問題。", score: 0, status: "wrong", comment: "脫離個案背景。巧手朱古力專門店只是尖沙咀一家獨資經營的小型餅店，並沒有跨國分公司或區域經理。" },
+          { text: "預算控制有一些限制。", score: 0, status: "partial", comment: "表述空泛，未有明確指出「無法取代管理人員的智慧」或「耗時和成本不菲」等具體限制名稱。" }
+        ]},
+        { label: "第 2 步：針對「資深糕餅師志凱管理知識不豐富」設定具體例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如志凱雖然手藝精湛，但缺乏商業管理與市場分析知識；當附近有新甜品店開張搶客導致銷量錄得不利差異時，預算報告只能顯示銷量下跌的數字，卻無法自動告訴志凱應如何運用市場營銷策略去反擊對手。", score: 1, status: "best", comment: "緊扣志凱精於烘焙但缺乏商業管理知識的特點，清楚說明預算報告只能顯示差異數字，卻無法自動提供反擊對手的管理方案。" },
+          { text: "例如志凱每天在廚房製作朱古力蛋糕。", score: 0, status: "partial", comment: "只描述了日常製作蛋糕的工作，未有連結至管理知識不足如何影響他解讀預算差異及作出商業決策。" },
+          { text: "例如志凱向銀行借取十億元收購外國朱古力廠。", score: 0, status: "wrong", comment: "例子誇大且嚴重偏離小型獨資餅店的經營規模。" }
+        ]},
+        { label: "第 3 步：深化論述至未能作出明智判斷與局限店舖發展的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "由於預算工具本身不能代替管理者的商業判斷，若志凱缺乏足夠的管理知識與技巧去解讀預算差異及制定合適的應變方案，便可能作出不當的商業決策或錯失反擊良機，局限了餅店的生存與發展空間。", score: 1, status: "best", comment: "清楚推演出預算不能代替管理智慧，當東主缺乏管理技巧時便可能作出不當決策並局限餅店發展空間。" },
+          { text: "所以預算控制無法取代志凱的智慧。", score: 0, status: "partial", comment: "同義反覆，未有說明缺乏管理知識去作出明智判斷對餅店決策與發展空間造成的負面影響。" },
+          { text: "這會令朱古力蛋糕的卡路里變成零。", score: 0, status: "wrong", comment: "推論不合常理。" }
+        ]}
+      ]
+    },
+    {
+      id: "e5", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 5：巧手朱古力專門店（根據個案找出銷量不利差異成因）", topic: "不利銷量差異的個案成因分析", maxMarks: 3,
+      scenario: "承上題，「巧手朱古力專門店」的資深糕餅師東主志凱上月因意外骨折留院治理，期間由實際烘焙經驗不多的兒子代父上陣擔任糕餅師。兩日後，附近新開了一家售賣各式各樣甜品及不同口味蛋糕的甜品店。志凱出院回店後，發現上月的實際銷量遠低於預算。試根據個案解釋導致該店上月銷量出現不利差異的原因。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「東主留院期間由經驗不足的兒子代任糕餅師導致出品素質下降，以及附近新甜品店開業搶走客源」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出導致上月銷量低於預算的單一核心原因（1分）", colorClass: "hl-s1", opts: [
+          { text: "原因是上月同時出現品質下降、新對手開業、全球金融危機及可可豆加價四個問題。", score: 0, status: "partial", comment: "違反一段一重點原則，而且混入了個案完全沒有提及的全球金融危機及可可豆加價。" },
+          { text: "原因之一是產品品質及穩定性下降：資深糕餅師志凱留院期間，由缺乏實際烘焙經驗的兒子代任糕餅師；同時亦受外在市場競爭加劇影響，附近新開了一家提供多樣化口味的甜品店搶走客源。", score: 1, status: "best", comment: "準確從個案事實中提煉出兒子缺乏經驗導致出品素質下降，以及附近新甜品店開業加劇競爭的核心成因。" },
+          { text: "原因是志凱將朱古力蛋糕的售價大幅減價一半。", score: 0, status: "wrong", comment: "與個案事實不符，而且大幅減價通常會刺激銷量上升，而非導致實際銷量遠低於預算。" }
+        ]},
+        { label: "第 2 步：扣連「女性上班族熟客與手工蛋糕品質及新對手競爭」作具體解釋（1分）", colorClass: "hl-s2", opts: [
+          { text: "由於餅店向來憑藉志凱精湛的烘焙手藝吸引熟客光顧，當實際經驗不多的兒子代為製作蛋糕和餅乾時，產品的味道、口感與賣相可能大不如前；加上附近新開業的甜品店提供更多不同口味的蛋糕選擇，分散了顧客的注意力。", score: 1, status: "best", comment: "緊扣志凱精湛手藝與兒子經驗不足的落差，並結合新對手提供多元口味甜品的競爭，解說合情合理。" },
+          { text: "因為兒子做的蛋糕不好吃。", score: 0, status: "partial", comment: "表述過於口語化及簡略，應具體說明兒子缺乏實際經驗導致產品味道賣相下降，以及新甜品店提供多元選擇的分流影響。" },
+          { text: "因為尖沙咀區所有寫字樓都搬走了。", score: 0, status: "wrong", comment: "脫離個案事實，個案並無提及尖沙咀寫字樓搬遷。" }
+        ]},
+        { label: "第 3 步：深化論述至顧客流失與實際銷量低於預算的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "出品水準下滑令原有熟客感到失望而減少重複購買，部分追求新鮮感與多元口味的顧客更轉投附近新開張的甜品店，導致餅店上月售出的蛋糕和餅乾件數大幅減少，實際銷量遠低於預算目標，錄得不利的銷量差異。", score: 1, status: "best", comment: "清楚推演出出品水準下滑與新對手搶客如何令熟客減少重購及流失，最終導致實際銷量遠低於預算。" },
+          { text: "所以上月的銷量便出現了不利差異。", score: 0, status: "partial", comment: "同義反覆，未有說明顧客失望減少購買及轉投競爭對手對實際售出件數的影響。" },
+          { text: "這會令店舖的固定租金自動減少。", score: 0, status: "wrong", comment: "推論錯誤，固定店舖租金不會因為蛋糕銷量下跌而自動減少。" }
+        ]}
+      ]
+    },
+    {
+      id: "e6", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 6：歐陸風尚成衣廠（總銷量達標但銷售額不利差異成因）", topic: "銷售額差異的成因：產品組合比例改變／實際售價調低", maxMarks: 3,
+      scenario: "「歐陸風尚成衣廠」在內地設廠生產兩款運動衛衣：基本款衛衣預算售價為每件 $80，尊貴款衛衣預算售價則為每件 $140，全部出口予歐美零售商。去年成衣廠共生產和售出 60,000 件衛衣，實際總產量和總銷量都與預算水平完全相同，但財務報表卻顯示錄得 $800,000 U 的不利銷售額差異。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「產品組合比例改變，即低價基本款銷量佔總銷量比例高於預算」為核心，解釋為何在總銷量達標下仍會錄得不利的銷售額差異（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出總銷量不變下造成不利銷售額差異的單一核心成因（1分）", colorClass: "hl-s1", opts: [
+          { text: "這是因為成衣廠去年售出的衛衣總件數遠低於預算目標。", score: 0, status: "wrong", comment: "審題失誤。個案已明確指出去年實際總產量和總銷量 60,000 件都與預算水平完全相同，因此並非總銷量不足所致。" },
+          { text: "成因之一是售出產品的比例，即產品組合與預算不同，售價較低的產品銷量佔整體銷量的比例高於預算；又或者實際平均售價低於預算，為吸引歐美買家而調低了衛衣售價或給予更多折扣。", score: 1, status: "best", comment: "準確指出在總銷量達標的前提下，導致實際銷售額低於預算的兩大可能成因：產品組合改變或實際售價調低。" },
+          { text: "這是因為工廠去年的電費錄得有利差異。", score: 0, status: "wrong", comment: "概念混淆。電費屬於生產與營運支出，電費節省並不會令頂線的銷售額收入減少。" }
+        ]},
+        { label: "第 2 步：扣連「$80 基本款與 $140 尊貴款衛衣」作具體數據邏輯說明（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如在去年售出的 60,000 件衛衣當中，歐美零售商訂購每件售價僅 $80 的基本款衛衣之數量比例遠高於原先預算，而訂購每件售價達 $140 的尊貴款衛衣之數量比例則低於預算。", score: 1, status: "best", comment: "緊扣 $80 基本款與 $140 尊貴款衛衣的售價差異，清楚說明低價基本款佔 60,000 件總銷量的比例高於預算。" },
+          { text: "例如兩款衛衣的銷量比例和預算不同。", score: 0, status: "partial", comment: "說明不夠精準，必須明確指出是「售價較低的基本款佔整體銷量比例高於預算，而高價尊貴款比例低於預算」，才會導致銷售額下跌。" },
+          { text: "例如工廠工人生產衛衣的速度變快了。", score: 0, status: "wrong", comment: "工人生產速度變快影響的是人工成本差異，與銷售額差異無關。" }
+        ]},
+        { label: "第 3 步：深化論述至拉低平均每件售價與總銷售額低於預算的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "由於銷售額等於售價乘以銷量，當低價基本款佔整體銷量的比重上升時，便會拉低這 60,000 件衛衣的整體平均售價；因此即使總銷量完全達標，最終計算出來的實際總銷售額仍會比預算銷售額少 $800,000，錄得不利的銷售額差異。", score: 1, status: "best", comment: "清楚結合「銷售額＝售價×銷量」的公式，推演出低價款比重上升如何拉低整體平均售價，令總銷售額比預算少 $800,000。" },
+          { text: "這樣就會出現 $800,000 U 的銷售額差異。", score: 0, status: "partial", comment: "同義反覆，未有解釋低價款式比例上升如何拉低整體平均單價並導致總銷售額低於預算。" },
+          { text: "這會令工廠的原料成本自動減少一半。", score: 0, status: "wrong", comment: "推論缺乏根據。" }
+        ]}
+      ]
+    },
+    {
+      id: "e7", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 7：歐陸風尚成衣廠（有利人工成本差異的成因分析）", topic: "人工差異：錄得有利人工成本差異 (F) 的成因", maxMarks: 3,
+      scenario: "承上題，「歐陸風尚成衣廠」去年的實際總產量與預算相同，均為 60,000 件衛衣，而財務報表顯示「人工成本」錄得 $300,000 F 的有利差異。人力資源經理對此表示欣慰。試解釋導致該成衣廠去年錄得「有利的人工成本差異」的原因。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「實際勞工效率高於預算」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出造成「有利人工差異 ($300,000 F)」的單一核心成因（1分）", colorClass: "hl-s1", opts: [
+          { text: "成因是工廠聘用了大量不熟練且士氣低落的工人，令生產每件衛衣的時間大幅延長。", score: 0, status: "wrong", comment: "方向完全相反。題目指出人工成本錄得 $300,000 F 的「有利差異」，代表實際人工成本低於預算；不熟練工人延長工時會推高人工成本並造成不利差異。" },
+          { text: "成因之一是實際勞工效率高於預算，即生產工人裁剪及縫製每件衛衣所需的實際工作時間比預算短；又或者實際工資水平低於預算，例如內地廠房當地工資下調或聘用了起薪點較低的工人。", score: 1, status: "best", comment: "準確指出在總產量不變下，令實際人工成本低於預算的兩大成因：實際勞工效率高於預算或實際工資水平低於預算。" },
+          { text: "成因是實際人工成本和預算不同。", score: 0, status: "partial", comment: "純粹重複題意，未有指出「實際勞工效率高於預算」或「實際工資水平低於預算」的具體成因方向。" }
+        ]},
+        { label: "第 2 步：針對「成衣廠車衣工人勞工效率提升」設定具體原因例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如成衣廠去年改善了車間工作環境與獎賞制度令工人士氣高昂，加上過往提供的在職縫紉培訓見效及聘用了技術熟練的車衣女工，使工人縫製每件衛衣的速度顯著加快，返工重做率亦大幅下降。", score: 1, status: "best", comment: "緊扣成衣廠生產車間情境，具體說明工人士氣高昂、縫紉培訓見效與技術熟練如何加快縫製速度及減少重做。" },
+          { text: "例如工人的效率變得很高。", score: 0, status: "partial", comment: "描述空泛，未有說明是甚麼原因，如聘用熟練工人、提供充足培訓或提升員工士氣，令工人的勞工效率提高。" },
+          { text: "例如棉花布料供應商給予成衣廠九折優惠。", score: 0, status: "wrong", comment: "棉花布料折扣帶來的是「有利原料成本差異」，並非節省人工開支的「有利人工成本差異」。" }
+        ]},
+        { label: "第 3 步：深化論述至減少總工時與超時津貼、使實際人工成本低於預算的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "由於生產每件衛衣所需的工時縮短，成衣廠在完成 60,000 件預算產量時所需的總計薪工時及超時工作津貼均比預期少，使全年實際支付的人工總成本比預算節省了 $300,000，從而錄得有利的人工差異。", score: 1, status: "best", comment: "清楚推演出單位生產工時縮短如何減少全年總計薪工時與超時津貼，使實際人工總成本比預算節省 $300,000。" },
+          { text: "這樣成衣廠便錄得有利的人工差異。", score: 0, status: "partial", comment: "同義反覆，未有說明縮短每件產品工時如何減少總計薪工時與超時津貼開支。" },
+          { text: "這會令歐美零售商退回所有衛衣。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e8", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 8：童夢益智玩具廠（處理不利人工差異的方法）", topic: "人工差異：針對不利人工差異的處理／補救方法", maxMarks: 3,
+      scenario: "「童夢益智玩具廠」生產及銷售塑膠拼裝玩具，營運經理發現上一季度錄得顯著的「不利人工差異」，即實際人工成本高於預算。試為該玩具廠建議處理這項不利人工差異的方法。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「針對實際勞工效率低於預算或實際工資水平高於預算的具體處理方法」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出針對「不利人工差異」的單一成因與對應處理方向（1分）", colorClass: "hl-s1", opts: [
+          { text: "玩具廠可同時透過大批量買塑膠、換機器、外判工序、請兼職、搞自動化及減價促銷來處理。", score: 0, status: "partial", comment: "違反一段一重點原則，而且混入了大批量買塑膠及減價促銷等針對原料與銷量差異的措施。" },
+          { text: "若不利人工差異源於生產每件玩具需時過長、實際勞工效率低於預算，玩具廠可把部分生產程序自動化，以專門的機器或設備代替人手工作，以及向員工提供更多培訓以提升工作效率；若源於實際工資水平高於預算，則可把部分工序外判至工資較低地區，或在淡季聘請兼職員工取代部分全職員工。", score: 1, status: "best", comment: "準確針對勞工效率低於預算及工資水平高於預算兩大成因，提出生產程序自動化、提供員工培訓及外判低工資地區等處理方法。" },
+          { text: "玩具廠應向玩具盒印刷供應商爭取更大購貨折扣。", score: 0, status: "wrong", comment: "措施錯配。向印刷供應商爭取購貨折扣是用來降低包裝材料成本，並不能解決工廠人工成本超支的問題。" }
+        ]},
+        { label: "第 2 步：針對「童夢益智玩具廠」設定具體的自動化與培訓措施例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如玩具廠可引入全自動機械臂及自動注塑包裝生產線，代替人手進行重複性的玩具零件組裝、打磨及入盒工序；同時為負責操作機器的工人提供系統化的在職技能培訓。", score: 1, status: "best", comment: "緊扣塑膠拼裝玩具廠的生產流程，具體描述引入自動注塑包裝線代替人手組裝打磨，並配合操作技能培訓。" },
+          { text: "例如叫玩具廠工人工作快一點。", score: 0, status: "partial", comment: "建議過於空泛，未有提出如把部分生產程序自動化、提供技能培訓、外判工序或淡季改聘兼職等具體管理行動。" },
+          { text: "例如在兒童電視頻道播放玩具廣告。", score: 0, status: "wrong", comment: "在電視頻道播放廣告屬於市場推廣策略，與控制工廠車間的人工成本無關。" }
+        ]},
+        { label: "第 3 步：深化論述至縮短單位生產工時、減少超時工資與控制人工成本的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "以自動化設備取代繁瑣人手工序並配合熟練操作，能大幅縮短生產每盒玩具所需的員工工作時間，顯著提升勞工效率，減少不必要的人手需求與超時工作津貼開支，從而使實際人工成本回落至預算水平之內。", score: 1, status: "best", comment: "清楚推演出生產自動化與熟練操作如何縮短每盒玩具的生產工時、減少超時津貼，使實際人工成本回落至預算內。" },
+          { text: "這樣玩具廠便處理了不利的人工差異。", score: 0, status: "partial", comment: "同義反覆，未有說明縮短每盒玩具生產工時、提升勞工效率及減少超時工資開支的具體效果。" },
+          { text: "這會令塑膠原料的市場價格下跌一半。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    }
+  ];
+
+  let curBuilderCat = 'short';
+  let curQIdx = 0;
+  let userSelections = {};
+  let isSubmitted = false;
+
+  function switchBuilderCat(cat, btn) {
+    curBuilderCat = cat;
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('builderCatLabel').textContent = cat === 'short' ? '選擇短答題（每題滿分 2 分）：' : '選擇進階論述題（每題滿分 3 分）：';
+    curQIdx = cat === 'short' ? 0 : 4;
+    userSelections = {};
+    isSubmitted = false;
+    renderQuestionChips();
+    renderWorkshop();
+  }
+
+  function renderQuestionChips() {
+    document.getElementById('questionChips').innerHTML = workshopQuestions
+      .map((q, i) => ({ q, i }))
+      .filter(x => x.q.cat === curBuilderCat)
+      .map(x => `<button class="chip ${x.i===curQIdx?'active':''}" onclick="selectWorkshopQ(${x.i})">${x.q.title}</button>`)
+      .join('');
+  }
+
+  function selectWorkshopQ(idx) {
+    curQIdx = idx;
+    userSelections = {};
+    isSubmitted = false;
+    renderQuestionChips();
+    renderWorkshop();
+  }
+
+  function pickStepOption(sIdx, oIdx) {
+    userSelections[sIdx] = oIdx;
+    isSubmitted = false;
+    renderWorkshop();
+  }
+
+  function submitConstructedAnswer() {
+    const q = workshopQuestions[curQIdx];
+    if (Object.keys(userSelections).length < q.steps.length) {
+      alert(`請先完成全部 ${q.steps.length} 個步驟的選擇，再點擊批改。`);
+      return;
+    }
+    isSubmitted = true;
+    renderWorkshop();
+  }
+
+  function fillBestChoices() {
+    const q = workshopQuestions[curQIdx];
+    q.steps.forEach((st, sIdx) => {
+      userSelections[sIdx] = st.opts.findIndex(o => o.status === 'best');
+    });
+    isSubmitted = true;
+    renderWorkshop();
+  }
+
+  function renderWorkshop() {
+    const q = workshopQuestions[curQIdx];
+    const letters = ['A', 'B', 'C'];
+
+    let totalScore = 0;
+    q.steps.forEach((st, sIdx) => {
+      if (userSelections[sIdx] !== undefined) {
+        totalScore += st.opts[userSelections[sIdx]].score;
+      }
+    });
+
+    const previewParts = q.steps.map((st, sIdx) => {
+      const selIdx = userSelections[sIdx];
+      if (selIdx === undefined) {
+        return `<span style="color:var(--mute);border-bottom:1px dashed var(--mute)">［未選擇第 ${sIdx + 1} 步］</span>`;
+      }
+      return `<span class="${st.colorClass}">${st.opts[selIdx].text}</span>`;
+    });
+
+    document.getElementById('builderWorkspace').innerHTML = `
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <div>
+            <span class="badge b-blue">${q.typeBadge}</span>
+            <span class="badge b-teal">${q.topic}</span>
+          </div>
+          <b style="color:var(--primary);font-size:16px">本段滿分：${q.maxMarks} 分</b>
+        </div>
+        <div style="background:var(--surface);padding:16px 20px;border-radius:12px;border-left:4px solid var(--primary);font-size:16.5px;margin-bottom:14px"><b>背景情境：</b>${q.scenario}</div>
+        <div style="font-size:18px;font-weight:800;color:var(--ink)">${q.question}</div>
+      </div>
+
+      ${q.steps.map((st, sIdx) => {
+        const selIdx = userSelections[sIdx];
+        return `
+          <div class="builder-stage">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <h4 style="font-size:16.5px"><span class="${st.colorClass}">${st.label}</span></h4>
+              <span style="font-size:14px;font-weight:600;color:var(--mute)">${selIdx !== undefined ? '已選 ' + letters[selIdx] : '請點選一項'}</span>
+            </div>
+            ${st.opts.map((o, oIdx) => {
+              const isSel = selIdx === oIdx;
+              let gradeCls = '';
+              if (isSubmitted && isSel) {
+                gradeCls = o.status === 'best' ? 'graded-best' : o.status === 'partial' ? 'graded-partial' : 'graded-wrong';
+              }
+              return `
+                <button class="opt-card ${isSel ? 'selected' : ''} ${gradeCls}" onclick="pickStepOption(${sIdx}, ${oIdx})">
+                  <span class="opt-letter">${letters[oIdx]}</span>
+                  <span style="flex:1">${o.text}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }).join('')}
+
+      <div class="card" style="border:2px solid var(--primary);margin-bottom:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+          <h3 style="color:var(--primary);font-size:19px">建構段落預覽</h3>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-green" onclick="submitConstructedAnswer()">批改答案</button>
+            <button class="btn btn-outline" onclick="fillBestChoices()">示範完整建構</button>
+          </div>
+        </div>
+        <div style="font-size:17px;line-height:1.85;background:var(--surface);padding:18px 22px;border-radius:12px;border:1px solid var(--line)">
+          ${previewParts.join(' ')}
+        </div>
+
+        ${isSubmitted ? `
+          <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--line)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h4 style="font-size:17.5px">分步批改回饋</h4>
+              <span class="badge ${totalScore === q.maxMarks ? 'b-green' : totalScore >= 1 ? 'b-amber' : 'b-red'}" style="font-size:15px;padding:6px 14px">
+                得分：${totalScore} / ${q.maxMarks} 分
+              </span>
+            </div>
+            ${q.steps.map((st, sIdx) => {
+              const chosen = st.opts[userSelections[sIdx]];
+              const cCls = chosen.status === 'best' ? 'c-best' : chosen.status === 'partial' ? 'c-partial' : 'c-wrong';
+              return `
+                <div class="critique-item ${cCls}">
+                  <b>第 ${sIdx + 1} 步（選項 ${letters[userSelections[sIdx]]} · ${chosen.score} 分）：</b>${chosen.comment}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  renderQuestionChips();
+  renderWorkshop();
+</script>
+</body>
+</html>

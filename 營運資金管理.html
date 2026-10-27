@@ -1,0 +1,1968 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>財務管理 — 營運資金管理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 財務管理單元專屬配色：翡翠深綠 (Emerald) × 深海藍 (Ocean Navy) × 琥珀金 (Amber Gold) */
+      --bg: #f2f6f4;
+      --card: #ffffff;
+      --surface: #f7faf8;
+      --ink: #0f1f18;
+      --ink-sec: #2d4239;
+      --mute: #5c7267;
+      --line: #d8e4dd;
+      --primary: #065f46;
+      --primary-dark: #064e3b;
+      --primary-light: #ecfdf5;
+      --primary-border: #a7f3d0;
+      --teal: #0369a1;
+      --teal-light: #f0f9ff;
+      --teal-border: #bae6fd;
+      --amber: #b45309;
+      --amber-light: #fffbeb;
+      --green: #15803d;
+      --green-light: #f0fdf4;
+      --red: #be123c;
+      --red-light: #fff1f2;
+      --radius: 16px;
+      --shadow: 0 4px 20px -2px rgba(6, 78, 59, 0.06), 0 2px 6px -1px rgba(6, 78, 59, 0.04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.75;
+      padding-bottom: 60px;
+      font-size: 17.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4 { margin: 0; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1.35; }
+
+    /* Top Navigation Bar */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      flex-wrap: wrap;
+    }
+    .home-link {
+      text-decoration: none;
+      color: var(--ink-sec);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      transition: all 0.2s;
+    }
+    .home-link:hover { color: var(--primary); border-color: var(--primary-border); background: var(--primary-light); }
+    .brand { display: flex; align-items: center; gap: 12px; font-size: 19px; font-weight: 800; color: var(--primary-dark); }
+    .brand-tag {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .main-tabs {
+      margin-left: auto;
+      display: flex;
+      gap: 6px;
+      background: #dfe9e3;
+      padding: 5px;
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+    .main-tabs button {
+      border: 0;
+      background: none;
+      padding: 9px 15px;
+      border-radius: 9px;
+      font: 700 15px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .main-tabs button:hover { color: var(--ink); }
+    .main-tabs button.on {
+      background: var(--card);
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(6, 78, 59, 0.1);
+    }
+
+    /* Main Container & Views */
+    .view { display: none; max-width: 1160px; margin: 0 auto; padding: 28px 24px; animation: fadeIn 0.25s ease; }
+    .view.on { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Section Header Banner */
+    .sec-banner {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow);
+    }
+    .sec-banner h1 { font-size: 25px; margin: 6px 0 8px; }
+    .sec-banner p { margin: 0; color: var(--ink-sec); font-size: 16.5px; max-width: 680px; }
+
+    /* Sub-navigation Switcher */
+    .sub-nav {
+      display: inline-flex;
+      background: #eaf1ed;
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .sub-nav button {
+      border: 0;
+      background: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font: 700 15px 'Noto Sans TC', sans-serif;
+      color: var(--mute);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sub-nav button:hover { color: var(--ink); }
+    .sub-nav button.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(6, 95, 70, 0.25);
+    }
+    .sub-view { display: none; }
+    .sub-view.active { display: block; animation: fadeIn 0.2s ease; }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .sidebar-layout { display: grid; grid-template-columns: 295px 1fr; gap: 22px; align-items: start; }
+
+    /* Badges & Pills */
+    .badge {
+      display: inline-block;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-right: 8px;
+    }
+    .b-blue { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border); }
+    .b-teal { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
+    .b-amber { background: var(--amber-light); color: var(--amber); border: 1px solid #fde68a; }
+    .b-green { background: var(--green-light); color: var(--green); border: 1px solid #bbf7d0; }
+    .b-red { background: var(--red-light); color: var(--red); border: 1px solid #fecdd3; }
+
+    /* Interactive Selector Lists */
+    .nav-list { display: flex; flex-direction: column; gap: 10px; }
+    .nav-item {
+      text-align: left;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      font: 700 16px 'Noto Sans TC', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .nav-item:hover { border-color: var(--primary); background: var(--primary-light); }
+    .nav-item.active {
+      background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 6px 16px rgba(6, 95, 70, 0.24);
+    }
+    .nav-item.active span.sub-txt { color: #d1fae5; }
+    .sub-txt { font-size: 13px; color: var(--mute); font-weight: 500; flex-shrink: 0; }
+
+    .chips { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+    .chip {
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      padding: 9px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font: 700 15.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      transition: all 0.2s;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .chip.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(6, 95, 70, 0.2);
+    }
+
+    .btn {
+      border: 0;
+      background: var(--primary);
+      color: #ffffff;
+      font: 700 16px 'Noto Sans TC', sans-serif;
+      padding: 11px 22px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-teal { background: var(--teal); }
+    .btn-teal:hover { background: #075985; }
+    .btn-green { background: var(--green); }
+    .btn-green:hover { background: #166534; }
+    .btn-outline { background: var(--card); color: var(--primary); border: 1.5px solid var(--primary); }
+    .btn-outline:hover { background: var(--primary-light); }
+
+    .note-box {
+      border-left: 4px solid var(--primary);
+      background: var(--primary-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 16px;
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+    .case-box {
+      border-left: 4px solid var(--teal);
+      background: var(--teal-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 14px;
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+
+    /* Visual Mathematical Formula Styling */
+    .math-card {
+      background: var(--primary-light);
+      border: 1.5px solid var(--primary-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .m-frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      text-align: center;
+      margin: 0 4px;
+      line-height: 1.25;
+    }
+    .m-num {
+      border-bottom: 2px solid currentColor;
+      padding: 0 8px 3px;
+      display: block;
+    }
+    .m-den {
+      padding: 3px 8px 0;
+      display: block;
+    }
+    .m-sqrt {
+      display: inline-flex;
+      align-items: stretch;
+      vertical-align: middle;
+      margin: 0 4px;
+    }
+    .m-sqrt-sym {
+      font-size: 26px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      padding-right: 1px;
+      font-weight: 900;
+    }
+    .m-sqrt-body {
+      border-top: 2.5px solid currentColor;
+      padding: 3px 8px 0;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* Flow Chain */
+    .flow-chain {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 14px 0;
+      padding: 16px;
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--line);
+    }
+    .flow-node {
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+    }
+    .flow-arrow { font-size: 18px; font-weight: 900; color: var(--amber); }
+
+    /* Comparison Table */
+    table.comp-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 16px; }
+    table.comp-table th, table.comp-table td { padding: 12px 15px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    table.comp-table th { background: var(--surface); font-weight: 800; color: var(--ink); }
+    table.comp-table tr.highlight-row { background: var(--primary-light); }
+
+    /* Calculator Inputs */
+    .calc-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+    .calc-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 14px;
+      background: var(--card);
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+    }
+    .calc-field label { font-weight: 700; color: var(--ink-sec); display: flex; justify-content: space-between; align-items: center; }
+    .calc-field input[type="number"] {
+      padding: 5px 8px;
+      border-radius: 7px;
+      border: 1.5px solid var(--line);
+      font: 700 14.5px 'Inter', 'Noto Sans TC', sans-serif;
+      color: var(--primary);
+      width: 98px;
+      text-align: right;
+    }
+
+    input[type="range"] { width: 100%; accent-color: var(--primary); cursor: pointer; }
+
+    /* Builder Specific */
+    .builder-stage {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .opt-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      width: 100%;
+      text-align: left;
+      padding: 15px 18px;
+      margin: 10px 0;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      font: 500 16.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1.65;
+    }
+    .opt-card:hover { border-color: var(--primary); background: var(--surface); }
+    .opt-card.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
+    .opt-card.correct, .opt-card.graded-best { border-color: var(--green); background: var(--green-light); color: #064e3b; }
+    .opt-card.graded-partial { border-color: var(--amber); background: var(--amber-light); color: #78350f; }
+    .opt-card.wrong, .opt-card.graded-wrong { border-color: var(--red); background: var(--red-light); color: #881337; }
+    .opt-letter {
+      display: inline-grid;
+      place-items: center;
+      min-width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #eaf1ed;
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 14.5px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .opt-card.selected .opt-letter { background: var(--primary); color: #ffffff; }
+
+    .hl-s1 { background: #d1fae5; color: #065f46; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s2 { background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s3 { background: #e0f2fe; color: #075985; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+
+    .critique-item {
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-left: 5px solid var(--line);
+      background: var(--card);
+    }
+    .critique-item.c-best { border-left-color: var(--green); background: var(--green-light); }
+    .critique-item.c-partial { border-left-color: var(--amber); background: var(--amber-light); }
+    .critique-item.c-wrong { border-left-color: var(--red); background: var(--red-light); }
+
+    details.guide-Collapsible {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 22px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    details.guide-Collapsible summary {
+      font-weight: 700;
+      font-size: 16.5px;
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    @media (max-width: 860px) {
+      .grid2, .grid3, .sidebar-layout, .calc-input-grid { grid-template-columns: 1fr; }
+      header { padding: 12px 18px; }
+      .main-tabs { width: 100%; justify-content: center; margin-top: 8px; }
+      .sec-banner h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="財務管理_目錄.html" class="home-link">返回單元目錄</a>
+  <select onchange="if(this.value) location.href=this.value" style="padding:7px 12px;border-radius:10px;border:1px solid var(--primary-border);background:var(--primary-light);color:var(--primary);font:700 14.5px 'Noto Sans TC',sans-serif;cursor:pointer">
+    <option value="">快速切換課室／測驗...</option>
+    <option value="財務管理_目錄.html">單元總目錄</option>
+    <option value="財務分析.html">第 1 課：財務分析</option>
+    <option value="預算編製.html">第 2 課：預算編製</option>
+    <option value="融資方式.html">第 3 課：融資方式</option>
+    <option value="資本投資評估.html">第 4 課：資本投資評估</option>
+    <option value="營運資金管理.html">第 5 課：營運資金管理</option>
+    <option value="風險管理.html">第 6 課：風險管理</option>
+    <option value="財務管理_單元綜合測驗.html">單元綜合模擬試卷 (72分)</option>
+  </select>
+  <div class="brand">
+    <span>財務管理</span>
+    <span class="brand-tag">第 5 課：營運資金管理</span>
+  </div>
+  <nav class="main-tabs" id="mainTabs">
+    <button class="on" data-tab="sec-cycle">1. 營運資金與營業循環</button>
+    <button data-tab="sec-cash">2. 現金管理與現金預算</button>
+    <button data-tab="sec-arap">3. 應收帳款(5C)與應付帳款</button>
+    <button data-tab="sec-inv">4. 存貨管理：EOQ 與再訂購水平</button>
+    <button data-tab="sec-builder">5. 論點建構工作坊</button>
+  </nav>
+</header>
+
+<!-- ==================== 1. 營運資金與營業循環 ==================== -->
+<section class="view on" id="sec-cycle">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元一：營運資金管理的重要性、營業循環與現金轉換循環</span>
+      <h1>營運資金管理的四大主要範疇、營業循環與現金轉換循環</h1>
+      <p>營運資金是流動資產減去流動負債的餘額。營運資金管理指同時管理企業的流動資產和流動負債，讓企業有充足的短期變現能力應付日常營運。即使企業賺取豐厚的利潤，若營運資金管理不善，不能從營運中取得足夠的現金償還短期債務，仍有倒閉的危機。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('cyc', 0, this)">四大主要範疇與兩個循環模擬</button>
+      <button onclick="switchSub('cyc', 1, this)">描述不同行業營業循環與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 1A：四大主要範疇與兩個循環模擬 -->
+  <div class="sub-view active" id="cyc-sub-0">
+    <div class="sidebar-layout" style="margin-bottom:20px">
+      <div class="nav-list" id="wcmCatNavList"></div>
+      <div class="card" id="wcmCatDetailCard" style="margin-bottom:0"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:0">
+      <span class="badge b-teal">營業循環和現金轉換循環（淨營業週期）</span>
+      <h3 style="font-size:21px;margin:8px 0 6px">拉動滑桿調整各階段天數，觀察營業循環與現金轉換循環的變化</h3>
+      <p style="font-size:15.5px;color:var(--ink-sec);margin:0 0 12px">
+        • <b>營業循環 (Operating Cycle)</b>：由企業<b>賒購存貨</b>，到售出產品<b>收取現金</b>的期間。<br>
+        • <b>現金轉換循環 (Cash Conversion Cycle，又稱淨營業週期)</b>：由企業<b>以現金支付購買存貨</b>，到售出產品<b>收取現金</b>的期間。企業的營業循環或現金轉換循環越短，代表管理營運資金的效率越高，變現能力也越強。
+      </p>
+      <div class="grid2" style="align-items:center">
+        <div style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line)">
+          <div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:4px">
+            <b>1. 存貨持有及生產期 (天)：</b><b id="lblCycInv" style="color:var(--primary)">35 天</b>
+          </div>
+          <input type="range" id="cycInv" min="1" max="90" value="35" oninput="updateCycleSim()">
+          <div style="display:flex;justify-content:space-between;font-size:15px;margin:8px 0 4px">
+            <b>2. 應收帳款收帳期 (天)：</b><b id="lblCycAr" style="color:var(--teal)">30 天</b>
+          </div>
+          <input type="range" id="cycAr" min="0" max="90" value="30" oninput="updateCycleSim()">
+          <div style="display:flex;justify-content:space-between;font-size:15px;margin:8px 0 4px">
+            <b>3. 應付帳款賒帳期 (天)：</b><b id="lblCycAp" style="color:var(--amber)">20 天</b>
+          </div>
+          <input type="range" id="cycAp" min="0" max="90" value="20" oninput="updateCycleSim()">
+        </div>
+        <div id="cycleSimOutput"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 子分頁 1B：描述不同行業營業循環與練習 -->
+  <div class="sub-view" id="cyc-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">答題錦囊：描述指定企業的營業循環或現金轉換循環</span>
+        <h3 style="font-size:20.5px;margin:8px 0 8px">描述營業循環的三步答題策略</h3>
+        <p style="font-size:15px;color:var(--ink-sec);margin:0 0 10px">
+          <b>1. 辨別企業的性質</b>：若購買原料製作成品出售，營業循環會包括「生產／製作」一環；若購買製成品作銷售，則不會包括生產一環。<br>
+          <b>2. 留意是否涉及賒購或賒銷</b>：若企業只接受顧客以現金付款，便不應提及賒銷（取而代之是「現銷貨品並收取現金」一環）。<br>
+          <b>3. 說明指定企業營業循環的所有階段</b>。
+        </p>
+        <div class="chips" id="bizCycChips">
+          <button class="chip active" onclick="renderBizCyc(0)">1. 流動軟雪糕車</button>
+          <button class="chip" onclick="renderBizCyc(1)">2. 線上零售商 (網店)</button>
+          <button class="chip" onclick="renderBizCyc(2)">3. 傳統服裝製造商</button>
+          <button class="chip" onclick="renderBizCyc(3)">4. 街市鮮魚販 (負轉換循環)</button>
+        </div>
+        <div id="bizCycBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">營運資金範疇與現金轉換速度挑戰</span>
+        <h3 style="font-size:20.5px;margin:8px 0 10px">辨識營運資金管理範疇與比較轉換速度（共 5 題）</h3>
+        <p id="wcmQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute);margin:0 0 10px"></p>
+        <div id="wcmQuizQ" style="font-size:16.5px;font-weight:700;padding:16px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:12px"></div>
+        <div id="wcmQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="wcmQuizFb" style="margin-top:12px;font-size:15.5px;min-height:48px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 2. 現金管理與現金預算 ==================== -->
+<section class="view" id="sec-cash">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元二：現金管理 (Cash Management)</span>
+      <h1>現金管理的基本目的、支票延後管理、三個基本原則與現金預算</h1>
+      <p>企業持有現金主要有兩個目的：進行交易和應付突如其來的需要。現金管理的基本目的是在持有現金的成本（放棄的利息收入）和好處（提高變現能力，減低現金短缺風險）之間取得平衡，即以最低的成本維持充足的現金，以確保業務能暢順運作。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('cash', 0, this)">支票延後與三個基本原則</button>
+      <button onclick="switchSub('cash', 1, this)">季度現金預算模擬與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 2A：支票延後與三個基本原則 -->
+  <div class="sub-view active" id="cash-sub-0">
+    <div class="sidebar-layout">
+      <div class="nav-list" id="cashPrinNavList"></div>
+      <div class="card" id="cashPrinDetailCard" style="margin-bottom:0"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 2B：季度現金預算互動模擬與練習 -->
+  <div class="sub-view" id="cash-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">編製現金預算</span>
+        <h3 style="font-size:20.5px;margin:8px 0 6px">季度「現金預算 (Cash Budget)」互動計算機</h3>
+        <p style="font-size:15px;color:var(--ink-sec);margin:0 0 10px">
+          • <b>期末現金餘額 (1)</b>：企業預期在期末持有的現金餘額。<br>
+          • <b>最低現金餘額 (2)</b>：企業希望持有以進行交易或應付突如其來支出的現金餘額。<br>
+          • <b>現金盈餘或短缺 (3)</b> ＝ 期末現金餘額 － 最低現金餘額（正數代表預期出現<b>現金盈餘</b>；負數代表預期出現<b>現金短缺</b>）。
+        </p>
+        <div id="cashBudgetTable"></div>
+        <div id="cashBudgetAdvice" class="note-box" style="margin-top:12px;font-size:15px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">現金管理原則與現金預算練習</span>
+        <h3 style="font-size:20.5px;margin:8px 0 10px">配對現金管理基本原則與判斷陳述正誤（共 6 題）</h3>
+        <p id="cashQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute);margin:0 0 10px"></p>
+        <div id="cashQuizQ" style="font-size:16.5px;font-weight:700;padding:16px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:12px"></div>
+        <div id="cashQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="cashQuizFb" style="margin-top:12px;font-size:15.5px;min-height:48px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 3. 應收帳款(5C)與應付帳款 ==================== -->
+<section class="view" id="sec-arap">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元三：應收帳款管理與應付帳款管理</span>
+      <h1>應收帳款政策（信用標準 5C・賒帳條款・收帳政策）＆ 應付帳款政策</h1>
+      <p>企業制定應收帳款政策時，必須全盤考慮變現能力、銷售額和壞帳三個因素並在好處和壞處之間取得平衡；而制定應付帳款政策時，則受到貸款利率和現金折扣率（現金折扣的年率）影響。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('arap', 0, this)">應收帳款政策三元素與信用分析 5C</button>
+      <button onclick="switchSub('arap', 1, this)">政策調整影響、應付帳款決策與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 3A：應收帳款政策三元素與信用分析 5C -->
+  <div class="sub-view active" id="arap-sub-0">
+    <div class="card" style="margin-bottom:0">
+      <span class="badge b-blue">應收帳款政策（信貸政策／信用政策）的三個元素</span>
+      <h3 style="font-size:21px;margin:8px 0 8px">點擊切換「信用標準（信用分析 5C）」、「賒帳條款」與「收帳政策」</h3>
+      <div class="chips" id="arElemChips">
+        <button class="chip active" onclick="renderArElem(0)">1. 信用標準與「信用分析 5C」</button>
+        <button class="chip" onclick="renderArElem(1)">2. 賒帳條款（三個組成元素）</button>
+        <button class="chip" onclick="renderArElem(2)">3. 收帳政策（五級催收行動）</button>
+      </div>
+      <div id="arElemBox" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 3B：政策調整影響模擬器、應付帳款決策與練習 -->
+  <div class="sub-view" id="arap-sub-1">
+    <div class="grid2" style="margin-bottom:20px">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">影響制定應收帳款政策的因素</span>
+        <h3 style="font-size:20.5px;margin:8px 0 6px">調整應收帳款政策對「變現能力・銷售額・壞帳」的影響</h3>
+        <div class="chips" id="arPolChips">
+          <button class="chip active" onclick="renderArPol(0)">提高信用標準</button>
+          <button class="chip" onclick="renderArPol(1)">縮短信用期限</button>
+          <button class="chip" onclick="renderArPol(2)">收緊收帳政策</button>
+          <button class="chip" onclick="renderArPol(3)">放寬政策 (降低標準/延長信用期)</button>
+          <button class="chip" onclick="renderArPol(4)">增加現金折扣</button>
+        </div>
+        <div id="arPolBox" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">應付帳款管理</span>
+        <h3 style="font-size:20.5px;margin:8px 0 6px">「獲取現金折扣」vs「放棄現金折扣」決策模擬</h3>
+        <p style="font-size:15px;color:var(--ink-sec);margin:0 0 10px">獲取現金折扣代表放棄貿易賒帳這個短期資金來源，涉及借款利息成本或放棄投資回報的機會成本。拉動滑桿比較<b>現金折扣的年率</b>與<b>貸款利率</b>：</p>
+        <div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:4px">
+          <b>供應商「現金折扣的年率」：</b><b id="lblApDisc" style="color:var(--green)">20%</b>
+        </div>
+        <input type="range" id="apDiscSlider" min="5" max="35" step="5" value="20" oninput="updateApSim()">
+        <div style="display:flex;justify-content:space-between;font-size:15px;margin:8px 0 4px">
+          <b>銀行「短期貸款利率」：</b><b id="lblApLoan" style="color:var(--red)">10%</b>
+        </div>
+        <input type="range" id="apLoanSlider" min="5" max="35" step="5" value="10" oninput="updateApSim()">
+        <div id="apSimOutput" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="badge b-teal">信用分析 5C 與應收／應付帳款政策挑戰</span>
+        <span id="arapQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute)"></span>
+      </div>
+      <div id="arapQuizQ" style="font-size:17px;font-weight:700;margin-bottom:14px"></div>
+      <div id="arapQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+      <div id="arapQuizFb" style="margin-top:14px;font-size:16px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 4. 存貨管理：EOQ 與再訂購水平 ==================== -->
+<section class="view" id="sec-inv">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元四：存貨管理 (Inventory Management)</span>
+      <h1>存貨管理的目的、經濟訂貨量 (EOQ)、再訂購水平與即時生產系統 (JIT)</h1>
+      <p>存貨管理有兩大目的：(i) 保持充足的存貨（應付突然增加的需求，避免因缺貨或生產停頓而損失生意）；及 (ii) 把與存貨相關的成本降至最低（並避免持有過多存貨降低企業的變現能力）。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('inv', 0, this)">動態 EOQ 與再訂購水平圖表計算室</button>
+      <button onclick="switchSub('inv', 1, this)">存貨成本、JIT 原理與實戰練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 4A：動態 EOQ 與再訂購水平圖表計算室 -->
+  <div class="sub-view active" id="inv-sub-0">
+    <div class="card" style="background:var(--surface)">
+      <span class="badge b-blue">存貨管理四大核心數學公式（標準符號 D・F・C・Q・Q*）</span>
+      <div class="grid2" style="margin-top:10px;gap:12px">
+        <div class="math-card" style="margin:0">
+          <span>1. 總訂購成本 ＝ <i>F</i> ×</span>
+          <span class="m-frac"><span class="m-num"><i>D</i></span><span class="m-den"><i>Q</i></span></span>
+          <span style="font-size:13.5px;color:var(--mute)">（每次訂購成本 × 訂單次數）</span>
+        </div>
+        <div class="math-card" style="margin:0">
+          <span>2. 總貯存成本 ＝ <i>C</i> ×</span>
+          <span class="m-frac"><span class="m-num"><i>Q</i></span><span class="m-den">2</span></span>
+          <span style="font-size:13.5px;color:var(--mute)">（單位貯存成本 × 平均存貨）</span>
+        </div>
+        <div class="math-card" style="margin:0;border-color:var(--green);background:var(--green-light);color:var(--green)">
+          <span>3. 經濟訂貨量 (<i>Q</i>*) ＝</span>
+          <span class="m-sqrt">
+            <span class="m-sqrt-sym">√</span>
+            <span class="m-sqrt-body">
+              <span class="m-frac"><span class="m-num">2 <i>D</i> <i>F</i></span><span class="m-den"><i>C</i></span></span>
+            </span>
+          </span>
+          <span style="font-size:13.5px">（此時總訂購成本＝總貯存成本）</span>
+        </div>
+        <div class="math-card" style="margin:0;border-color:var(--teal);background:var(--teal-light);color:var(--teal)">
+          <span>4. 再訂購水平 ＝ (每日耗用量 × 訂貨間隔期) ＋ 安全存貨</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="border:1.5px solid var(--primary);margin-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+        <div>
+          <span class="badge b-blue">動態移動圖表實驗室</span>
+          <h3 style="font-size:21px;margin-top:4px">拉動滑桿或修改數字，即時觀察「EOQ 成本曲線圖」及「再訂購水平圖表」動態移動</h3>
+        </div>
+        <div class="chips" style="margin:0">
+          <button class="chip active" id="eoqPre0" onclick="loadEoqPreset(0)">預設 1：電腦店外置硬碟</button>
+          <button class="chip" id="eoqPre1" onclick="loadEoqPreset(1)">預設 2：超市飲品 (高訂購費)</button>
+          <button class="chip" id="eoqPre2" onclick="loadEoqPreset(2)">預設 3：雪糕廠牛奶</button>
+        </div>
+      </div>
+
+      <div class="grid2" style="margin-top:12px">
+        <div style="background:var(--surface);padding:16px 18px;border-radius:14px;border:1px solid var(--line)">
+          <b style="color:var(--primary);font-size:14.5px;display:block;margin-bottom:8px">(1) 調整經濟訂貨量 (EOQ) 參數（D・F・C・現時訂貨量 Q）：</b>
+          <div class="calc-input-grid">
+            <div class="calc-field">
+              <label><span>需求量 (<i>D</i>)</span><input type="number" id="inD" value="18000" step="500" oninput="syncSlider('sD',this.value);runEoqRolCalc(false)"></label>
+              <input type="range" id="sD" min="200" max="30000" step="200" value="18000" oninput="syncInput('inD',this.value);runEoqRolCalc(false)">
+            </div>
+            <div class="calc-field">
+              <label><span>每次訂購成本 (<i>F</i>) ($)</span><input type="number" id="inF" value="500" step="50" oninput="syncSlider('sF',this.value);runEoqRolCalc(false)"></label>
+              <input type="range" id="sF" min="100" max="6000" step="50" value="500" oninput="syncInput('inF',this.value);runEoqRolCalc(false)">
+            </div>
+            <div class="calc-field">
+              <label><span>單位貯存成本 (<i>C</i>) ($)</span><input type="number" id="inC" value="80" step="5" oninput="syncSlider('sC',this.value);runEoqRolCalc(false)"></label>
+              <input type="range" id="sC" min="5" max="200" step="5" value="80" oninput="syncInput('inC',this.value);runEoqRolCalc(false)">
+            </div>
+            <div class="calc-field">
+              <label><span>現時訂貨量 (<i>Q</i>)</span><input type="number" id="inCurrQ" value="250" step="25" oninput="syncSlider('sCurrQ',this.value);runEoqRolCalc(false)"></label>
+              <input type="range" id="sCurrQ" min="50" max="1000" step="10" value="250" oninput="syncInput('inCurrQ',this.value);runEoqRolCalc(false)">
+            </div>
+          </div>
+
+          <b style="color:var(--teal);font-size:14.5px;display:block;margin:12px 0 8px">(2) 調整再訂購水平參數（每日耗用量・訂貨間隔期・安全存貨）：</b>
+          <div class="calc-input-grid">
+            <div class="calc-field">
+              <label><span>每日耗用量 (單位)</span><input type="number" id="inDaily" value="50" step="5" oninput="syncSlider('sDaily',this.value);runEoqRolCalc(false)"></label>
+              <input type="range" id="sDaily" min="10" max="120" step="5" value="50" oninput="syncInput('inDaily',this.value);runEoqRolCalc(false)">
+            </div>
+            <div class="calc-field">
+              <label><span>訂貨間隔期 (天)</span><input type="number" id="inLead" value="4" step="1" oninput="syncSlider('sLead',this.value);runEoqRolCalc(false)"></label>
+              <input type="range" id="sLead" min="1" max="10" step="1" value="4" oninput="syncInput('inLead',this.value);runEoqRolCalc(false)">
+            </div>
+            <div class="calc-field" style="grid-column:span 2">
+              <label><span>安全存貨水平 (Safety Stock) (單位)</span><input type="number" id="inSafe" value="100" step="20" oninput="syncSlider('sSafe',this.value);runEoqRolCalc(false)"></label>
+              <input type="range" id="sSafe" min="0" max="400" step="20" value="100" oninput="syncInput('inSafe',this.value);runEoqRolCalc(false)">
+            </div>
+          </div>
+
+          <div id="eoqCalcResultBox" style="margin-top:10px"></div>
+        </div>
+
+        <!-- 右側：動態移動雙 SVG 圖表 -->
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+            <div class="chips" style="margin:0">
+              <button class="chip active" id="chartTab0" onclick="switchInvChart(0)">圖表一：EOQ 成本曲線圖 (動態)</button>
+              <button class="chip" id="chartTab1" onclick="switchInvChart(1)">圖表二：再訂購水平鋸齒圖 (動態)</button>
+            </div>
+            <button class="btn btn-outline" style="padding:6px 12px;font-size:13.5px" onclick="runEoqRolCalc(true)">重置圖表座標比例</button>
+          </div>
+          <div id="invChartContainer" style="background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:14px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 子分頁 4B：存貨成本、JIT 原理與實戰練習 -->
+  <div class="sub-view" id="inv-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">核心概念拆解</span>
+        <h3 style="font-size:20.5px;margin:8px 0 8px">訂購成本 vs 貯存成本、再訂購水平三因素與即時生產系統 (JIT)</h3>
+        <div class="chips" id="invConceptChips">
+          <button class="chip active" onclick="renderInvConcept(0)">1. 訂購成本 vs 貯存成本（存倉成本）</button>
+          <button class="chip" onclick="renderInvConcept(1)">2. 決定再訂購水平的三大因素</button>
+          <button class="chip" onclick="renderInvConcept(2)">3. 即時生產系統 (JIT) 原理與應用</button>
+        </div>
+        <div id="invConceptBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">存貨成本分類與計算練習</span>
+        <h3 style="font-size:20.5px;margin:8px 0 10px">分辨存貨成本類別或計算最佳訂貨量與再訂購水平（共 7 題）</h3>
+        <p id="invQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute);margin:0 0 10px"></p>
+        <div id="invQuizQ" style="font-size:16.5px;font-weight:700;padding:16px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:12px"></div>
+        <div id="invQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="invQuizFb" style="margin-top:12px;font-size:15.5px;min-height:48px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 5. 論點建構問答工作坊 (12題) ==================== -->
+<section class="view" id="sec-builder">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-amber">實戰寫作訓練</span>
+      <h1>「一段一個獨立重點」論點建構工作坊</h1>
+      <p>收錄 4 道短答題（2 步建構 · 2 分）及 8 道進階論述題（3 步建構 · 3 分）。請選擇題目並逐步點選最準確的商業論述。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchBuilderCat('short', this)">短答題訓練 (4題)</button>
+      <button onclick="switchBuilderCat('essay', this)">進階論述題訓練 (8題)</button>
+    </div>
+  </div>
+
+  <details class="guide-Collapsible">
+    <summary>查看「一段一個重點」建構結構指南（點擊展開 / 收起）</summary>
+    <div class="grid2" style="margin-top:14px;font-size:16px">
+      <div style="background:var(--primary-light);padding:14px 18px;border-radius:10px">
+        <b style="color:var(--primary)">短答題／個案題模式（每段滿分 2 分 — 2 步建構）</b><br>
+        <span class="hl-s1">第 1 步 (1分)</span> 準確寫出現金管理方法、再訂購水平因素或信貸政策影響<br>
+        <span class="hl-s2">第 2 步 (1分)</span> 結合題目企業背景說明如何運作或為何產生該影響
+      </div>
+      <div style="background:var(--teal-light);padding:14px 18px;border-radius:10px">
+        <b style="color:var(--teal)">進階論述題模式（每段滿分 3 分 — 3 步深度建構）</b><br>
+        <span class="hl-s1">第 1 步 (1分)</span> 指出單一核心概念、5C 因素或 EOQ 變數名稱並界定其核心含義<br>
+        <span class="hl-s2">第 2 步 (1分)</span> 針對題目行業（如健身中心、商業銀行、飲品廠、運動店、豆品廠）設定具體例子<br>
+        <span class="hl-s3">第 3 步 (1分)</span> 深化推論該工具或因素如何影響企業的變現能力、壞帳風險、存貨成本或營運暢順度
+      </div>
+    </div>
+  </details>
+
+  <div class="card" style="padding:18px 22px;margin-bottom:18px">
+    <div style="font-size:15px;color:var(--mute);font-weight:700;margin-bottom:8px" id="builderCatLabel">選擇短答題（每題滿分 2 分）：</div>
+    <div class="chips" id="questionChips" style="margin:0"></div>
+  </div>
+
+  <div id="builderWorkspace"></div>
+</section>
+
+<script>
+  // Main Tab Switching
+  document.querySelectorAll('#mainTabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#mainTabs button').forEach(b => b.classList.remove('on'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+      btn.classList.add('on');
+      document.getElementById(btn.dataset.tab).classList.add('on');
+    });
+  });
+
+  // Sub-view Switching
+  function switchSub(prefix, idx, btn) {
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll(`[id^="${prefix}-sub-"]`).forEach((el, i) => {
+      el.classList.toggle('active', i === idx);
+    });
+  }
+
+  // ====== 1. 營運資金管理、營業循環與現金轉換循環 ======
+  const wcmCats = [
+    { num: "01", title: "1. 現金管理 (Cash Management)", badge: "短期資產管理", def: "管理企業現金的收入和支出。基本目的是在持有現金的成本（放棄的利息收入）和好處（提高變現能力，減低現金短缺風險）之間取得平衡，即<b>以最低的成本維持充足的現金，以確保業務能暢順運作</b>。", ex: "<b>日常商業實例：</b>餐廳預測來年的現金流量並編製季度現金預算、管理支票延後，以及鼓勵顧客以現金付款。" },
+    { num: "02", title: "2. 應收帳款管理 (Accounts Receivable)", badge: "短期資產管理", def: "主要環繞企業如何制定<b>應收帳款政策（又稱信貸政策或信用政策）</b>，包含<b>(i) 信用標準（可用 5C 作信用分析）、(ii) 賒帳條款 和 (iii) 收帳政策</b>三個元素，制定時須考慮變現能力、銷售額和壞帳三個因素。", ex: "<b>日常商業實例：</b>食品分銷商審核客戶信貸可靠性後，容許顧客在 60 天信用期限內付款。<br><b>管理不善後果：</b>如果向太多顧客提供貿易賒帳，資金便會積壓在應收帳款上，導致企業無法收取足夠的現金償還短期債務而面臨倒閉危機。" },
+    { num: "03", title: "3. 應付帳款管理 (Accounts Payable)", badge: "短期負債管理", def: "指企業如何制定應付帳款政策（決定賒購和償還應付帳款的程序）。由於貿易賒帳是一種短期籌資方法，只要有效地運用應付帳款，就可減少向銀行借取短期貸款的需要，避免支付額外的融資成本。", ex: "<b>日常商業實例：</b>運動服飾零售商向供應商取得貿易賒帳，並根據現金折扣的年率與貸款利率決定應否提前償還應付帳款以獲取現金折扣。" },
+    { num: "04", title: "4. 存貨管理 (Inventory Management)", badge: "短期資產管理", def: "指企業對<b>原料、半製成品及製成品</b>的管理。存貨管理有兩大目的：<b>(i) 保持充足的存貨</b>（應付突然增加的需求，避免因缺貨或生產停頓而損失生意）；及 <b>(ii) 把與存貨相關的成本降至最低</b>（常用技巧包括經濟訂貨量模型和再訂購水平）。", ex: "<b>日常商業實例：</b>咖啡店監控每日的咖啡豆耗用量並設定再訂購水平。<br><b>管理不善後果：</b>如果持有過多存貨，可能無法在短期內售出存貨套現（降低變現能力），因此在付款給供應商時或會出現困難甚至倒閉。" }
+  ];
+
+  function renderWcmCat(idx) {
+    document.getElementById('wcmCatNavList').innerHTML = wcmCats.map((c, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderWcmCat(${i})">
+        <span>${c.title}</span>
+      </button>
+    `).join('');
+    const c = wcmCats[idx];
+    document.getElementById('wcmCatDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${c.title}</h3>
+        <span class="badge b-blue">${c.badge}</span>
+      </div>
+      <p style="margin:0 0 12px;font-size:17px">${c.def}</p>
+      <div class="case-box">${c.ex}</div>
+    `;
+  }
+  renderWcmCat(0);
+
+  function updateCycleSim() {
+    const inv = +document.getElementById('cycInv').value;
+    const ar = +document.getElementById('cycAr').value;
+    const ap = +document.getElementById('cycAp').value;
+    document.getElementById('lblCycInv').textContent = inv + ' 天';
+    document.getElementById('lblCycAr').textContent = ar + ' 天';
+    document.getElementById('lblCycAp').textContent = ap + ' 天';
+
+    const opCycle = inv + ar;
+    const ccc = opCycle - ap;
+
+    let msg = ccc < 0 ? `<b style="color:var(--green)">負數的現金轉換循環（${ccc} 天）：</b>企業在向供應商支付購買存貨的款項（第 ${ap} 天）前，已收取銷售所得的款項（第 ${opCycle} 天），即<b>現金流入比現金流出更早出現</b>，變現能力與管理營運資金的效率極高。` :
+              ccc <= 30 ? `<b style="color:var(--teal)">現金轉換循環較短（${ccc} 天）：</b>代表企業能夠較快把存貨轉換成現金，支付短期債務的能力較高，變現能力較強。` :
+              `<b style="color:var(--red)">現金轉換循環偏長（${ccc} 天）：</b>把存貨轉換為現金的時間較長，企業應設法更快地售出存貨、加快收回應收帳款或善用應付帳款賒帳期。`;
+
+    document.getElementById('cycleSimOutput').innerHTML = `
+      <div style="background:var(--card);padding:16px 18px;border-radius:12px;border:1.5px solid var(--line);font-size:15.5px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span><b>營業循環</b>（賒購存貨 ➔ 售出並收取現金）：</span>
+          <b style="color:var(--primary);font-size:17px">${inv} 天 ＋ ${ar} 天 ＝ ${opCycle} 天</b>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+          <span><b>現金轉換循環</b>（以現金付貨款 ➔ 售出並收取現金）：</span>
+          <b style="color:${ccc<0?'var(--green)':'var(--teal)'};font-size:17px">${opCycle} 天 － ${ap} 天 ＝ ${ccc} 天</b>
+        </div>
+        <div style="background:var(--surface);padding:12px 14px;border-radius:8px;font-size:15px">${msg}</div>
+      </div>`;
+  }
+  updateCycleSim();
+
+  const bizCycList = [
+    {
+      title: "1. 流動軟雪糕車（有製作過程 ＋ 賒購食材 ＋ 只收現金）",
+      nodes: ["1. 以賒購形式購買食材", "2. 使用食材製作雪糕", "3. 銷售雪糕並收取現金", "4. 以現金支付購買食材的款項"],
+      note: "<b>答題要點：</b>(i) 流動雪糕車會製作軟雪糕銷售，故營業循環會包括<b>「使用食材製作雪糕」</b>一環；(ii) 一般流動雪糕車向顧客出售雪糕時直接收取現金，如非特別說明，<b>答案不應提及賒銷</b>。"
+    },
+    {
+      title: "2. 線上零售商／網店（購買製成品無生產 ＋ 賒購存貨 ＋ 顧客即時付款）",
+      nodes: ["1. 以賒購形式購買製成品存貨", "2. 向顧客銷售貨品並收取現金", "3. 以現金向供應商支付購貨款項"],
+      note: "<b>為何線上零售商的現金轉換循環通常較短？</b>因為線上零售商購買製成品直接銷售（無生產過程），且顧客在網上購物時通常即時付款（無應收帳款收帳期），甚至在向供應商支付貨款前已收到顧客付款（現金轉換循環可為負數）。"
+    },
+    {
+      title: "3. 傳統製造商（有生產過程 ＋ 賒購原料 ＋ 向客戶賒銷）",
+      nodes: ["1. 賒購原料", "2. 以現金支付貨款", "3. 把原料製作成成品", "4. 賒銷貨品", "5. 從應收帳款收取現金"],
+      note: "<b>特點：</b>同時包含生產過程及向客戶提供貿易賒帳（應收帳款），故營業循環及現金轉換循環較長。"
+    },
+    {
+      title: "4. 街市魚販（早上向供應商取得鮮活海產 ➔ 即日現銷收現 ➔ 週末才支付貨款）",
+      nodes: ["1. 早上賒購鮮活海產", "2. 即日向顧客銷售貨品和收取現金", "3. 週末以現金向供應商支付貨款"],
+      note: "<b>現金轉換速度最快：</b>魚販在週末支付貨款前已即日收妥現金，現金轉換循環為負數。"
+    }
+  ];
+  function renderBizCyc(idx) {
+    document.querySelectorAll('#bizCycChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const b = bizCycList[idx];
+    document.getElementById('bizCycBox').innerHTML = `<div style="background:var(--surface);padding:16px 18px;border-radius:12px;border:1px solid var(--line);font-size:15px"><b style="color:var(--primary);font-size:16.5px">${b.title}</b><div class="flow-chain">${b.nodes.map((n,i)=>`<div class="flow-node">${n}</div>${i<b.nodes.length-1?'<span class="flow-arrow">➔</span>':''}`).join('')}</div><div style="background:var(--card);padding:10px 14px;border-radius:8px;border-left:4px solid var(--teal)">${b.note}</div></div>`;
+  }
+  renderBizCyc(0);
+
+  const wcmQuizItems = [
+    { q: "1. 指出以下四個情況分別涉及哪個「營運資金管理的主要範疇」：<br>(a) 某運動服飾零售商向供應商取得貿易賒帳 ｜ (b) 某食品分銷商容許顧客在 60 天內付款 ｜ (c) 某咖啡店監控每日的咖啡豆耗用量 ｜ (d) 某餐廳預測來年的現金流量", opts: ["A. (a) 應付帳款管理 ｜ (b) 應收帳款管理 ｜ (c) 存貨管理 ｜ (d) 現金管理", "B. (a) 應收帳款管理 ｜ (b) 應付帳款管理 ｜ (c) 現金管理 ｜ (d) 存貨管理"], ans: 0, exp: "正確。向供應商取得貿易賒帳屬應付帳款管理；容許顧客在 60 天內付款屬應收帳款管理；監控咖啡豆耗用量屬存貨管理；預測現金流量屬現金管理。" },
+    { q: "2. 把下列四家企業按「現金轉換的速度」由快至慢排列：<br>(a) 魚販每天早上取得海產，即日現銷收現，週末才付貨款<br>(b) 飛機生產商賒購原材料生產飛機，然後向航空公司賒銷飛機<br>(c) 美食車東主以現金購買一星期食材存貨，再向顧客現銷食品<br>(d) 紡織品生產商賒購聚酯纖維生產布料，然後向製衣公司賒銷布料", opts: ["A. 由快至慢：(a) 魚販 ➔ (c) 美食車 ➔ (d) 紡織品生產商 ➔ (b) 飛機生產商", "B. 由快至慢：(b) ➔ (d) ➔ (c) ➔ (a)"], ans: 0, exp: "正確。(a) 魚販即日收現週末才付款最快；(c) 美食車一星期內現銷收現次之；(d) 紡織品生產商涉生產及賒銷；(b) 飛機生產周期極長且賒銷最慢。" },
+    { q: "3. 玩具生產商「童趣島」在第四季為銷售旺季（允許顧客賒帳購貨，信用期限 90 天，第四季結束才收妥貨款），通常在第三季增加生產量。為何公司預計在第三季和第四季會出現現金短缺？應以短期還是長期銀行貸款應付？", opts: ["A. 因為須租用額外空間存放原料和製成品、支付增加生產量的額外人力成本，且在第四季結束時才能收取應收貨款；應以『短期銀行貸款』應付這短期資金需要", "B. 應以三十年期長期貸款應付"], ans: 0, exp: "正確。第三、四季墊支倉儲與生產人力成本而第四季末才收回貨款，屬短期現金短缺，應以短期銀行貸款應付。" },
+    { q: "4. 辨別陳述是否正確：「只要企業賺取豐厚的利潤，即使營運資金管理不善，也絕不會有倒閉的危機。」", opts: ["A. 正確", "B. 不正確 — 即使企業賺取豐厚利潤，如果營運資金管理不善，不能從營運中取得足夠的現金償還短期債務，仍然有倒閉的危機"], ans: 1, exp: "正確（陳述不正確）。流動資金短缺是企業倒閉的主要原因。" },
+    { q: "5. 辨別陳述是否正確：「企業的營業循環或現金轉換循環越短，代表它管理營運資金的效率越高，變現能力也越強。」", opts: ["A. 正確", "B. 不正確"], ans: 0, exp: "正確。現金轉換循環越短，代表越快把存貨轉換成現金，支付短期債務的能力及變現能力越強。" }
+  ];
+  let curWQ = 0;
+  function renderWcmQuiz() {
+    const it = wcmQuizItems[curWQ];
+    document.getElementById('wcmQuizProg').textContent = `題目 ${curWQ + 1} / ${wcmQuizItems.length}`;
+    document.getElementById('wcmQuizQ').innerHTML = it.q;
+    document.getElementById('wcmQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:11px 15px" onclick="checkWcmQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('wcmQuizFb').innerHTML = '';
+  }
+  function checkWcmQuiz(idx) {
+    const it = wcmQuizItems[curWQ];
+    const fb = document.getElementById('wcmQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14px" onclick="curWQ=(curWQ+1)%wcmQuizItems.length;renderWcmQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderWcmQuiz();
+
+  // ====== 2. 現金管理與現金預算 ======
+  const cashPrinCatalog = [
+    {
+      title: "核心技巧：支票延後管理 (Float Management)",
+      badge: "收帳與支付延後",
+      def: "「支票延後」是付款人發出支票，與收款人可以使用該筆款項之間的差距（主要因為郵遞支票、記帳和銀行系統處理支票結算需時）。分為：(i) 支票收帳延後（從顧客收取支票所涉延後）及 (ii) 支票支付延後（向供應商開出支票所涉延後）。",
+      detail: `
+        <div class="flow-chain" style="margin:10px 0;padding:12px">
+          <div class="flow-node">第0天：寄出支票</div><span class="flow-arrow">➔</span>
+          <div class="flow-node">第2天：收款人收到支票</div><span class="flow-arrow">➔</span>
+          <div class="flow-node">第4天：記帳並存入銀行</div><span class="flow-arrow">➔</span>
+          <div class="flow-node">第6天：完成支票結算可動用</div>
+        </div>
+        <p style="margin:0"><b>在現金管理中的重要性：</b>在完成支票結算手續前，款項不會從付款人的銀行帳戶轉出，付款人仍可使用該筆款項。因此，付款人傾向<b>延長支票支付延後</b>的時間；收款人則傾向<b>縮短支票收帳延後</b>的時間。企業可透過這兩方面來增持現金，而<b>無須支付利息費用</b>。</p>
+      `
+    },
+    {
+      title: "基本原則 (i)：加快現金流入",
+      badge: "現金管理原則",
+      def: "企業主要可以通過以下兩種方式加快現金流入（此外亦可透過加快收取應收帳款）：",
+      detail: `
+        <p style="margin:0 0 10px"><b>a. 縮短支票收帳延後的時間：</b><br>
+        • 在主要的城市設立收帳中心，從而縮短郵遞時間。<br>
+        • 在銀行每天的<b>截數時間 (Cut-off time)</b> 前存入支票（銀行會在下個結算日才處理每天截數後存入的支票）。</p>
+        <p style="margin:0"><b>b. 鼓勵現金付款（即時收到現金，並減少支付給信用卡營辦商的服務費）：</b><br>
+        • 給予顧客會員卡，讓使用現金或八達通付款的顧客可獲取積分，換領禮品。<br>
+        • 設立特快現金收銀處。<br>
+        • 向使用現金付款的顧客提供折扣優惠。</p>
+      `
+    },
+    {
+      title: "基本原則 (ii)：延遲現金流出",
+      badge: "現金管理原則",
+      def: "企業應在不會引來供應商或債權人不滿的情況下，盡量延遲支付現金，從而延長持有現金的時間。",
+      detail: `
+        <p style="margin:0"><b>企業可以透過延長支票支付延後的時間來延遲現金流出（或延遲支付應付帳款），方法如下：</b><br>
+        • <b>在星期五（銀行每週最後一個工作天）付款</b>，令收款人不能在週末把支票存入銀行和過戶。<br>
+        • <b>在偏遠的城市設立付款中心</b>，從而延長郵遞時間。</p>
+      `
+    },
+    {
+      title: "基本原則 (iii)：配合現金流入和現金流出的時間和金額",
+      badge: "現金管理原則",
+      def: "企業應調整現金流量，讓現有的現金餘額加上現金流入的總和足以應付現金流出，以避免出現現金短缺的情況。",
+      detail: `
+        <p style="margin:0">這樣，企業就無須額外融資，又可將持有的現金減至最低，有助<b>避免支付額外的融資成本，以及降低持有現金的成本</b>。要配合現金流入和流出的時間和金額，企業必須<b>編製現金預算</b>以預測未來的現金流量。</p>
+      `
+    }
+  ];
+
+  function renderCashPrin(idx) {
+    document.getElementById('cashPrinNavList').innerHTML = cashPrinCatalog.map((c, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderCashPrin(${i})">
+        <span>${c.title}</span>
+      </button>
+    `).join('');
+    const c = cashPrinCatalog[idx];
+    document.getElementById('cashPrinDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${c.title}</h3>
+        <span class="badge b-blue">${c.badge}</span>
+      </div>
+      <p style="margin:0 0 12px;font-weight:600;font-size:17px">${c.def}</p>
+      <div class="case-box">${c.detail}</div>
+    `;
+  }
+  renderCashPrin(0);
+
+  const cbData = {
+    minCash: 80,
+    initQ1: 50,
+    inflows: [300, 250, 150, 150],
+    outflows: [180, 230, 280, 120]
+  };
+  function renderCashBudget() {
+    let openBal = cbData.initQ1;
+    let netFlows = [], openBals = [], closeBals = [], surDef = [];
+    for (let q = 0; q < 4; q++) {
+      openBals.push(openBal);
+      const nf = cbData.inflows[q] - cbData.outflows[q];
+      netFlows.push(nf);
+      const cb = openBal + nf;
+      closeBals.push(cb);
+      surDef.push(cb - cbData.minCash);
+      openBal = cb;
+    }
+
+    document.getElementById('cashBudgetTable').innerHTML = `
+      <div style="display:flex;gap:14px;align-items:center;margin-bottom:8px;font-size:14.5px;flex-wrap:wrap">
+        <span><b>第 1 季期初現金 ($'000)：</b><input type="number" value="${cbData.initQ1}" step="10" style="width:75px;padding:4px 8px;border-radius:6px;border:1.5px solid var(--line);font-weight:700" oninput="cbData.initQ1=+this.value||0;renderCashBudget()"></span>
+        <span><b>最低現金餘額 (2) ($'000)：</b><input type="number" value="${cbData.minCash}" step="10" style="width:75px;padding:4px 8px;border-radius:6px;border:1.5px solid var(--primary);font-weight:700;color:var(--primary)" oninput="cbData.minCash=+this.value||0;renderCashBudget()"></span>
+      </div>
+      <table class="comp-table" style="font-size:14px;margin-top:4px">
+        <thead><tr><th>項目 ($'000)</th><th>第一季</th><th>第二季</th><th>第三季</th><th>第四季</th></tr></thead>
+        <tbody>
+          <tr><td><b>總現金收入</b></td>${[0,1,2,3].map(q=>`<td><input type="number" value="${cbData.inflows[q]}" step="10" style="width:68px;padding:4px;font-weight:700" oninput="cbData.inflows[${q}]=+this.value||0;renderCashBudget()"></td>`).join('')}</tr>
+          <tr><td><b>減：總現金支出</b></td>${[0,1,2,3].map(q=>`<td><input type="number" value="${cbData.outflows[q]}" step="10" style="width:68px;padding:4px;font-weight:700" oninput="cbData.outflows[${q}]=+this.value||0;renderCashBudget()"></td>`).join('')}</tr>
+          <tr><td><b>淨現金流量</b></td>${netFlows.map(n=>`<td style="color:${n<0?'var(--red)':'var(--ink)'};font-weight:700">${n<0?'('+Math.abs(n)+')':n}</td>`).join('')}</tr>
+          <tr><td>加：期初現金餘額</td>${openBals.map(b=>`<td>${b}</td>`).join('')}</tr>
+          <tr style="background:var(--teal-light);font-weight:800"><td>(1) 期末現金餘額</td>${closeBals.map(b=>`<td>${b}</td>`).join('')}</tr>
+          <tr><td>減：最低現金餘額 (2)</td>${[0,1,2,3].map(()=>`<td>${cbData.minCash}</td>`).join('')}</tr>
+          <tr class="highlight-row" style="font-weight:900"><td>(3) 現金盈餘 (或短缺)</td>${surDef.map(s=>`<td style="color:${s<0?'var(--red)':'var(--green)'}">${s<0?'('+Math.abs(s)+') 短缺': '+'+s+' 盈餘'}</td>`).join('')}</tr>
+        </tbody>
+      </table>`;
+
+    const shortQs = surDef.map((s, i) => s < 0 ? `第 ${i+1} 季（短缺 $${Math.abs(s)},000）` : null).filter(Boolean);
+    const surpQs = surDef.map((s, i) => s > 0 ? `第 ${i+1} 季（盈餘 $${s},000）` : null).filter(Boolean);
+
+    document.getElementById('cashBudgetAdvice').innerHTML = `
+      <b>出現現金盈餘或現金短缺時應採取的措施及現金預算的重要性：</b><br>
+      • <b>針對現金盈餘季度（${surpQs.length ? surpQs.join('、') : '無'}）</b>：應把盈餘投資於<b>有價證券（能簡單快捷轉換為現金的短期投資工具，如債券和股票）</b>以賺取回報，減少持有現金的機會成本；預先編製現金預算讓企業有更多時間分析各種短期投資機會，作出更好決策。<br>
+      • <b>針對現金短缺季度（${shortQs.length ? shortQs.join('、') : '無'}）</b>：應進行短期融資（如借取短期銀行貸款），令企業持有不少於最低現金餘額的現金；預先編製現金預算讓企業有足夠時間尋找不同融資選擇，並與貸款機構就貸款申請協商較低年息。`;
+  }
+  renderCashBudget();
+
+  const cashQuizItems = [
+    { q: "1. 為下列四項措施配以最相關的「現金管理基本原則」：<br>(a) 在偏遠的城市設立付款中心 ｜ (b) 在預期出現現金短缺時，提前申請貸款 ｜ (c) 在銀行每天截數前存入支票 ｜ (d) 向以現金付款的顧客提供折扣優惠", opts: ["A. (a) 延遲現金流出 ｜ (b) 配合現金流入和現金流出的時間和金額 ｜ (c) 加快現金流入 ｜ (d) 加快現金流入", "B. 全部屬於延遲現金流出"], ans: 0, exp: "正確。(a) 屬延遲現金流出；(b) 屬配合現金流入和流出的時間和金額；(c) 及 (d) 屬加快現金流入。" },
+    { q: "2. 辨別陳述是否正確：「現金管理的基本目的是增加企業持有的現金。」", opts: ["A. 正確", "B. 不正確 — 持有太多現金會削弱盈利能力（放棄利息收入）；基本目的是以最低的成本維持充足的現金，確保業務暢順運作"], ans: 1, exp: "正確（陳述不正確）。現金管理旨在平衡持有現金的成本和好處，而非盲目增加現金。" },
+    { q: "3. 辨別陳述是否正確：「在企業的現金預算中，如期末現金餘額為正數時，企業將會預期出現現金盈餘。」", opts: ["A. 正確", "B. 不正確 — 現金盈餘或短缺是把『期末現金餘額減去最低現金餘額』得出的；當期末現金餘額（雖為正數）少於最低現金餘額時，企業仍會預期出現『現金短缺』"], ans: 1, exp: "正確（陳述不正確）。只有當期末現金餘額大於最低現金餘額時，才會出現現金盈餘。" },
+    { q: "4. 辨別陳述是否正確：「如果放棄的利息回報上升，企業持有現金的成本便會增加；而在支票延後管理中，付款人傾向延長支票支付延後，收款人則傾向縮短支票收帳延後。」", opts: ["A. 正確", "B. 不正確"], ans: 0, exp: "正確。持有現金的主要成本就是所放棄的利息收入。" },
+    { q: "5. 辨別陳述是否正確：「現金預算是實際現金收支的紀錄。」", opts: ["A. 正確", "B. 不正確 — 現金預算是對企業『未來』現金流入、現金流出和現金餘額的預測"], ans: 1, exp: "正確（陳述不正確）。預算是對未來的預測，而非過往實際紀錄。" },
+    { q: "6. 如果企業預計將會出現現金盈餘，應採取甚麼措施？", opts: ["A. 把盈餘投資於有價證券（如債券和股票），以賺取利息或投資回報，減少持有現金的機會成本", "B. 向財務公司借取高息貸款"], ans: 0, exp: "正確。把現金盈餘投資於有價證券可賺取回報，減少放棄的利息收入。" }
+  ];
+  let curCQ = 0;
+  function renderCashQuiz() {
+    const it = cashQuizItems[curCQ];
+    document.getElementById('cashQuizProg').textContent = `題目 ${curCQ + 1} / ${cashQuizItems.length}`;
+    document.getElementById('cashQuizQ').innerHTML = it.q;
+    document.getElementById('cashQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:11px 15px" onclick="checkCashQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('cashQuizFb').innerHTML = '';
+  }
+  function checkCashQuiz(idx) {
+    const it = cashQuizItems[curCQ];
+    const fb = document.getElementById('cashQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14px" onclick="curCQ=(curCQ+1)%cashQuizItems.length;renderCashQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderCashQuiz();
+
+  // ====== 3. 應收帳款(5C)與應付帳款 ======
+  const arElems = [
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1.5px solid var(--primary);font-size:15.5px;line-height:1.75">
+      <b style="color:var(--primary);font-size:17.5px">1. 信用標準 (Credit Standard) 與「信用分析 5C」：</b><br>
+      <b>信用標準</b>是指顧客要從企業獲得賒帳，須具備的最低信貸可靠性（嚴格的信用標準有助排除信貸可靠性較低的顧客，避免壞帳）。企業或銀行進行<b>信用分析</b>時常用的方法稱為 <b>5C</b>：
+      <table class="comp-table" style="font-size:14.5px;margin-top:8px">
+        <thead><tr><th style="width:18%">5C 因素</th><th style="width:42%">描述</th><th style="width:40%">放債人可以如何評估這個因素的例子</th></tr></thead>
+        <tbody>
+          <tr><td><b>(1) 資金<br>(Capital)</b></td><td>指<b>企業東主投資於企業的資金金額</b>。若東主投放了足夠資金，獲得信貸機會較大（確保東主分擔財務風險，具備充足資金支持營運）。</td><td>審視企業的<b>槓桿比率</b>，它顯示企業的長期債務與長期資本（包括東主的投資）的比例。</td></tr>
+          <tr><td><b>(2) 能力<br>(Capacity)</b></td><td>指<b>企業償還貸款的能力</b>（是否有能力償還債項）。</td><td>審查企業的<b>現金流量的金額和時機</b>，以及企業的<b>銷售紀錄</b>（或變現能力比率）。</td></tr>
+          <tr><td><b>(3) 抵押品<br>(Collateral)</b></td><td>指企業提供作為<b>貸款保障的抵押品</b>（如不能準時還債，法律容許放債人出售抵押品償債）。</td><td>估算企業所提供的抵押品（例如<b>物業、車輛或存貨</b>）的價值。</td></tr>
+          <tr><td><b>(4) 狀況<br>(Conditions)</b></td><td>指企業所處的<b>整體經濟環境、行業前景，以及貸款的預期用途</b>。<br><span style="color:var(--red)">注意：狀況並非指企業的財務狀況！</span></td><td>評估經濟衰退對企業造成的負面影響（例如失業率會否影響該企業顧客的購買行為）。</td></tr>
+          <tr><td><b>(5) 品格<br>(Character)</b></td><td>放債人對<b>企業信貸可靠性的主觀判斷</b>（企業是否有償還債項的責任感）。<br><span style="color:var(--red)">注意：品格並非指企業東主的個人性格！</span></td><td>審視企業過去的<b>信貸和還款紀錄</b>（是否按時還清貸款）。</td></tr>
+        </tbody>
+      </table>
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1.5px solid var(--primary);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px">2. 賒帳條款（又稱賒貸條款或賒帳條件 Credit Term）：</b><br>
+      列明賒購貨品的還款條款，當中包括下列三個元素：<br>
+      • <b>(i) 信用期限 (Credit Period)</b>：債務人償還欠款的指定期限，通常以<b>天數</b>表示。信用期限越短，顧客便要越早償還貨款。<br>
+      • <b>(ii) 現金折扣 (Cash Discount)</b>：債務人在現金折扣期限內還款所得到的折扣優惠，通常按<b>發票金額的某個百分比</b>計算。折扣率越高，債務人提前還款的誘因便越大。<br>
+      • <b>(iii) 現金折扣期限 (Cash Discount Period)</b>：債務人獲得現金折扣的還款期限。它<b>較信用期限短</b>，有助鼓勵顧客早日還款。
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1.5px solid var(--primary);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px">3. 收帳政策 (Collection Policy)：</b><br>
+      列出一旦顧客逾期還款，企業應採取哪些行動來催收帳款，以免逾期應收帳款變成<b>壞帳（已證實無法收回的應收帳款）</b>。企業應決定在何時催收、催收的頻密程度，以及何時將催收行動升級。<br>
+      <b>以下催收帳款的行動由最友善到最不友善排列：</b>
+      <div class="flow-chain" style="margin:10px 0;padding:12px">
+        <div class="flow-node">1. 善意提醒</div><span class="flow-arrow">➔</span>
+        <div class="flow-node">2. 發出警告信或電郵</div><span class="flow-arrow">➔</span>
+        <div class="flow-node">3. 造訪顧客的辦公室</div><span class="flow-arrow">➔</span>
+        <div class="flow-node">4. 僱用收帳公司</div><span class="flow-arrow">➔</span>
+        <div class="flow-node" style="background:var(--red-light);color:var(--red);border-color:var(--red)">5. 對顧客採取法律行動</div>
+      </div>
+    </div>`
+  ];
+  function renderArElem(idx) {
+    document.querySelectorAll('#arElemChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('arElemBox').innerHTML = arElems[idx];
+  }
+  renderArElem(0);
+
+  const arPolList = [
+    { title: "提高信用標準（只向信貸較好的顧客提供賒帳）", liq: "增加 ↑", sales: "下降 ↓", bad: "下降 ↓", exp: "信用較好的顧客通常會較早償還款項，改善<b>變現能力 ↑</b>；由於信用較差的顧客不能獲取貿易賒帳，預期<b>壞帳會減少 ↓</b>；但嚴格標準或會嚇怕部分潛在顧客，導致<b>銷售額下降 ↓</b>。" },
+    { title: "縮短信用期限（要求顧客更早還款）", liq: "增加 ↑", sales: "下降 ↓", bad: "下降 ↓", exp: "信用期限越短，顧客便要越早還款，改善<b>變現能力 ↑</b>；顧客拖欠款項的時間越短，出現財政困難而未能還款的機會越低，<b>壞帳減少 ↓</b>；但付款靈活性減低會令<b>銷售額下降 ↓</b>。" },
+    { title: "收緊收帳政策（更頻密催收及將行動升級）", liq: "增加 ↑", sales: "下降 ↓", bad: "下降 ↓", exp: "企業可加快收回債項（<b>變現能力增加 ↑</b>）並減少<b>壞帳 ↓</b>；但嚴厲的收帳政策會減低對顧客的吸引力，導致<b>銷售額下降 ↓</b>。" },
+    { title: "放寬應收帳款政策（降低信用標準 ／ 延長信用期限 ／ 放寬收帳政策）", liq: "下降 ↓", sales: "增加 ↑", bad: "增加 ↑", exp: "顧客更容易獲得賒帳且享有更大付款靈活性，能吸引更多顧客光顧（<b>銷售額增加 ↑</b>）；但資金積壓在應收帳款上令現金狀況轉差（<b>變現能力下降 ↓</b>），且<b>壞帳風險增加 ↑</b>。" },
+    { title: "增加現金折扣（提高提前還款的折扣率）", liq: "增加 ↑", sales: "增加 ↑", bad: "下降 ↓", exp: "增加現金折扣可吸引更多希望獲取折扣的顧客購貨（<b>銷售額增加 ↑</b>），同時增加顧客提前還款的誘因以加快收回現金（<b>變現能力增加 ↑</b>）及減低無法還款的機會（<b>壞帳下降 ↓</b>）（相反，減少現金折扣則會令變現能力↓、銷售額↓、壞帳↑）。" }
+  ];
+  function renderArPol(idx) {
+    document.querySelectorAll('#arPolChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const p = arPolList[idx];
+    document.getElementById('arPolBox').innerHTML = `
+      <div style="background:var(--surface);padding:14px 16px;border-radius:12px;border:1px solid var(--line);font-size:15px">
+        <b style="color:var(--primary);font-size:16px">${p.title}</b>
+        <div class="grid3" style="margin:10px 0;text-align:center">
+          <div style="background:var(--card);padding:10px;border-radius:10px;border:1px solid var(--line)"><span>變現能力</span><br><b style="font-size:17px;color:${p.liq.includes('↑')?'var(--green)':'var(--red)'}">${p.liq}</b></div>
+          <div style="background:var(--card);padding:10px;border-radius:10px;border:1px solid var(--line)"><span>銷售額</span><br><b style="font-size:17px;color:${p.sales.includes('↑')?'var(--green)':'var(--red)'}">${p.sales}</b></div>
+          <div style="background:var(--card);padding:10px;border-radius:10px;border:1px solid var(--line)"><span>壞帳</span><br><b style="font-size:17px;color:${p.bad.includes('↓')?'var(--green)':'var(--red)'}">${p.bad}</b></div>
+        </div>
+        <div style="background:var(--card);padding:10px 14px;border-radius:8px;border-left:4px solid var(--primary)">${p.exp}</div>
+      </div>`;
+  }
+  renderArPol(0);
+
+  function updateApSim() {
+    const discRate = +document.getElementById('apDiscSlider').value;
+    const loanRate = +document.getElementById('apLoanSlider').value;
+    document.getElementById('lblApDisc').textContent = discRate + '%';
+    document.getElementById('lblApLoan').textContent = loanRate + '%';
+
+    const takeDisc = discRate > loanRate;
+    const isEqual = discRate === loanRate;
+
+    document.getElementById('apSimOutput').innerHTML = `
+      <div style="background:${takeDisc?'var(--green-light)':isEqual?'var(--amber-light)':'var(--red-light)'};padding:14px 16px;border-radius:12px;border:1.5px solid ${takeDisc?'var(--green)':isEqual?'var(--amber)':'var(--red)'};font-size:15px">
+        <b style="font-size:16.5px;color:${takeDisc?'var(--green)':isEqual?'var(--amber)':'var(--red)'}">
+          ${takeDisc ? `決策規則：現金折扣的年率 (${discRate}%) ＞ 貸款利率 (${loanRate}%) ➔ 獲取現金折扣` : isEqual ? `兩者相等：獲取或放棄現金折扣的成本相同` : `決策規則：現金折扣的年率 (${discRate}%) ＜ 貸款利率 (${loanRate}%) ➔ 放棄現金折扣`}
+        </b>
+        <div style="margin-top:6px;line-height:1.7;color:var(--ink)">
+          ${takeDisc ? `• <b>解釋：</b>如果貸款利率低於現金折扣的年率，貸款的利息成本便會低於現金折扣所節省的購貨成本；因此企業應該向銀行借款，提前償還應付帳款並<b>獲取現金折扣</b>。` :
+            `• <b>解釋：</b>如果貸款利率高於現金折扣的年率，貸款利息會高於現金折扣所節省的成本；因此企業應該<b>放棄現金折扣</b>，延長短期籌資資金的使用時間直至信用期限結束。`}
+        </div>
+      </div>`;
+  }
+  updateApSim();
+
+  const arapQuizItems = [
+    { q: "1. 某銀行使用「信用分析中的 5C」評估貸款申請。辨別銀行在以下情況所考慮的是哪個因素：<br>(a) 查看企業過去是否按時還清貸款 ｜ (b) 審視企業去年的銷售額 ｜ (c) 評估企業不受經濟衰退影響的程度 ｜ (d) 審視企業東主在企業所投放的資金 ｜ (e) 估算企業所提供作為抵押品的存貨價值", opts: ["A. (a) 品格 ｜ (b) 能力 ｜ (c) 狀況 ｜ (d) 資金 ｜ (e) 抵押品", "B. (a) 能力 ｜ (b) 資金 ｜ (c) 品格 ｜ (d) 狀況 ｜ (e) 抵押品"], ans: 0, exp: "正確。(a) 過去還款紀錄屬品格；(b) 銷售額及現金流屬能力；(c) 經濟衰退影響屬狀況；(d) 東主投放資金屬資金；(e) 抵押存貨價值屬抵押品。" },
+    { q: "2. 在信用分析的 5C 中，有關「品格」和「狀況」的描述，下列哪項是正確的？", opts: ["A. 品格是指企業東主的個人性格；狀況是指企業的財務狀況", "B. 品格是指放債人對企業信貸可靠性的主觀判斷（是否有償還債項的責任感，審視信貸和還款紀錄）；狀況是指企業所處的整體經濟環境、行業前景以及貸款的預期用途"], ans: 1, exp: "正確。品格並非指東主的個人性格，而狀況亦並非指企業的財務狀況。" },
+    { q: "3. 辨別陳述是否正確：「設立信用標準的目的是減低壞帳風險；現金折扣能鼓勵顧客提前還款；而現金折扣期限比信用期限短。」", opts: ["A. 完全正確", "B. 不正確"], ans: 0, exp: "正確。現金折扣通常按發票金額的某個百分比計算，且現金折扣期限較信用期限短，以鼓勵顧客早日還款。" },
+    { q: "4. 一家游泳衣生產商打算調整信貸政策：(a) 把現金折扣率由 2% 調高至 3%；(b) 把信用期限由 30 天延長至 60 天。這兩項措施分別會對公司的「變現能力」造成甚麼影響？", opts: ["A. (a) 調高現金折扣率會令變現能力『上升』；(b) 延長信用期限會令變現能力『下降』", "B. 兩項措施都會令變現能力上升"], ans: 0, exp: "正確。提高現金折扣率增加顧客提前還款誘因，加快收回現金令變現能力上升；延長信用期限令資金積壓在應收帳款更久，導致變現能力下降。" },
+    { q: "5. 辨別陳述是否正確：「在現金折扣期限內償還應付帳款不會涉及任何成本。」", opts: ["A. 正確", "B. 不正確 — 獲取現金折扣代表放棄貿易賒帳這個短期資金來源；如無足夠現金須借取短期貸款並支付利息，如有足夠現金則涉及放棄投資回報的機會成本"], ans: 1, exp: "正確（陳述不正確）。提前還款獲取現金折扣必定涉及利息成本或機會成本。" },
+    { q: "6. 辨別陳述是否正確：「如果現金折扣的年率高於借貸利率（即現金折扣所節省的購貨成本高於貸款利息），企業便應獲取現金折扣。」", opts: ["A. 正確", "B. 不正確"], ans: 0, exp: "正確。當現金折扣年率高於貸款利率時，節省的成本大於貸款利息，應獲取現金折扣。" },
+    { q: "7. 哪種財務比率對於企業決定「是否給予顧客貿易賒帳」最為有用？", opts: ["A. 變現能力比率（如流動比率和速動比率，量度顧客償還短期債務的能力）", "B. 毛利率"], ans: 0, exp: "正確。貿易賒帳屬於短期債務，審視顧客的流動比率和速動比率最能評估其短期還款能力。" }
+  ];
+  let curARQ = 0;
+  function renderArapQuiz() {
+    const it = arapQuizItems[curARQ];
+    document.getElementById('arapQuizProg').textContent = `題目 ${curARQ + 1} / ${arapQuizItems.length}`;
+    document.getElementById('arapQuizQ').innerHTML = it.q;
+    document.getElementById('arapQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:11px 15px" onclick="checkArapQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('arapQuizFb').innerHTML = '';
+  }
+  function checkArapQuiz(idx) {
+    const it = arapQuizItems[curARQ];
+    const fb = document.getElementById('arapQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14px" onclick="curARQ=(curARQ+1)%arapQuizItems.length;renderArapQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderArapQuiz();
+
+  // ====== 4. 存貨管理：EOQ 與再訂購水平 ======
+  let curChartTab = 0;
+  let refMaxQ = 1000;
+  let refMaxCost = 90000;
+
+  const eoqPresets = [
+    { d: 18000, f: 500, c: 80, currQ: 200, daily: 50, lead: 4, safe: 100 },
+    { d: 500, f: 5625, c: 10, currQ: 600, daily: 20, lead: 5, safe: 60 },
+    { d: 1200, f: 600, c: 25, currQ: 350, daily: 40, lead: 3, safe: 80 }
+  ];
+
+  function syncSlider(sId, val) {
+    const el = document.getElementById(sId);
+    if (el) el.value = val;
+  }
+  function syncInput(inId, val) {
+    const el = document.getElementById(inId);
+    if (el) el.value = val;
+  }
+
+  function loadEoqPreset(idx) {
+    [0,1,2].forEach(i => document.getElementById('eoqPre'+i).classList.toggle('active', i === idx));
+    const p = eoqPresets[idx];
+    document.getElementById('inD').value = p.d; syncSlider('sD', p.d);
+    document.getElementById('inF').value = p.f; syncSlider('sF', p.f);
+    document.getElementById('inC').value = p.c; syncSlider('sC', p.c);
+    document.getElementById('inCurrQ').value = p.currQ; syncSlider('sCurrQ', p.currQ);
+    document.getElementById('inDaily').value = p.daily; syncSlider('sDaily', p.daily);
+    document.getElementById('inLead').value = p.lead; syncSlider('sLead', p.lead);
+    document.getElementById('inSafe').value = p.safe; syncSlider('sSafe', p.safe);
+    runEoqRolCalc(true);
+  }
+
+  function switchInvChart(tIdx) {
+    curChartTab = tIdx;
+    document.getElementById('chartTab0').classList.toggle('active', tIdx === 0);
+    document.getElementById('chartTab1').classList.toggle('active', tIdx === 1);
+    runEoqRolCalc(false);
+  }
+
+  function runEoqRolCalc(resetScale) {
+    const D = Math.max(10, +document.getElementById('inD').value || 10);
+    const F = Math.max(10, +document.getElementById('inF').value || 10);
+    const C = Math.max(1, +document.getElementById('inC').value || 1);
+    const currQ = Math.max(10, +document.getElementById('inCurrQ').value || 10);
+
+    const daily = Math.max(1, +document.getElementById('inDaily').value || 1);
+    const lead = Math.max(1, +document.getElementById('inLead').value || 1);
+    const safe = Math.max(0, +document.getElementById('inSafe').value || 0);
+
+    const eoqExact = Math.sqrt((2 * D * F) / C);
+    const eoqRound = Math.max(1, Math.round(eoqExact));
+
+    const ordCostEoq = F * (D / eoqExact);
+    const carCostEoq = C * (eoqExact / 2);
+    const totCostEoq = ordCostEoq + carCostEoq;
+
+    const ordCostCurr = F * (D / currQ);
+    const carCostCurr = C * (currQ / 2);
+    const totCostCurr = ordCostCurr + carCostCurr;
+
+    if (resetScale) {
+      refMaxQ = Math.round(Math.max(eoqExact * 2.1, currQ * 1.4));
+      refMaxCost = Math.round(totCostEoq * 2.2);
+    } else {
+      if (eoqExact > refMaxQ * 0.88 || currQ > refMaxQ * 0.92) refMaxQ = Math.round(Math.max(eoqExact, currQ) * 1.35);
+      if (eoqExact < refMaxQ * 0.16 && currQ < refMaxQ * 0.3) refMaxQ = Math.round(Math.max(eoqExact * 2.2, currQ * 1.4));
+      if (totCostEoq > refMaxCost * 0.85) refMaxCost = Math.round(totCostEoq * 1.5);
+      if (totCostEoq < refMaxCost * 0.18) refMaxCost = Math.round(totCostEoq * 2.2);
+    }
+
+    const rol = (daily * lead) + safe;
+
+    let qCompareAdvice = '';
+    if (Math.abs(currQ - eoqRound) <= 2) {
+      qCompareAdvice = `現時訂貨量（<b>${currQ} 單位</b>）已等於經濟訂貨量（<b>${eoqRound} 單位</b>），總訂購成本等於總貯存成本，總存貨成本處於最低水平。`;
+    } else if (currQ < eoqRound) {
+      qCompareAdvice = `現時每次訂貨量（<b>${currQ} 單位</b>）低於最佳訂貨量（<b>${eoqRound} 單位</b>），<b>總訂購成本（$${Math.round(ordCostCurr).toLocaleString()}）高於總貯存成本（$${Math.round(carCostCurr).toLocaleString()}）</b>。應<b>增加每次訂貨量至 ${eoqRound} 單位</b>，以減少訂貨次數從而降低總訂購成本。`;
+    } else {
+      qCompareAdvice = `現時每次訂貨量（<b>${currQ} 單位</b>）高於最佳訂貨量（<b>${eoqRound} 單位</b>），<b>總貯存成本（$${Math.round(carCostCurr).toLocaleString()}）高於總訂購成本（$${Math.round(ordCostCurr).toLocaleString()}）</b>。應<b>減少每次訂貨量至 ${eoqRound} 單位</b>，以降低平均存貨量從而節省總貯存成本（存倉成本）。`;
+    }
+
+    document.getElementById('eoqCalcResultBox').innerHTML = `
+      <div style="background:var(--card);padding:14px 16px;border-radius:12px;border:1.5px solid var(--primary);font-size:14.5px;line-height:1.7">
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px">
+          <b>經濟訂貨量 (<i>Q</i>*) ＝</b>
+          <span class="m-sqrt" style="color:var(--primary);font-weight:800">
+            <span class="m-sqrt-sym">√</span>
+            <span class="m-sqrt-body">
+              <span class="m-frac">
+                <span class="m-num">2 × ${D.toLocaleString()} × $${F.toLocaleString()}</span>
+                <span class="m-den">$${C.toLocaleString()}</span>
+              </span>
+            </span>
+          </span>
+          <span>＝ <b style="font-size:18px;color:var(--primary)">${eoqRound.toLocaleString()} 單位</b></span>
+        </div>
+        <div>• 在 <i>Q</i>* (${eoqRound} 單位) 下：總訂購成本 ＝ <b>$${Math.round(ordCostEoq).toLocaleString()}</b> ｜ 總貯存成本 ＝ <b>$${Math.round(carCostEoq).toLocaleString()}</b> ｜ 最低總存貨成本 ＝ <b style="color:var(--red)">$${Math.round(totCostEoq).toLocaleString()}</b></div>
+        <div style="margin-top:6px;padding:8px 12px;background:var(--surface);border-radius:8px;font-size:14px">${qCompareAdvice}</div>
+        <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)">
+          <b>再訂購水平 ＝</b> ( 每日耗用量 <b>${daily}</b> × 訂貨間隔期 <b>${lead} 天</b> ) ＋ 安全存貨 <b>${safe}</b> ＝ <b style="font-size:17px;color:var(--teal)">${rol.toLocaleString()} 單位</b>
+        </div>
+      </div>`;
+
+    if (curChartTab === 0) {
+      const x0 = 68, y0 = 230, W = 422, H = 200;
+      const toX = q => x0 + (q / refMaxQ) * W;
+      const toY = cost => Math.max(12, y0 - (cost / refMaxCost) * H);
+
+      let tocPts = [], tccPts = [], ticPts = [];
+      const steps = 65;
+      for (let i = 1; i <= steps; i++) {
+        const q = (i / steps) * refMaxQ;
+        const toc = (D * F) / q;
+        const tcc = (C * q) / 2;
+        const tic = toc + tcc;
+        const px = toX(q).toFixed(1);
+        if (toc <= refMaxCost * 1.12) tocPts.push(`${px},${toY(toc).toFixed(1)}`);
+        if (tcc <= refMaxCost * 1.12) tccPts.push(`${px},${toY(tcc).toFixed(1)}`);
+        if (tic <= refMaxCost * 1.12) ticPts.push(`${px},${toY(tic).toFixed(1)}`);
+      }
+      tccPts.unshift(`${x0},${y0}`);
+
+      const xEoq = toX(eoqExact);
+      const yCross = toY(ordCostEoq);
+      const yMinTic = toY(totCostEoq);
+
+      const xCurr = Math.min(x0 + W, toX(currQ));
+      const yCurrToc = toY(ordCostCurr);
+      const yCurrTcc = toY(carCostCurr);
+      const yCurrTic = toY(totCostCurr);
+
+      document.getElementById('invChartContainer').innerHTML = `
+        <b style="color:var(--primary);font-size:14.5px;display:block;margin-bottom:6px">經濟訂貨量 (EOQ) 動態成本曲線圖（拉動左側 <i>D</i>、<i>F</i>、<i>C</i> 或 <i>Q</i> 滑桿觀察曲線移動）</b>
+        <svg viewBox="0 0 530 275" style="width:100%;height:auto;background:var(--surface);border-radius:10px;border:1px solid var(--line)">
+          <line x1="${x0}" y1="${toY(refMaxCost*0.5)}" x2="${x0+W}" y2="${toY(refMaxCost*0.5)}" stroke="#d8e4dd" stroke-dasharray="3 3"/>
+          <line x1="${x0}" y1="${toY(refMaxCost*0.25)}" x2="${x0+W}" y2="${toY(refMaxCost*0.25)}" stroke="#d8e4dd" stroke-dasharray="3 3"/>
+
+          <line x1="${x0}" y1="15" x2="${x0}" y2="${y0}" stroke="#0f1f18" stroke-width="2"/>
+          <line x1="${x0}" y1="${y0}" x2="${x0+W+12}" y2="${y0}" stroke="#0f1f18" stroke-width="2"/>
+          <text x="12" y="26" font-size="12" font-weight="bold" fill="#0f1f18">成本 ($)</text>
+          <text x="425" y="265" font-size="12" font-weight="bold" fill="#0f1f18">訂貨量 (單位)</text>
+          <text x="${x0-12}" y="${y0+14}" font-size="11.5" fill="#5c7267">0</text>
+          <text x="${x0-6}" y="${toY(ordCostEoq)+4}" font-size="10.5" fill="#0369a1" text-anchor="end">$${Math.round(ordCostEoq).toLocaleString()}</text>
+          <text x="${x0-6}" y="${yMinTic+4}" font-size="10.5" fill="#be123c" font-weight="bold" text-anchor="end">$${Math.round(totCostEoq).toLocaleString()}</text>
+
+          <polyline points="${tccPts.join(' ')}" fill="none" stroke="#065f46" stroke-width="3"/>
+          <text x="${x0+W-115}" y="${Math.max(28, toY((C*refMaxQ)/2)-8)}" font-size="12" font-weight="bold" fill="#065f46">總貯存成本</text>
+
+          <polyline points="${tocPts.join(' ')}" fill="none" stroke="#0369a1" stroke-width="3"/>
+          <text x="${x0+W-115}" y="${Math.min(y0-8, toY((D*F)/refMaxQ)-6)}" font-size="12" font-weight="bold" fill="#0369a1">總訂購成本</text>
+
+          <polyline points="${ticPts.join(' ')}" fill="none" stroke="#be123c" stroke-width="3.5"/>
+          <text x="${Math.min(360, xEoq+15)}" y="${Math.max(24, yMinTic-10)}" font-size="12.5" font-weight="bold" fill="#be123c">總存貨成本 (最低點)</text>
+
+          <line x1="${xCurr}" y1="${yCurrTic}" x2="${xCurr}" y2="${y0}" stroke="#b45309" stroke-width="2" stroke-dasharray="3 3"/>
+          <circle cx="${xCurr}" cy="${yCurrToc}" r="4" fill="#0369a1"/>
+          <circle cx="${xCurr}" cy="${yCurrTcc}" r="4" fill="#065f46"/>
+          <circle cx="${xCurr}" cy="${yCurrTic}" r="4.5" fill="#b45309" stroke="#0f1f18" stroke-width="1.5"/>
+          <text x="${xCurr}" y="${y0+28}" font-size="11" font-weight="bold" fill="#b45309" text-anchor="middle">現時 Q=${currQ}</text>
+
+          <line x1="${xEoq}" y1="${yMinTic}" x2="${xEoq}" y2="${y0}" stroke="#065f46" stroke-width="2" stroke-dasharray="5 4"/>
+          <line x1="${x0}" y1="${yCross}" x2="${xEoq}" y2="${yCross}" stroke="#0369a1" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <line x1="${x0}" y1="${yMinTic}" x2="${xEoq}" y2="${yMinTic}" stroke="#be123c" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <circle cx="${xEoq}" cy="${yCross}" r="5.5" fill="#0369a1" stroke="#fff" stroke-width="1.5"/>
+          <circle cx="${xEoq}" cy="${yMinTic}" r="5.5" fill="#be123c" stroke="#fff" stroke-width="1.5"/>
+          <text x="${xEoq}" y="${y0+15}" font-size="12" font-weight="bold" fill="#065f46" text-anchor="middle">經濟訂貨量 Q*=${eoqRound}</text>
+        </svg>
+        <div style="font-size:13.5px;color:var(--mute);margin-top:8px">
+          <b>繪圖答題要點：</b>(1) 繪畫兩條軸線及標明「成本 ($)」與「訂貨量 (單位)」；(2) 清晰繪畫及標記「總訂購成本」、「總貯存成本」及「總存貨成本」三條曲線；(3) 在總訂購成本與總貯存成本相交（即總存貨成本最低點）對應的橫軸位置標記「經濟訂貨量」。
+        </div>`;
+    } else {
+      const x0 = 68, y0 = 230, W = 422, H = 195;
+      const maxInv = safe + eoqRound;
+      const yMaxScale = Math.max(maxInv * 1.18, rol * 1.25, 300);
+      const toY = inv => Math.max(18, y0 - (inv / yMaxScale) * H);
+
+      const ySafe = toY(safe);
+      const yRol = toY(rol);
+      const yPeak = toY(maxInv);
+
+      const cycleDays = Math.max(lead + 1, eoqRound / daily);
+      const totalDaysShown = cycleDays * 2.3;
+      const toX = day => x0 + (day / totalDaysShown) * W;
+
+      const d1End = cycleDays;
+      const d1Order = Math.max(0.2, d1End - lead);
+      const d2End = cycleDays * 2;
+      const d2Order = Math.max(d1End + 0.2, d2End - lead);
+
+      const xOrder1 = toX(d1Order);
+      const xEnd1 = toX(d1End);
+      const xOrder2 = toX(d2Order);
+      const xEnd2 = toX(d2End);
+      const xTail = toX(totalDaysShown);
+      const yTail = toY(Math.max(safe, maxInv - daily * (totalDaysShown - d2End)));
+
+      document.getElementById('invChartContainer').innerHTML = `
+        <b style="color:var(--teal);font-size:14.5px;display:block;margin-bottom:6px">再訂購水平 (ROL) 動態存貨變動圖（拉動左側「每日耗用量、訂貨間隔期、安全存貨」滑桿觀察變化）</b>
+        <svg viewBox="0 0 530 275" style="width:100%;height:auto;background:var(--surface);border-radius:10px;border:1px solid var(--line)">
+          <line x1="${x0}" y1="15" x2="${x0}" y2="${y0}" stroke="#0f1f18" stroke-width="2"/>
+          <line x1="${x0}" y1="${y0}" x2="${x0+W+12}" y2="${y0}" stroke="#0f1f18" stroke-width="2"/>
+          <text x="8" y="25" font-size="12" font-weight="bold" fill="#0f1f18">存貨水平(單位)</text>
+          <text x="435" y="265" font-size="12" font-weight="bold" fill="#0f1f18">時間 (天)</text>
+
+          <line x1="${x0}" y1="${yPeak}" x2="${xEnd2}" y2="${yPeak}" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4 4"/>
+          <text x="${x0-6}" y="${yPeak+4}" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="end">${maxInv}</text>
+
+          <line x1="${x0}" y1="${yRol}" x2="${x0+W}" y2="${yRol}" stroke="#b45309" stroke-width="2" stroke-dasharray="6 4"/>
+          <text x="${x0-6}" y="${yRol+4}" font-size="11" font-weight="bold" fill="#b45309" text-anchor="end">${rol}</text>
+          <text x="${x0+W-5}" y="${Math.max(25, yRol-6)}" font-size="12" font-weight="bold" fill="#b45309" text-anchor="end">再訂購水平 (${rol} 單位)</text>
+
+          <line x1="${x0}" y1="${ySafe}" x2="${x0+W}" y2="${ySafe}" stroke="#be123c" stroke-width="2" stroke-dasharray="6 4"/>
+          <text x="${x0-6}" y="${ySafe+4}" font-size="11" font-weight="bold" fill="#be123c" text-anchor="end">${safe}</text>
+          <text x="${x0+W-5}" y="${Math.min(y0-6, ySafe+15)}" font-size="12" font-weight="bold" fill="#be123c" text-anchor="end">安全存貨 (${safe} 單位)</text>
+
+          <polyline points="${x0},${yPeak} ${xEnd1},${ySafe} ${xEnd1},${yPeak} ${xEnd2},${ySafe} ${xEnd2},${yPeak} ${xTail},${yTail}" fill="none" stroke="#0369a1" stroke-width="3"/>
+
+          <circle cx="${xOrder1}" cy="${yRol}" r="5.5" fill="#b45309" stroke="#fff" stroke-width="1.5"/>
+          <circle cx="${xOrder2}" cy="${yRol}" r="5.5" fill="#b45309" stroke="#fff" stroke-width="1.5"/>
+
+          <line x1="${xOrder1}" y1="${yRol}" x2="${xOrder1}" y2="${y0}" stroke="#065f46" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <line x1="${xEnd1}" y1="${ySafe}" x2="${xEnd1}" y2="${y0}" stroke="#065f46" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <line x1="${xOrder1}" y1="${y0-10}" x2="${xEnd1}" y2="${y0-10}" stroke="#065f46" stroke-width="2.5"/>
+          <text x="${(xOrder1+xEnd1)/2}" y="${y0+16}" font-size="11.5" font-weight="bold" fill="#065f46" text-anchor="middle">訂貨間隔期 (${lead}天)</text>
+
+          <line x1="${xEnd1+12}" y1="${yPeak}" x2="${xEnd1+12}" y2="${ySafe}" stroke="#065f46" stroke-width="2.5"/>
+          <text x="${xEnd1+18}" y="${(yPeak+ySafe)/2+4}" font-size="11.5" font-weight="bold" fill="#065f46">經濟訂貨量 (${eoqRound})</text>
+        </svg>
+        <div style="font-size:13.5px;color:var(--mute);margin-top:8px">
+          <b>繪圖答題要點：</b>在繪畫再訂購水平的圖表時，除標示兩軸（「存貨水平(單位)」及「時間(天)」）外，應清晰標記「再訂購水平」、「安全存貨水平」、「訂貨間隔期」和「經濟訂貨量」。
+        </div>`;
+    }
+  }
+  runEoqRolCalc(true);
+
+  const invConcepts = [
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px">1. 經濟訂貨量模型下的兩種存貨成本（注意：在基本的經濟訂貨量模型下，存貨成本並不包括存貨的購入價！）：</b><br>
+      • <b>(a) 訂購成本 (Ordering Cost)</b>：向供應商訂貨和取貨所涉及的成本，包括<b>下訂單和收貨等文書和行政工作，以及取貨所產生的運輸成本</b>。訂購成本一般為定額，按每次訂貨（每份訂單）計算；每次訂貨量越大，全年訂購次數越少，全年的總訂購成本也越低（<b>總訂購成本與訂貨量成反比</b>）。<br>
+      • <b>(b) 貯存成本（又稱存倉成本 Carrying Cost）</b>：持有存貨一段時間（通常為一年）所涉及的成本，包括<b>貯存費（倉庫租金）、保險費、存貨損耗和產品過時所導致的損失，以及資金用來購買存貨的機會成本（放棄的投資回報）</b>。貯存成本通常按每單位存貨計算；每次訂貨量越大，平均存貨量越多，全年的總貯存成本也越高（<b>總貯存成本與訂貨量成正比</b>）。
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px">2. 決定「再訂購水平 (Re-order Level)」的三個因素（緊記列明標準關鍵字詞！）：</b><br>
+      • <b>(i) 訂貨間隔期 (Lead Time)</b>：指下訂單一刻至供應商交貨一刻所需的時間。<b>訂貨間隔期越長，再訂購水平便越高</b>（答題時緊記寫出「訂貨間隔期」，而非「送貨時間」或「運輸時間」）。<br>
+      • <b>(ii) 每日耗用量（或每日銷量）</b>：每日的存貨耗用量或銷量越大，企業會更快速地耗盡剩餘存貨，因此<b>再訂購水平便越高</b>（如已知年需求量，可將年需求量除以每年的日數計算每日耗用量）。<br>
+      • <b>(iii) 安全存貨水平 (Safety Stock)</b>：企業用於應付突發情況（例如銷量突然增加、貨物運輸延誤和供應鏈中斷）的最低存貨水平。<b>要求的安全存貨水平越高，再訂購水平便越高</b>。
+    </div>`,
+    `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1px solid var(--line);font-size:16px;line-height:1.8">
+      <b style="color:var(--primary);font-size:17.5px">3. 即時生產系統 (Just-in-Time System, JIT)：</b><br>
+      • <b>原理與目的</b>：旨在讓企業在需要存貨時才「即時」把存貨送到，從而把<b>貯存成本降至最低</b>。<br>
+      • <b>連鎖零售商的應用</b>：例如跨國連鎖超市當某分店的貨品存貨處於低水平時，電腦化的存貨系統會自動向供應商發出訂單，供應商須按要求在指定日期及時段內把貨物送到該分店。這樣店鋪既能保證不會缺貨，又不必持有太多存貨，從而把貯存成本降至最低（且由於全年總訂貨量很大，即使每次訂貨量小、訂購次數頻密，仍能向供應商爭取較大的折扣）。
+    </div>`
+  ];
+  function renderInvConcept(idx) {
+    document.querySelectorAll('#invConceptChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('invConceptBox').innerHTML = invConcepts[idx];
+  }
+  renderInvConcept(0);
+
+  const invQuizItems = [
+    { q: "1. 某花店會購買和持有鮮花存貨。分辨以下四項成本是否屬於存貨成本（訂購成本或貯存成本）：<br>(a) 用作存放未出售鮮花的倉庫月租 ｜ (b) 購買 100 單位鮮花的購入價格 ｜ (c) 未售出的鮮花因枯萎所帶來的損失 ｜ (d) 將鮮花運到香港的運輸成本", opts: ["A. (a) 貯存成本 ｜ (b) 不屬於存貨成本（在基本經濟訂貨量模型下，存貨成本不包括存貨的購入價） ｜ (c) 貯存成本 ｜ (d) 訂購成本", "B. 四項全部屬於訂購成本"], ans: 0, exp: "正確。在基本 EOQ 模型下，存貨本身的購入價格 (b) 不包括在存貨成本內；倉庫月租 (a) 及枯萎損耗 (c) 屬貯存成本；取貨運輸成本 (d) 屬訂購成本。" },
+    { q: "2. 假設某超級市場計劃於本年購買 2,000 公斤急凍食品 (D = 2,000)，每次訂貨量為 200 公斤 (Q = 200)。每張訂單的訂購成本為 $400 (F = $400)，而每年的貯存成本為每公斤 $20 (C = $20)。計算總訂購成本和總貯存成本，並解釋超市應增加還是減少訂貨量：", opts: ["A. 總訂購成本 = $4,000 [$400 × (2,000 ÷ 200)] ｜ 總貯存成本 = $2,000 [$20 × (200 ÷ 2)] ➔ 由於總訂購成本高於總貯存成本（且經濟訂貨量 283 公斤 ＞ 200 公斤），應『增加』訂貨量", "B. 應減少訂貨量"], ans: 0, exp: "正確。現時總訂購成本 ($4,000) 高於總貯存成本 ($2,000)，應增加每次訂貨量以減少訂貨次數，從而降低總訂購成本。" },
+    { q: "3. 某便利店每年出售 10,000 支瓶裝水 (D = 10,000)。訂購成本為每張訂單 $170 (F = $170)，而每支瓶裝水的貯存成本為每年 $20 (C = $20)。計算瓶裝水的經濟訂貨量 (Q*) 和相應的總存貨成本（至最接近的整數）：", opts: ["A. 經濟訂貨量 = 412 支 ｜ 總存貨成本 = $8,246", "B. 經濟訂貨量 = 200 支 ｜ 總存貨成本 = $10,500"], ans: 0, exp: "正確。Q* = √(2 × 10,000 × $170 ÷ $20) = √170,000 ≈ 412 支；相應總存貨成本 = [$170 × (10,000 ÷ 412)] + [$20 × (412 ÷ 2)] ≈ $8,246。" },
+    { q: "4. 某小賣部每月售出 20 箱薯片 (D = 20)，每箱薯片的貯存成本為每月 $20 (C = $20)，訂購成本為每張訂單 $200 (F = $200)。計算小賣部的薯片最佳訂貨量 (Q*)：", opts: ["A. 20 箱 [√(2 × 20 × $200 ÷ $20) = √400 = 20 箱]", "B. 400 箱"], ans: 0, exp: "正確。直接代入公式得出 √400 ＝ 20 箱。" },
+    { q: "5. 某白米批發商每天售出 250 公斤白米，並希望維持「五天」的安全存貨水平（即 250 × 5 = 1,250 公斤）。訂貨間隔期為四天。計算白米的再訂購水平：", opts: ["A. 1,000 公斤（漏加安全存貨）", "B. 2,250 公斤 [(250 公斤 × 4 天) ＋ (250 公斤 × 5 天安全存貨)]"], ans: 1, exp: "正確。再訂購水平 = (250 × 4) + (250 × 5) = 1,000 + 1,250 = 2,250 公斤。" },
+    { q: "6. 某貨品的年度需求為 7,200 件，訂貨間隔期為 8 天。假設每年有 360 天及不設安全存貨，計算該貨品的再訂購水平：", opts: ["A. 160 件 [每日耗用量 (7,200 ÷ 360 = 20 件) × 訂貨間隔期 8 天]", "B. 900 件"], ans: 0, exp: "正確。先將年度需求 7,200 件除以 360 天求出每日耗用量 ＝ 20 件，再乘以訂貨間隔期 8 天 ＝ 160 件。" },
+    { q: "7. 辨別陳述是否正確：「再訂購水平是企業持有存貨的最低水平；而每日存貨耗用量越大，再訂購水平便越低。」", opts: ["A. 正確", "B. 不正確 — 『安全存貨水平』才是企業用於應付突發情況的最低存貨水平（若設有安全存貨，再訂購水平會高於安全存貨水平）；且每日耗用量越大，再訂購水平便越『高』"], ans: 1, exp: "正確（陳述不正確）。每日耗用量越大、訂貨間隔期越長、安全存貨水平越高，再訂購水平便越高。" }
+  ];
+  let curIQ = 0;
+  function renderInvQuiz() {
+    const it = invQuizItems[curIQ];
+    document.getElementById('invQuizProg').textContent = `題目 ${curIQ + 1} / ${invQuizItems.length}`;
+    document.getElementById('invQuizQ').innerHTML = it.q;
+    document.getElementById('invQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:11px 15px" onclick="checkInvQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('invQuizFb').innerHTML = '';
+  }
+  function checkInvQuiz(idx) {
+    const it = invQuizItems[curIQ];
+    const fb = document.getElementById('invQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14px" onclick="curIQ=(curIQ+1)%invQuizItems.length;renderInvQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderInvQuiz();
+
+  // ====== 5. 論點建構問答工作坊 (選項無括號自然行文・批改回饋針對作答內容直接點評) ======
+  const workshopQuestions = [
+    {
+      id: "s1", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 1：星光百貨公司（現金管理目的與鼓勵現金付款方法）", topic: "現金管理的基本目的與加快現金流入的方法", maxMarks: 2,
+      scenario: "「星光百貨公司」發現太多顧客使用信用卡簽帳購物，導致公司須支付高昂的信用卡服務費且減慢了現金流入。管理層希望實踐現金管理的基本目的，並改善公司的現金狀況。",
+      question: "(i) 指出現金管理的基本目的是甚麼（1分）；(ii) 向星光百貨公司建議一個鼓勵顧客以現金付款的具體方法（1分）。（2 分）",
+      steps: [
+        { label: "第 1 步：準確寫出「現金管理的基本目的」（1分）", colorClass: "hl-s1", opts: [
+          { text: "現金管理的基本目的是把公司所有資產全部變賣成現金鎖在夾萬內，永遠不作任何投資。", score: 0, status: "wrong", comment: "誤解了現金管理的目的。持有過多閒置現金會放棄利息收入，招致高昂的機會成本並削弱盈利能力。" },
+          { text: "現金管理的基本目的是在持有現金的成本和好處之間取得平衡，即以最低的成本維持充足的現金，確保業務能暢順運作。", score: 1, status: "best", comment: "準確指出在持有現金的機會成本與變現能力好處之間取得平衡，以最低成本維持充足現金確保運作暢順的核心目的。" },
+          { text: "現金管理的基本目的是提高存貨周轉率。", score: 0, status: "wrong", comment: "範疇混淆。提高存貨周轉率屬於存貨管理的範疇，而非現金管理的基本目的。" }
+        ]},
+        { label: "第 2 步：向星光百貨公司建議一個「鼓勵顧客以現金付款」的具體方法（1分）", colorClass: "hl-s2", opts: [
+          { text: "百貨公司可向使用現金付款的顧客提供折扣優惠、給予顧客會員卡讓使用現金或八達通付款的顧客可獲取積分換領禮品，以及在店內設立特快現金收銀處。", score: 1, status: "best", comment: "具體提出提供現金付款折扣、會員卡積分換禮品及設立特快現金收銀處等措施，能有效鼓勵顧客使用現金付款並加快現金流入。" },
+          { text: "百貨公司可在星期五才寄出支票給供應商。", score: 0, status: "wrong", comment: "方向錯配。在星期五向供應商寄出支票屬於延遲現金流出的措施，並不能鼓勵百貨公司的顧客以現金付款。" },
+          { text: "百貨公司叫顧客最好用現金付款。", score: 0, status: "partial", comment: "建議過於空泛，必須提出如向現金付款顧客提供折扣優惠、給予會員積分或設立特快現金收銀處等具體誘因或措施。" }
+        ]}
+      ]
+    },
+    {
+      id: "s2", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 2：鮮味連鎖超市（放棄供應商現金折扣的原因）", topic: "應付帳款管理：企業選擇放棄現金折扣的原因", maxMarks: 2,
+      scenario: "「鮮味連鎖超級市場」向食品供應商賒購貨品，供應商提供提前還款的現金折扣，但超市管理層評估後決定「放棄現金折扣」，待信用期限結束時才向供應商償還應付帳款。",
+      question: "試以其中一個合理原因為例，說明為何鮮味連鎖超級市場會決定放棄供應商提供的現金折扣。（2 分）",
+      steps: [
+        { label: "第 1 步：指出決定「放棄現金折扣」的單一核心財務原因（1分）", colorClass: "hl-s1", opts: [
+          { text: "因為供應商提供的現金折扣年率遠高於銀行的短期貸款年利率。", score: 0, status: "wrong", comment: "決策規則顛倒。當現金折扣的年率高於銀行短期貸款利率時，節省的購貨成本大於貸款利息，超市應該借款提前還款以獲取現金折扣，而非放棄。" },
+          { text: "因為銀行的短期貸款利率高於供應商提供的現金折扣年率，又或者超市目前缺乏足夠現金，且將資金投放於其他短期投資所賺取的回報率高於現金折扣年率。", score: 1, status: "best", comment: "準確指出銀行貸款利率高於現金折扣年率，或短期投資回報率高於現金折扣年率等放棄現金折扣的合理原因。" },
+          { text: "因為放棄現金折扣可以減少超市的購貨成本。", score: 0, status: "wrong", comment: "陳述錯誤。獲取現金折扣才能減少購貨成本，放棄現金折扣須按發票全額付款。" }
+        ]},
+        { label: "第 2 步：扣連「貸款利息成本與節省的購貨成本」作解釋（1分）", colorClass: "hl-s2", opts: [
+          { text: "當銀行貸款利率高於現金折扣的年率時，超市向銀行借款提前還款所須支付的貸款利息，將會高於獲取現金折扣所節省的購貨成本；因此放棄現金折扣並延長短期籌資資金的使用時間直至信用期限結束，對超市更為有利。", score: 1, status: "best", comment: "清楚比較借款提前還款的貸款利息高於現金折扣所節省的購貨成本，說明放棄折扣並延長使用貿易賒帳期的財務理據。" },
+          { text: "因為超市不想提早還錢給供應商。", score: 0, status: "partial", comment: "同義反覆，未有比較借貸利息成本或放棄投資回報的機會成本與現金折扣所節省的購貨成本。" },
+          { text: "因為超市準備解僱所有收銀員。", score: 0, status: "wrong", comment: "人事變動與應付帳款的現金折扣決策無關。" }
+        ]}
+      ]
+    },
+    {
+      id: "s3", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 3：台式茶飲專門店（決定茶葉再訂購水平的考慮因素）", topic: "存貨管理：決定再訂購水平 (ROL) 的三個因素", maxMarks: 2,
+      scenario: "「茶香園」是一家台式手搖茶飲專門店，每天均需沖泡大量台灣進口烏龍茶葉。店長正決定店內烏龍茶葉的「再訂購水平」。",
+      question: "試以其中一項考慮因素為例，以茶飲店作例子說明店舖在決定茶葉的「再訂購水平」時應如何考慮。（2 分）",
+      steps: [
+        { label: "第 1 步：準確寫出決定再訂購水平的單一因素名稱（1分）", colorClass: "hl-s1", opts: [
+          { text: "應考慮每公斤烏龍茶葉的購入價格高低。", score: 0, status: "wrong", comment: "概念錯誤。再訂購水平由每日耗用量、訂貨間隔期及安全存貨水平決定，與茶葉的購入價格高低無關。" },
+          { text: "應考慮茶葉的訂貨間隔期，以及茶葉的每日耗用量和安全存貨水平。", score: 1, status: "best", comment: "準確寫出決定再訂購水平的「訂貨間隔期」、「每日耗用量」及「安全存貨水平」等標準因素名稱。" },
+          { text: "應同時考慮訂貨間隔期、每日耗用量、安全存貨水平及每次訂購成本。", score: 0, status: "partial", comment: "違反一段一重點原則，而且混入了用於計算經濟訂貨量的「每次訂購成本」。" }
+        ]},
+        { label: "第 2 步：扣連「茶飲店訂購台灣茶葉」解釋該因素如何影響再訂購水平高低（1分）", colorClass: "hl-s2", opts: [
+          { text: "訂貨間隔期是指茶飲店向台灣供應商下訂單一刻，至供應商交貨一刻所需的時間；如果台灣茶葉的訂貨間隔期越長，茶飲店在等候交貨期間消耗的茶葉便越多，因此再訂購水平便越高，以確保收到新一批茶葉前仍有充足存貨使用。", score: 1, status: "best", comment: "清楚界定訂貨間隔期為下訂單至供應商交貨所需的時間，並準確說明訂貨間隔期越長則再訂購水平越高的關係。" },
+          { text: "因為茶飲店要知道幾時有茶葉送到。", score: 0, status: "partial", comment: "描述過於口語化，必須明確說明訂貨間隔期是指「下訂單一刻至供應商交貨一刻所需的時間」，且訂貨間隔期越長，再訂購水平便越高。" },
+          { text: "訂貨間隔期越長，茶葉的再訂購水平便越低。", score: 0, status: "wrong", comment: "方向顛倒。當訂貨間隔期越長，等候收貨期間消耗的茶葉越多，再訂購水平必須定得越高而非越低。" }
+        ]}
+      ]
+    },
+    {
+      id: "s4", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 4：麥香精釀啤酒廠（延長信用期限的壞處與信貸政策替代方案）", topic: "應收帳款管理：延長信用期限的壞處與其他刺激銷量的信貸政策元素", maxMarks: 2,
+      scenario: "本地手工啤酒廠「麥香精釀」向超級市場及餐廳批發啤酒。面對競爭對手提供慷慨賒帳期，酒廠東主正考慮是否「延長給予零售商的信用期限」來刺激銷量，但財務經理提醒延長賒帳期會有壞處。",
+      question: "(i) 說明酒廠延長信用期限的一項壞處（1分）；(ii) 除了延長信用期限外，建議酒廠可如何運用「信貸政策」的其他元素來提升銷量（1分）。（2 分）",
+      steps: [
+        { label: "第 1 步：指出延長信用期限的一項核心壞處（1分）", colorClass: "hl-s1", opts: [
+          { text: "壞處是會令酒廠的變現能力大幅上升，以及壞帳風險跌至零。", score: 0, status: "wrong", comment: "影響方向完全相反。延長信用期限會減慢收回現金的速度，令酒廠的變現能力下降並增加壞帳風險。" },
+          { text: "壞處是會降低酒廠的變現能力並令現金狀況轉差，因為顧客會延遲還款令資金積壓在應收帳款上；同時顧客拖欠時間越長，出現財政困難而未能還款的機會越高，會增加壞帳風險。", score: 1, status: "best", comment: "準確指出延長信用期限會令資金積壓在應收帳款上，從而降低變現能力並增加壞帳風險。" },
+          { text: "壞處是會令所有餐廳立即停止購買啤酒。", score: 0, status: "wrong", comment: "不合常理。延長給予客戶的信用期限會增加付款靈活性以吸引客戶購買，不會令餐廳停止購買。" }
+        ]},
+        { label: "第 2 步：建議運用「信貸政策」的其他元素來提升銷量的方法（1分）", colorClass: "hl-s2", opts: [
+          { text: "酒廠可邀請本地畫家重新設計啤酒罐標籤，並在社交媒體投放廣告。", score: 0, status: "wrong", comment: "審題失誤。重新設計標籤與投放廣告屬於市場營銷組合策略，並非題目要求運用的「信貸政策」元素。" },
+          { text: "酒廠可降低信用標準讓更多顧客容易獲得賒帳、增加提前還款的現金折扣或延長現金折扣期限，以及採取較寬鬆的收帳政策，例如減少催收帳款的次數和採取較友善的收帳行動，從而吸引更多零售商顧客。", score: 1, status: "best", comment: "準確從信貸政策的信用標準、現金折扣及收帳政策三個角度，提出降低信用標準、增加現金折扣及放寬收帳政策來提升銷量。" },
+          { text: "酒廠可以提高信用標準並每天派收帳公司上門追債。", score: 0, status: "wrong", comment: "效果相反。提高信用標準與嚴厲追債屬於收緊信貸政策，會嚇怕客戶並導致銷量下降而非提升。" }
+        ]}
+      ]
+    },
+    {
+      id: "e1", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 1：酷動健身中心（現金預算在現金管理中的重要性）", topic: "現金管理：現金預算的定義與其在現金管理中的重要性", maxMarks: 3,
+      scenario: "「酷動健身中心」在香港經營多間分店，使用「現金預算」來管理日常現金流。試解釋何謂現金預算，並闡釋編製現金預算在健身中心現金管理中的重要性。",
+      question: "請遵循「一段一個獨立重點」原則，以「現金預算預測未來現金短缺或現金盈餘並讓企業及早規劃應對措施」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出「現金預算」的定義及預測未來現金短缺與盈餘的核心功能（1分）", colorClass: "hl-s1", opts: [
+          { text: "現金預算是記錄過去十年健身器材折舊費用的歷史會計報表。", score: 0, status: "wrong", comment: "概念錯誤。現金預算是預測未來的現金流入與流出，而且器材折舊屬於非現金項目，不會紀錄在現金預算內。" },
+          { text: "現金預算是為現金的收支所編製的預算，用來預測企業未來的現金流入、現金流出和現金餘額；其核心重要性在於有助企業預測未來可能出現的現金短缺或現金盈餘。", score: 1, status: "best", comment: "準確界定現金預算為預測未來現金流入、流出及餘額的預算，並點出其預測未來現金短缺或盈餘的核心作用。" },
+          { text: "現金預算對健身中心很重要。", score: 0, status: "partial", comment: "只重複了題目字眼，未有交代現金預算預測未來現金流入、流出和現金餘額的定義及功能。" }
+        ]},
+        { label: "第 2 步：針對「酷動健身中心」設定預知現金短缺與現金盈餘的具體規劃例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如健身中心透過編製現金預算，預先發現某月因新入會人數減少、但仍須支付高昂商場租金及教練薪金而令期末現金少於最低現金餘額，出現現金短缺，管理層便可預先計劃如何獲取短期貸款；反之若發現將出現現金盈餘，亦可預先計劃投資於短期有價證券。", score: 1, status: "best", comment: "緊扣健身中心的會費收入與商場租金、教練薪金支出，具體說明預知現金短缺時及早安排短期貸款，以及預知盈餘時規劃投資有價證券。" },
+          { text: "例如健身中心用現金預算來看看有沒有錢。", score: 0, status: "partial", comment: "描述過於簡略，未有結合健身中心的具體收支項目說明如何針對預測出的現金短缺或盈餘作預先規劃。" },
+          { text: "例如健身中心評核瑜伽導師的教學表現。", score: 0, status: "wrong", comment: "評核導師表現屬於人力資源管理中的工作表現評核，與編製現金預算無關。" }
+        ]},
+        { label: "第 3 步：深化論述至充足時間協商較低借貸利率、避免周轉危機與降低機會成本的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "及早預知現金短缺能確保健身中心有足夠的時間尋找不同的融資選擇，以及與貸款機構就貸款的申請協商較低年息，避免臨急借取高息貸款；同時在將出現現金盈餘時有更多時間分析各種短期投資機會，減少持有閒置現金的機會成本。", score: 1, status: "best", comment: "清楚推演出及早預知短缺如何爭取時間尋找融資及協商較低年息，並說明預知盈餘如何協助分析短期投資以減少機會成本。" },
+          { text: "這樣健身中心便管理好現金流了。", score: 0, status: "partial", comment: "同義反覆，未有說明有足夠時間尋找融資、與貸款機構協商較低年息及分析短期投資機會的具體好處。" },
+          { text: "這會令健身中心的商場租金自動免除。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e2", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 2：環球商業銀行（信用分析 5C 一：資金 Capital 與 能力 Capacity）", topic: "信用分析中的 5C：銀行如何使用「資金」與「能力」審批貸款申請", maxMarks: 3,
+      scenario: "一家商業銀行使用「信用分析中的 5C」來審批企業客戶的商業貸款申請。試舉例說明該銀行可如何使用信用分析中的 5C 來審批貸款申請。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以 5C 中的「資金」及「能力」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出 5C 中的單一因素名稱與準確定義（1分）", colorClass: "hl-s1", opts: [
+          { text: "銀行可同時使用資金、能力、抵押品、狀況和品格五個因素來審批貸款。", score: 0, status: "partial", comment: "違反一段一重點原則，只羅列了 5C 的名稱而未有針對單一因素界定其含義。" },
+          { text: "銀行可考慮 5C 中的資金：這是指企業東主投資於企業的資金金額；同時亦可考慮能力，即企業償還貸款的能力。", score: 1, status: "best", comment: "準確界定 5C 中的「資金」為企業東主投資於企業的資金金額，以及「能力」為企業償還貸款的能力。" },
+          { text: "資金是指商業銀行自己金庫入面有多少現金。", score: 0, status: "wrong", comment: "主體理解錯誤。信用分析 5C 中的資金是指申請貸款的企業東主投資於該企業的資金金額，而非銀行自身的金庫現金。" }
+        ]},
+        { label: "第 2 步：設定銀行審查借款企業「槓桿比率或現金流與銷售紀錄」的具體例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如當一家製造商向銀行申請貸款時，銀行可審視該製造商的槓桿比率，檢視企業長期債務與包括東主投資在內的長期資本比例，以評估東主是否為企業提供了足夠資金；同時審查企業現金流量的金額和時機以及銷售紀錄，以評估其還款能力。", score: 1, status: "best", comment: "具體結合審視借款製造商的槓桿比率以評估東主投入資金比重，以及審查現金流與銷售紀錄以評估還款能力，例子準確。" },
+          { text: "例如銀行看看那間公司有沒有資金。", score: 0, status: "partial", comment: "描述空泛，未有提出銀行透過審視「槓桿比率」或審查「現金流量的金額和時機及銷售紀錄」來評估該因素的具體做法。" },
+          { text: "例如銀行調查企業東主平時喜歡甚麼娛樂活動。", score: 0, status: "wrong", comment: "東主的個人娛樂喜好與評估企業信貸可靠性的 5C 因素無關。" }
+        ]},
+        { label: "第 3 步：深化論述至確保東主分擔財務風險及提高獲批機會的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "如果東主投放了足夠資金、槓桿比率處於健康水平，獲得銀行信貸的機會便較大；透過要求企業東主提供足夠資金，銀行可確保東主共同分擔財務風險，並具備充足資金支持企業營運及按時還款。", score: 1, status: "best", comment: "清楚推演出要求東主投放足夠資金如何確保東主與銀行共同分擔財務風險，並保障企業具備充足資金支持營運。" },
+          { text: "這樣銀行便評估了資金這個因素。", score: 0, status: "partial", comment: "同義反覆，未有說明確保東主分擔財務風險及支持企業營運以減低銀行壞帳風險的作用。" },
+          { text: "這會令借款企業無須償還任何貸款利息。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e3", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 3：環球商業銀行（信用分析 5C 二：狀況 Conditions 與 品格 Character）", topic: "信用分析中的 5C：銀行如何使用「狀況」與「品格」審批貸款申請", maxMarks: 3,
+      scenario: "承上題，該商業銀行使用「信用分析中的 5C」來審批企業貸款申請。試以「狀況」及「品格」為例，說明銀行如何使用該因素審批貸款。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以 5C 中的「狀況，即整體經濟環境、行業前景與貸款的預期用途」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出「狀況」的準確定義（1分）", colorClass: "hl-s1", opts: [
+          { text: "5C 中的狀況是指申請貸款企業內部的財務狀況，而品格則指東主的個人性格。", score: 0, status: "wrong", comment: "常見字面誤解。在信用分析 5C 中，狀況並非指企業內部的財務狀況，而是指整體經濟環境、行業前景及貸款預期用途；品格亦非指東主個人性格，而是指企業償還債項的責任感與信貸紀錄。" },
+          { text: "銀行會考慮 5C 中的狀況：這是指企業所處的整體經濟環境、行業前景，以及貸款的預期用途；至於品格，則指貸款人對企業信貸可靠性的主觀判斷，即企業是否有償還債項的責任感。", score: 1, status: "best", comment: "準確界定「狀況」為整體經濟環境、行業前景及貸款預期用途，並清楚區分「品格」為企業償還債項的責任感。" },
+          { text: "銀行會看看企業的狀況如何。", score: 0, status: "partial", comment: "未有界定「狀況」在信用分析 5C 中是指整體經濟環境、行業前景以及貸款的預期用途。" }
+        ]},
+        { label: "第 2 步：設定銀行評估外在經濟衰退影響與貸款用途的具體例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如銀行會評估經濟衰退對申請貸款企業造成的負面影響，分析失業率上升會否影響該企業顧客的購買行為，並審查企業借取該筆貸款的目的與預期用途；若評估品格，則會審視企業過往的信貸和還款紀錄。", score: 1, status: "best", comment: "具體結合評估經濟衰退與失業率對借款企業顧客購買行為的影響、審查貸款預期用途，以及審視過往還款紀錄。" },
+          { text: "例如銀行看看外面的環境好不好。", score: 0, status: "partial", comment: "描述過於籠統，應具體說明評估經濟衰退或失業率對企業生意造成的負面影響，以及審查貸款的預期用途。" },
+          { text: "例如銀行計算自己的經濟訂貨量。", score: 0, status: "wrong", comment: "經濟訂貨量屬於存貨管理模型，與銀行審批商業貸款的信用分析無關。" }
+        ]},
+        { label: "第 3 步：深化論述至決定在既有外在環境下批核貸款申請是否有利可圖的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "全面評估這些整體經濟環境、行業前景與貸款用途狀況，將決定銀行在既有外在環境下，批核該筆貸款申請是否安全及有利可圖，避免將資金借予處於夕陽行業或用途高危的企業而招致壞帳損失。", score: 1, status: "best", comment: "清楚推演出評估外在經濟環境與貸款用途如何協助銀行判斷批出貸款是否安全及有利可圖。" },
+          { text: "這樣銀行便考慮了狀況因素。", score: 0, status: "partial", comment: "同義反覆，未有說明評估外在環境與貸款用途對決定批核貸款是否安全及有利可圖的作用。" },
+          { text: "這會令全球經濟衰退立即結束。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e4", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 4：清涼飲品生產商（制定應收帳款政策的考慮因素：變現能力與銷售額）", topic: "影響制定應收帳款政策的三個因素：變現能力、銷售額和壞帳", maxMarks: 3,
+      scenario: "一家汽水生產商使用途徑成員分銷產品。目前，該生產商正在為途徑成員制定「應收帳款政策」。試說明該汽水生產商在制定應收帳款政策時應考慮的因素。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「變現能力」為核心，結合信用標準、賒帳條款與收帳政策建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出制定應收帳款政策的單一考慮因素與核心關係（1分）", colorClass: "hl-s1", opts: [
+          { text: "汽水生產商應同時考慮變現能力、銷售額和壞帳三個因素。", score: 0, status: "partial", comment: "違反一段一重點原則，只羅列了三個考慮因素的名稱而未有針對「變現能力」作具體說明。" },
+          { text: "汽水生產商在制定應收帳款政策時應考慮變現能力因素：由於應收帳款的變現能力低於現金，假如向太多途徑成員提供貿易賒帳或進行過多賒銷，資金便會積壓在應收帳款上，導致現金狀況轉差和變現能力下降。", score: 1, status: "best", comment: "準確指出「變現能力」考慮因素，並清楚解釋過多賒銷如何令資金積壓在應收帳款上，導致現金狀況轉差。" },
+          { text: "向分銷商提供長達兩年的賒帳期可以令汽水生產商即時收到最多現金。", score: 0, status: "wrong", comment: "因果顛倒。給予分銷商長達兩年的賒帳期會令資金長期積壓在應收帳款上，無法即時收回現金，嚴重削弱變現能力。" }
+        ]},
+        { label: "第 2 步：針對「汽水生產商向途徑成員設定應收帳款政策三元素」設定具體例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如如果汽水生產商希望改善現金狀況和變現能力，便可提高信用標準，只向信貸紀錄良好的批發商提供賒帳；同時調整賒帳條款，例如縮短信用期限及增加現金折扣以鼓勵批發商提前還款，並採取較嚴格的收帳政策更頻密地催收帳款。", score: 1, status: "best", comment: "具體結合提高批發商信用標準、縮短信用期限與增加現金折扣，以及收緊收帳政策三項措施，清楚說明如何加快收回現金。" },
+          { text: "例如汽水生產商需要考慮自己的變現能力。", score: 0, status: "partial", comment: "純粹重複題目字眼，未有說明如何透過調整信用標準、賒帳條款或收帳政策來改善汽水生產商的變現能力。" },
+          { text: "例如汽水生產商推出新口味檸檬汽水。", score: 0, status: "wrong", comment: "推出新口味汽水屬於市場營銷的產品策略，並非管理途徑成員賒帳的應收帳款政策。" }
+        ]},
+        { label: "第 3 步：深化論述至加快收取應收帳款以改善變現能力及與銷售額平衡的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "透過上述措施減少過多賒銷並加快收取應收帳款的速度，汽水生產商能有效改善現金狀況和變現能力；惟管理層亦須在好處和壞處間取得平衡，以免過分嚴格的應收帳款政策減低對途徑成員的吸引力而導致銷售額下降。", score: 1, status: "best", comment: "清楚推演出加快收回債項對改善變現能力的作用，並點出須與銷售額影響取得平衡的管理思維。" },
+          { text: "這樣汽水生產商便改善了變現能力。", score: 0, status: "partial", comment: "同義反覆，未有說明加快收回債項與防止政策過嚴影響銷售額之間的平衡關係。" },
+          { text: "這會令汽水鋁罐的生產成本變成零。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e5", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 5：金時電腦專門店（運用信貸政策元素減低壞帳風險的方法）", topic: "應收帳款管理：根據信貸政策元素建議減低壞帳風險的方法", maxMarks: 3,
+      scenario: "「金時公司」是一家電腦零售商，以往只接受現金付款。管理顧問提議公司應制定「應收帳款政策」來提升銷量，但提醒若允許顧客賒帳購貨，便應留意壞帳的風險。試根據信貸政策的元素，向該電腦店建議減低壞帳風險的方法。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以信貸政策中的「信用標準、賒帳條款或收帳政策」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出信貸政策的單一元素名稱及針對減低壞帳的調整方向（1分）", colorClass: "hl-s1", opts: [
+          { text: "電腦店可同時透過降低信用標準、延長信用期限及減少催收次數來減低壞帳。", score: 0, status: "wrong", comment: "方向完全相反。降低信用標準、延長信用期限及減少催收次數屬於放寬信貸政策，只會令壞帳風險大幅增加而非減低。" },
+          { text: "電腦店可運用信貸政策中的信用標準元素，透過提高信用標準、訂立嚴格的最低信貸可靠性要求來減少壞帳；同時亦可縮短信用期限、增加提前還款現金折扣，以及採取較嚴格的收帳政策。", score: 1, status: "best", comment: "準確指出透過提高信用標準、縮短信用期限與增加現金折扣，以及收緊收帳政策來減低壞帳風險的方向。" },
+          { text: "電腦店應該拒絕向任何顧客出售電腦。", score: 0, status: "wrong", comment: "建議不合常理，完全拒絕出售電腦會令公司失去所有營業收入，違背了制定信貸政策以提升銷量的前提。" }
+        ]},
+        { label: "第 2 步：針對「電腦店向顧客提供賒帳」設定具體執行例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如電腦店在批出貿易賒帳前，先運用 5C 信用分析審慎評估商業或個人顧客過往的信貸和還款紀錄以及還款能力，設定較高的最低信貸可靠性門檻，只向達到嚴格信用標準的顧客提供賒帳，並在顧客一旦逾期時迅速發出警告信或僱用收帳公司催收。", score: 1, status: "best", comment: "緊扣電腦店批出賒帳的情境，具體說明如何運用 5C 審查顧客還款紀錄與能力以執行嚴格信用標準，並配合逾期催收行動。" },
+          { text: "例如電腦店提高自己的信用標準。", score: 0, status: "partial", comment: "只重複了第 1 步的字眼，未有具體說明電腦店如何審查顧客的信貸可靠性以排除高風險顧客。" },
+          { text: "例如電腦店向銷售人員發放固定月薪加佣金。", score: 0, status: "wrong", comment: "發放月薪加佣金屬於人力資源薪酬制度，並非減少顧客欠款壞帳的信貸政策。" }
+        ]},
+        { label: "第 3 步：深化論述至排除信用較差顧客與減少預期壞帳支出的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "由於信貸可靠性較差的顧客被排除在外而不能獲取貿易賒帳，加上獲批賒帳的顧客在嚴密催收下能及早還款，電腦店能有效避免將昂貴電腦賒銷予容易違約的顧客，從而大幅減少預期壞帳支出。", score: 1, status: "best", comment: "清楚推演出排除信貸較差顧客如何避免將電腦賒銷予高違約風險對象，從而減少壞帳損失。" },
+          { text: "這樣電腦店的壞帳便會減少。", score: 0, status: "partial", comment: "同義反覆，未有說明排除信貸可靠性較低顧客不能獲取貿易賒帳的篩選作用。" },
+          { text: "這會令外置硬碟的每次訂購成本減半。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e6", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 6：法國運動用品零售商（經濟訂貨量 EOQ 公式變數說明）", topic: "存貨管理：經濟訂貨量 (EOQ) 公式的各項變數及舉例說明", maxMarks: 3,
+      scenario: "一家法國運動用品零售商在香港開設五家門市，計劃採用「經濟訂貨量模型」將存貨成本減至最低。試列出經濟訂貨量公式的各項變數，並以該運動用品零售商為例加以說明。",
+      question: "請遵循「一段一個獨立重點」原則，列出經濟訂貨量公式 Q* = √(2DF / C) 所涉及的變數，並針對該運動用品零售商逐一舉例闡釋（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：準確寫出經濟訂貨量公式及所涉及的四項核心變數名稱（1分）", colorClass: "hl-s1", opts: [
+          { text: "經濟訂貨量的公式是 Q* = √(2DF / C)，當中涉及的四項變數包括：Q* 代表最佳的經濟訂貨量，D 代表每段時期的貨品需求量，F 代表每次訂購的固定訂購成本，而 C 則代表每段時期每單位的貯存成本，又稱存倉成本。", score: 1, status: "best", comment: "準確列出經濟訂貨量公式以及 Q*、D、F、C 四項變數的完整財務名稱。" },
+          { text: "經濟訂貨量公式只涉及貨品的購入價和消費者的年齡兩項變數。", score: 0, status: "wrong", comment: "概念錯誤。在基本的經濟訂貨量模型下，存貨成本只考慮訂購成本和貯存成本，並不包括存貨本身的購入價。" },
+          { text: "經濟訂貨量公式有幾個英文字母。", score: 0, status: "partial", comment: "未有明確寫出 D、F、C 在存貨管理公式中分別代表的變數名稱。" }
+        ]},
+        { label: "第 2 步：針對「香港運動用品零售商」舉例說明 D、F、C 的具體商業含義（1分）", colorClass: "hl-s2", opts: [
+          { text: "以該運動用品零售商訂購某款運動鞋為例：每段時期的貨品需求量 D 是指香港五家門市每年預計售出該款運動鞋的總雙數；每次訂購成本 F 是指每次向法國供應商下訂單和收貨的文書行政工作，以及將運動鞋運送到香港的固定運輸成本；每單位貯存成本 C 則指持有每雙運動鞋一年所涉及的倉庫貯存費、保險費、產品過時損耗及積壓資金的機會成本。", score: 1, status: "best", comment: "緊扣香港五家運動用品門市向法國訂購運動鞋的情境，具體說明年銷量總雙數、每次下單與船運空運費，以及每雙運動鞋的倉租保險與過時損耗。" },
+          { text: "例如運動店買運動鞋時要計算這些變數。", score: 0, status: "partial", comment: "沒有具體說明運動用品店的哪些營運數據與開支項目分別對應需求量 D、訂購成本 F 與貯存成本 C。" },
+          { text: "例如運動店聘請專業教練在門市指導顧客試鞋。", score: 0, status: "wrong", comment: "門市教練指導服務屬於銷售服務範疇，並非經濟訂貨量公式中的存貨變數。" }
+        ]},
+        { label: "第 3 步：深化論述至平衡訂購成本與貯存成本以找出最低總存貨成本點的作用（1分）", colorClass: "hl-s3", opts: [
+          { text: "由於訂貨量越大，總訂購成本越低但總貯存成本越高，運動用品零售商將上述需求量、每次訂購成本與單位貯存成本數據代入公式計算出經濟訂貨量 Q*，便能找出令總訂購成本等於總貯存成本的最佳每次訂貨量，從而把總存貨成本減至最低。", score: 1, status: "best", comment: "清楚總結如何透過計算經濟訂貨量平衡總訂購成本與總貯存成本，達成把總存貨成本減至最低的目的。" },
+          { text: "這樣運動店便計出了經濟訂貨量。", score: 0, status: "partial", comment: "同義反覆，未有說明找出令總訂購成本等於總貯存成本的最佳訂貨量以把總存貨成本減至最低的作用。" },
+          { text: "這會令法國運來香港的船運時間變成零天。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e7", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 7：太和豆品廠（運費上升下運用 EOQ 模型調整訂購量的分析）", topic: "存貨管理：當每次運輸／訂購成本 (F) 上升時，如何運用 EOQ 模型決定訂購量", maxMarks: 3,
+      scenario: "「太和豆品廠」在香港生產豆腐和豆漿，使用加拿大進口的優質黃豆作生產。最近全球供應鏈受影響，導致每次運輸成本處於前所未有的新高，而存貨的貯存成本及全年需求量不變。東主認為應該調整訂貨量，務求把總存貨成本降至最低。",
+      question: "請遵循「一段一個獨立重點」原則，運用「經濟訂貨量模型」，解釋在運費上升而貯存成本不變的情況下，太和豆品廠應否「增加」黃豆的訂購量（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：明確指出應「增加」訂購量的結論，並識別運費屬於哪項 EOQ 變數（1分）", colorClass: "hl-s1", opts: [
+          { text: "豆品廠不應增加訂購量，反而應該大幅減少每次黃豆的訂購量。", score: 0, status: "wrong", comment: "判斷錯誤。當每次運輸成本創新高時，若減少每次訂購量，便須更頻密地訂貨及支付更多次高昂運費，令總訂購成本急升。" },
+          { text: "太和豆品廠應該增加每次黃豆的訂購量：根據經濟訂貨量模型，取貨所產生的運輸成本屬於每次訂購成本 F 的一部分；當運費上升時，每次訂購成本 F 便會增加。", score: 1, status: "best", comment: "準確作出應增加每次訂購量的結論，並清楚識別出取貨運輸成本屬於每次訂購成本 F 的一部分。" },
+          { text: "豆品廠應該保持每次訂購量不變。", score: 0, status: "wrong", comment: "當每次訂購成本 F 上升而需求量 D 與單位貯存成本 C 不變時，繼續維持原訂貨量會令總訂購成本高於總貯存成本，偏離最低總成本點。" }
+        ]},
+        { label: "第 2 步：運用 EOQ 公式邏輯及總訂購成本與訂貨量成反比關係作推演解釋（1分）", colorClass: "hl-s2", opts: [
+          { text: "根據經濟訂貨量公式 Q* = √(2DF / C)，在每段時期需求量 D 及每單位貯存成本 C 不變下，當分子的每次訂購成本 F 因運費上升而增加時，計算出來的最佳經濟訂貨量 Q* 便會上升；從成本關係看，由於總訂購成本與訂貨量成反比，面對高昂運費，豆品廠須透過增加每次訂貨量來減少全年的訂貨次數，從而降低總訂購成本。", score: 1, status: "best", comment: "同時從公式分子 F 增大令 Q* 上升的數學邏輯，以及增加每次訂貨量以減少全年訂貨次數與總訂購成本的財務邏輯作雙重解釋，說服力極強。" },
+          { text: "因為運費貴了，所以要買多一點黃豆。", score: 0, status: "partial", comment: "說理過於單薄，必須運用經濟訂貨量公式 Q* = √(2DF / C) 中分子 F 增加，或增加每次訂貨量以減少全年訂貨次數及總訂購成本的概念作解釋。" },
+          { text: "因為黃豆在潮濕天氣下很容易變壞。", score: 0, status: "wrong", comment: "黃豆在潮濕天氣變壞屬於存貨損耗的貯存成本問題，並非解釋運費上升為何要增加每次訂購量的原因。" }
+        ]},
+        { label: "第 3 步：深化論述至重新平衡訂購成本與貯存成本、使總存貨成本降至最低的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "透過增加每次黃豆的訂購量，能大幅減少全年支付高昂運費的訂貨次數，使總訂購成本與總貯存成本在新的經濟訂貨量水平上重新相等，從而把全年的總存貨成本降至最低。", score: 1, status: "best", comment: "清楚推演出增加每次訂貨量如何減少全年高昂運費次數，使總訂購成本與總貯存成本重新平衡並達至最低總存貨成本。" },
+          { text: "這樣豆品廠便調整了訂貨量。", score: 0, status: "partial", comment: "同義反覆，未有說明減少訂貨次數以重新平衡總訂購成本與總貯存成本、將總存貨成本降至最低的效果。" },
+          { text: "這會令加拿大黃豆的訂貨間隔期縮短為零。", score: 0, status: "wrong", comment: "推論不合邏輯，增加每次訂貨量並不會令跨國海運的訂貨間隔期變成零。" }
+        ]}
+      ]
+    },
+    {
+      id: "e8", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 8：明記連鎖超市（從現金管理角度建議處理變現能力問題的方法）", topic: "現金管理：運用現金管理原則改善企業變現能力的方法", maxMarks: 3,
+      scenario: "「明記」是一家小型超級市場連鎖店，所有的銷售都是收取現金。然而，由於近來競爭劇烈及成本上升，很多貨品的存貨周轉較慢，有時難以保持良好的變現能力。試從「現金管理」的角度，建議可以處理明記變現能力問題的方法。",
+      question: "請遵循「一段一個獨立重點」原則，從現金管理角度，單獨以「延遲現金流出及編製現金預算配合收支時間」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出切合「全現銷超市」的單一現金管理方法方向（1分）", colorClass: "hl-s1", opts: [
+          { text: "明記應該立即僱用收帳公司向所有超市顧客追討逾期應收帳款，並縮短給顧客的信用期限。", score: 0, status: "wrong", comment: "審題失誤。個案已明確列明「所有的銷售都是收取現金」，超市根本沒有顧客應收帳款可供追討。" },
+          { text: "從現金管理角度，明記可遵循延遲現金流出的基本原則，向供應商爭取延長支付應付帳款的時間或延長支票支付延後，同時編製現金預算以配合現金流入和現金流出的時間和金額。", score: 1, status: "best", comment: "準確避開現銷超市無應收帳款的陷阱，從延遲向供應商的現金流出及編製現金預算配合收支時間切入。" },
+          { text: "明記應該把所有現金拿去購買三十年期長期物業。", score: 0, status: "wrong", comment: "做法錯誤。把流動現金用於購買長期物業會令手頭現金枯竭，使短期變現能力進一步惡化。" }
+        ]},
+        { label: "第 2 步：針對「明記小型連鎖超市」設定具體的現金管理操作例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如明記可在不會引來飲品及食品供應商不滿的情況下，與供應商協商延長貿易賒帳的信用期限，並盡量在信用期限屆滿時或星期五才開出支票付款，以延長支票支付延後的時間；同時透過編製現金預算預測未來的現金流量，配合現金流入和流出的時間，及早安排短期銀行貸款應付現金短缺。", score: 1, status: "best", comment: "緊扣小型連鎖超市向食品供應商付款的實務，具體提出協商延長賒帳期、在星期五開出支票延長支付延後，以及編製現金預算配合收支時間。" },
+          { text: "例如明記盡量遲一點才付錢給別人。", score: 0, status: "partial", comment: "描述過於口語化，未有具體說明如何在不引來供應商不滿下爭取延長貿易賒帳期、在星期五開支票延長支票支付延後或編製現金預算。" },
+          { text: "例如明記重新設計超市的商標顏色。", score: 0, status: "wrong", comment: "設計商標顏色屬於市場營銷形象工作，與改善短期變現能力的現金管理無關。" }
+        ]},
+        { label: "第 3 步：深化論述至延長持有現金時間、避免現金短缺與改善變現能力的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "透過延遲現金流出並妥善配合現金流入和流出的時間，明記能夠延長持有現金的時間，確保現有的現金餘額加上日常現銷現金流入足以應付現金流出與短期債務，從而減低現金短缺風險並改善超市的變現能力。", score: 1, status: "best", comment: "清楚推演出延遲現金流出與配合收支時間如何延長持有現金的時間，確保有足夠現金清償短期債務以改善變現能力。" },
+          { text: "這樣明記便解決了變現能力問題。", score: 0, status: "partial", comment: "同義反覆，未有說明延長持有現金時間如何協助超市應付日常現金流出與短期債務。" },
+          { text: "這會令超市無須再繳付任何電費。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    }
+  ];
+
+  let curBuilderCat = 'short';
+  let curQIdx = 0;
+  let userSelections = {};
+  let isSubmitted = false;
+
+  function switchBuilderCat(cat, btn) {
+    curBuilderCat = cat;
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('builderCatLabel').textContent = cat === 'short' ? '選擇短答題（每題滿分 2 分）：' : '選擇進階論述題（每題滿分 3 分）：';
+    curQIdx = cat === 'short' ? 0 : 4;
+    userSelections = {};
+    isSubmitted = false;
+    renderQuestionChips();
+    renderWorkshop();
+  }
+
+  function renderQuestionChips() {
+    document.getElementById('questionChips').innerHTML = workshopQuestions
+      .map((q, i) => ({ q, i }))
+      .filter(x => x.q.cat === curBuilderCat)
+      .map(x => `<button class="chip ${x.i===curQIdx?'active':''}" onclick="selectWorkshopQ(${x.i})">${x.q.title}</button>`)
+      .join('');
+  }
+
+  function selectWorkshopQ(idx) {
+    curQIdx = idx;
+    userSelections = {};
+    isSubmitted = false;
+    renderQuestionChips();
+    renderWorkshop();
+  }
+
+  function pickStepOption(sIdx, oIdx) {
+    userSelections[sIdx] = oIdx;
+    isSubmitted = false;
+    renderWorkshop();
+  }
+
+  function submitConstructedAnswer() {
+    const q = workshopQuestions[curQIdx];
+    if (Object.keys(userSelections).length < q.steps.length) {
+      alert(`請先完成全部 ${q.steps.length} 個步驟的選擇，再點擊批改。`);
+      return;
+    }
+    isSubmitted = true;
+    renderWorkshop();
+  }
+
+  function fillBestChoices() {
+    const q = workshopQuestions[curQIdx];
+    q.steps.forEach((st, sIdx) => {
+      userSelections[sIdx] = st.opts.findIndex(o => o.status === 'best');
+    });
+    isSubmitted = true;
+    renderWorkshop();
+  }
+
+  function renderWorkshop() {
+    const q = workshopQuestions[curQIdx];
+    const letters = ['A', 'B', 'C'];
+
+    let totalScore = 0;
+    q.steps.forEach((st, sIdx) => {
+      if (userSelections[sIdx] !== undefined) {
+        totalScore += st.opts[userSelections[sIdx]].score;
+      }
+    });
+
+    const previewParts = q.steps.map((st, sIdx) => {
+      const selIdx = userSelections[sIdx];
+      if (selIdx === undefined) {
+        return `<span style="color:var(--mute);border-bottom:1px dashed var(--mute)">［未選擇第 ${sIdx + 1} 步］</span>`;
+      }
+      return `<span class="${st.colorClass}">${st.opts[selIdx].text}</span>`;
+    });
+
+    document.getElementById('builderWorkspace').innerHTML = `
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <div>
+            <span class="badge b-blue">${q.typeBadge}</span>
+            <span class="badge b-teal">${q.topic}</span>
+          </div>
+          <b style="color:var(--primary);font-size:16px">本段滿分：${q.maxMarks} 分</b>
+        </div>
+        <div style="background:var(--surface);padding:16px 20px;border-radius:12px;border-left:4px solid var(--primary);font-size:16.5px;margin-bottom:14px"><b>背景情境：</b>${q.scenario}</div>
+        <div style="font-size:18px;font-weight:800;color:var(--ink)">${q.question}</div>
+      </div>
+
+      ${q.steps.map((st, sIdx) => {
+        const selIdx = userSelections[sIdx];
+        return `
+          <div class="builder-stage">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <h4 style="font-size:16.5px"><span class="${st.colorClass}">${st.label}</span></h4>
+              <span style="font-size:14px;font-weight:600;color:var(--mute)">${selIdx !== undefined ? '已選 ' + letters[selIdx] : '請點選一項'}</span>
+            </div>
+            ${st.opts.map((o, oIdx) => {
+              const isSel = selIdx === oIdx;
+              let gradeCls = '';
+              if (isSubmitted && isSel) {
+                gradeCls = o.status === 'best' ? 'graded-best' : o.status === 'partial' ? 'graded-partial' : 'graded-wrong';
+              }
+              return `
+                <button class="opt-card ${isSel ? 'selected' : ''} ${gradeCls}" onclick="pickStepOption(${sIdx}, ${oIdx})">
+                  <span class="opt-letter">${letters[oIdx]}</span>
+                  <span style="flex:1">${o.text}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }).join('')}
+
+      <div class="card" style="border:2px solid var(--primary);margin-bottom:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+          <h3 style="color:var(--primary);font-size:19px">建構段落預覽</h3>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-green" onclick="submitConstructedAnswer()">批改答案</button>
+            <button class="btn btn-outline" onclick="fillBestChoices()">示範完整建構</button>
+          </div>
+        </div>
+        <div style="font-size:17px;line-height:1.85;background:var(--surface);padding:18px 22px;border-radius:12px;border:1px solid var(--line)">
+          ${previewParts.join(' ')}
+        </div>
+
+        ${isSubmitted ? `
+          <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--line)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h4 style="font-size:17.5px">分步批改回饋</h4>
+              <span class="badge ${totalScore === q.maxMarks ? 'b-green' : totalScore >= 1 ? 'b-amber' : 'b-red'}" style="font-size:15px;padding:6px 14px">
+                得分：${totalScore} / ${q.maxMarks} 分
+              </span>
+            </div>
+            ${q.steps.map((st, sIdx) => {
+              const chosen = st.opts[userSelections[sIdx]];
+              const cCls = chosen.status === 'best' ? 'c-best' : chosen.status === 'partial' ? 'c-partial' : 'c-wrong';
+              return `
+                <div class="critique-item ${cCls}">
+                  <b>第 ${sIdx + 1} 步（選項 ${letters[userSelections[sIdx]]} · ${chosen.score} 分）：</b>${chosen.comment}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  renderQuestionChips();
+  renderWorkshop();
+</script>
+</body>
+</html>

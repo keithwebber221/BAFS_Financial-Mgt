@@ -1,0 +1,1647 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>財務管理 — 風險管理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 財務管理單元專屬配色：翡翠深綠 (Emerald) × 深海藍 (Ocean Navy) × 琥珀金 (Amber Gold) */
+      --bg: #f2f6f4;
+      --card: #ffffff;
+      --surface: #f7faf8;
+      --ink: #0f1f18;
+      --ink-sec: #2d4239;
+      --mute: #5c7267;
+      --line: #d8e4dd;
+      --primary: #065f46;
+      --primary-dark: #064e3b;
+      --primary-light: #ecfdf5;
+      --primary-border: #a7f3d0;
+      --teal: #0369a1;
+      --teal-light: #f0f9ff;
+      --teal-border: #bae6fd;
+      --amber: #b45309;
+      --amber-light: #fffbeb;
+      --green: #15803d;
+      --green-light: #f0fdf4;
+      --red: #be123c;
+      --red-light: #fff1f2;
+      --radius: 16px;
+      --shadow: 0 4px 20px -2px rgba(6, 78, 59, 0.06), 0 2px 6px -1px rgba(6, 78, 59, 0.04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.75;
+      padding-bottom: 60px;
+      font-size: 17.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4 { margin: 0; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1.35; }
+
+    /* Top Navigation Bar */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      flex-wrap: wrap;
+    }
+    .home-link {
+      text-decoration: none;
+      color: var(--ink-sec);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      transition: all 0.2s;
+    }
+    .home-link:hover { color: var(--primary); border-color: var(--primary-border); background: var(--primary-light); }
+    .brand { display: flex; align-items: center; gap: 12px; font-size: 19px; font-weight: 800; color: var(--primary-dark); }
+    .brand-tag {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .main-tabs {
+      margin-left: auto;
+      display: flex;
+      gap: 6px;
+      background: #dfe9e3;
+      padding: 5px;
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+    .main-tabs button {
+      border: 0;
+      background: none;
+      padding: 9px 15px;
+      border-radius: 9px;
+      font: 700 15px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .main-tabs button:hover { color: var(--ink); }
+    .main-tabs button.on {
+      background: var(--card);
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(6, 78, 59, 0.1);
+    }
+
+    /* Main Container & Views */
+    .view { display: none; max-width: 1160px; margin: 0 auto; padding: 28px 24px; animation: fadeIn 0.25s ease; }
+    .view.on { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Section Header Banner */
+    .sec-banner {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow);
+    }
+    .sec-banner h1 { font-size: 25px; margin: 6px 0 8px; }
+    .sec-banner p { margin: 0; color: var(--ink-sec); font-size: 16.5px; max-width: 680px; }
+
+    /* Sub-navigation Switcher */
+    .sub-nav {
+      display: inline-flex;
+      background: #eaf1ed;
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .sub-nav button {
+      border: 0;
+      background: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font: 700 15px 'Noto Sans TC', sans-serif;
+      color: var(--mute);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sub-nav button:hover { color: var(--ink); }
+    .sub-nav button.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(6, 95, 70, 0.25);
+    }
+    .sub-view { display: none; }
+    .sub-view.active { display: block; animation: fadeIn 0.2s ease; }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .sidebar-layout { display: grid; grid-template-columns: 295px 1fr; gap: 22px; align-items: start; }
+
+    /* Badges & Pills */
+    .badge {
+      display: inline-block;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-right: 8px;
+    }
+    .b-blue { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border); }
+    .b-teal { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
+    .b-amber { background: var(--amber-light); color: var(--amber); border: 1px solid #fde68a; }
+    .b-green { background: var(--green-light); color: var(--green); border: 1px solid #bbf7d0; }
+    .b-red { background: var(--red-light); color: var(--red); border: 1px solid #fecdd3; }
+
+    /* Interactive Selector Lists */
+    .nav-list { display: flex; flex-direction: column; gap: 10px; }
+    .nav-item {
+      text-align: left;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      font: 700 16px 'Noto Sans TC', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .nav-item:hover { border-color: var(--primary); background: var(--primary-light); }
+    .nav-item.active {
+      background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 6px 16px rgba(6, 95, 70, 0.24);
+    }
+    .nav-item.active span.sub-txt { color: #d1fae5; }
+    .sub-txt { font-size: 13px; color: var(--mute); font-weight: 500; flex-shrink: 0; }
+
+    .chips { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+    .chip {
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      padding: 9px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font: 700 15.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink-sec);
+      transition: all 0.2s;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .chip.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(6, 95, 70, 0.2);
+    }
+
+    .btn {
+      border: 0;
+      background: var(--primary);
+      color: #ffffff;
+      font: 700 16px 'Noto Sans TC', sans-serif;
+      padding: 11px 22px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-teal { background: var(--teal); }
+    .btn-teal:hover { background: #075985; }
+    .btn-green { background: var(--green); }
+    .btn-green:hover { background: #166534; }
+    .btn-outline { background: var(--card); color: var(--primary); border: 1.5px solid var(--primary); }
+    .btn-outline:hover { background: var(--primary-light); }
+
+    .note-box {
+      border-left: 4px solid var(--primary);
+      background: var(--primary-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 16px;
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+    .case-box {
+      border-left: 4px solid var(--teal);
+      background: var(--teal-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 14px;
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+
+    /* Check Row for Insurable Conditions */
+    .check-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 16px;
+      border-radius: 10px;
+      border: 1.5px solid var(--line);
+      margin-bottom: 8px;
+      background: var(--card);
+      font-size: 15px;
+    }
+    .check-row.pass { border-color: var(--green); background: var(--green-light); color: #064e3b; }
+    .check-row.fail { border-color: var(--red); background: var(--red-light); color: #881337; }
+
+    /* Comparison Table */
+    table.comp-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 16px; }
+    table.comp-table th, table.comp-table td { padding: 12px 15px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    table.comp-table th { background: var(--surface); font-weight: 800; color: var(--ink); }
+    table.comp-table tr.highlight-row { background: var(--primary-light); }
+
+    input[type="range"] { width: 100%; accent-color: var(--primary); cursor: pointer; }
+
+    /* Builder Specific */
+    .builder-stage {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .opt-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      width: 100%;
+      text-align: left;
+      padding: 15px 18px;
+      margin: 10px 0;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      font: 500 16.5px 'Noto Sans TC', sans-serif;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1.65;
+    }
+    .opt-card:hover { border-color: var(--primary); background: var(--surface); }
+    .opt-card.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
+    .opt-card.correct, .opt-card.graded-best { border-color: var(--green); background: var(--green-light); color: #064e3b; }
+    .opt-card.graded-partial { border-color: var(--amber); background: var(--amber-light); color: #78350f; }
+    .opt-card.wrong, .opt-card.graded-wrong { border-color: var(--red); background: var(--red-light); color: #881337; }
+    .opt-letter {
+      display: inline-grid;
+      place-items: center;
+      min-width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #eaf1ed;
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 14.5px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .opt-card.selected .opt-letter { background: var(--primary); color: #ffffff; }
+
+    .hl-s1 { background: #d1fae5; color: #065f46; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s2 { background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .hl-s3 { background: #e0f2fe; color: #075985; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+
+    .critique-item {
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-left: 5px solid var(--line);
+      background: var(--card);
+    }
+    .critique-item.c-best { border-left-color: var(--green); background: var(--green-light); }
+    .critique-item.c-partial { border-left-color: var(--amber); background: var(--amber-light); }
+    .critique-item.c-wrong { border-left-color: var(--red); background: var(--red-light); }
+
+    details.guide-Collapsible {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 22px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    details.guide-Collapsible summary {
+      font-weight: 700;
+      font-size: 16.5px;
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    @media (max-width: 860px) {
+      .grid2, .grid3, .sidebar-layout { grid-template-columns: 1fr; }
+      header { padding: 12px 18px; }
+      .main-tabs { width: 100%; justify-content: center; margin-top: 8px; }
+      .sec-banner h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="財務管理_目錄.html" class="home-link">返回單元目錄</a>
+  <select onchange="if(this.value) location.href=this.value" style="padding:7px 12px;border-radius:10px;border:1px solid var(--primary-border);background:var(--primary-light);color:var(--primary);font:700 14.5px 'Noto Sans TC',sans-serif;cursor:pointer">
+    <option value="">快速切換課室／測驗...</option>
+    <option value="財務管理_目錄.html">單元總目錄</option>
+    <option value="財務分析.html">第 1 課：財務分析</option>
+    <option value="預算編製.html">第 2 課：預算編製</option>
+    <option value="融資方式.html">第 3 課：融資方式</option>
+    <option value="資本投資評估.html">第 4 課：資本投資評估</option>
+    <option value="營運資金管理.html">第 5 課：營運資金管理</option>
+    <option value="風險管理.html">第 6 課：風險管理</option>
+    <option value="財務管理_單元綜合測驗.html">單元綜合模擬試卷 (72分)</option>
+  </select>
+  <div class="brand">
+    <span>財務管理</span>
+    <span class="brand-tag">第 6 課：風險管理</span>
+  </div>
+  <nav class="main-tabs" id="mainTabs">
+    <button class="on" data-tab="sec-process">1. 風險管理過程與負面影響</button>
+    <button data-tab="sec-types">2. 風險種類與可保風險五條件</button>
+    <button data-tab="sec-strategies">3. 四大風險管理策略與排雷</button>
+    <button data-tab="sec-insurance">4. 適用於企業的保險保障</button>
+    <button data-tab="sec-builder">5. 論點建構工作坊</button>
+  </nav>
+</header>
+
+<!-- ==================== 1. 風險管理過程與負面影響 ==================== -->
+<section class="view on" id="sec-process">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元一：風險管理的過程與風險對企業活動的影響</span>
+      <h1>風險管理的三個步驟、量度層面與對企業造成的四種負面影響</h1>
+      <p>風險是指蒙受損失或遭遇不幸的可能性；風險管理是指企業透過識別和評估其面對的各種風險，從而制定風險管理措施，務求盡量減少損失的過程。執行風險管理的過程包含三個主要步驟：(1) 識別風險、(2) 量度風險（損失頻率與損失嚴重程度）和 (3) 控制風險。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('prc', 0, this)">三個主要步驟與動態 2D 風險矩陣</button>
+      <button onclick="switchSub('prc', 1, this)">對企業活動的四種影響與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 1A：三個主要步驟與動態 2D 風險矩陣 -->
+  <div class="sub-view active" id="prc-sub-0">
+    <div class="card" style="margin-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+        <div>
+          <span class="badge b-blue">量度與控制風險</span>
+          <h3 style="font-size:21px;margin-top:4px">「損失頻率」與「損失嚴重程度」動態 2D 風險矩陣</h3>
+        </div>
+        <div class="chips" style="margin:0">
+          <button class="chip active" id="matPre0" onclick="setMatrixPreset(82, 18, 0)">預設 1：餐廳摔破玻璃杯</button>
+          <button class="chip" id="matPre1" onclick="setMatrixPreset(22, 85, 1)">預設 2：廚房發生嚴重火災</button>
+          <button class="chip" id="matPre2" onclick="setMatrixPreset(85, 88, 2)">預設 3：採購受致命病毒污染食材</button>
+          <button class="chip" id="matPre3" onclick="setMatrixPreset(18, 20, 3)">預設 4：辦公室窗邊輕微滲水</button>
+        </div>
+      </div>
+
+      <div class="grid2" style="margin-top:12px;align-items:center">
+        <div style="background:var(--surface);padding:18px 20px;border-radius:14px;border:1px solid var(--line)">
+          <p style="font-size:15px;color:var(--ink-sec);margin:0 0 12px">
+            • <b>第 1 步：識別風險</b>（例如透過比率分析，若槓桿比率偏高，代表無力償還債務的風險較高）。<br>
+            • <b>第 2 步：量度風險</b>——從兩個層面量度：<br>
+            &nbsp;&nbsp;(i) <b>損失頻率 (Loss Frequency)</b>：量度某段期間內出現損失的次數（反映蒙受損失的可能性）。<br>
+            &nbsp;&nbsp;(ii) <b>損失嚴重程度 (Loss Severity)</b>：量度損失的幅度。<br>
+            • <b>第 3 步：控制風險</b>（比較風險的潛在損失和風險控制措施的成本，選擇最具成本效益的措施）。
+          </p>
+          <div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:4px">
+            <b>1. 損失頻率 (發生次數/可能性)：</b><b id="lblMatFreq" style="color:var(--primary)">82% (高頻率)</b>
+          </div>
+          <input type="range" id="matFreq" min="5" max="95" value="82" oninput="updateMatrixSim()">
+          <div style="display:flex;justify-content:space-between;font-size:15px;margin:10px 0 4px">
+            <b>2. 損失嚴重程度 (損失幅度)：</b><b id="lblMatSev" style="color:var(--red)">18% (低嚴重程度)</b>
+          </div>
+          <input type="range" id="matSev" min="5" max="95" value="18" oninput="updateMatrixSim()">
+        </div>
+        <div id="matrixSvgBox"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 子分頁 1B：對企業活動的四種負面影響與練習 -->
+  <div class="sub-view" id="prc-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">風險對企業活動的影響</span>
+        <h3 style="font-size:20.5px;margin:8px 0 8px">企業面對不同種類純風險時可能蒙受的四種損失</h3>
+        <div class="chips" id="impactChips">
+          <button class="chip active" onclick="renderImpact(0)">1. 人命傷亡</button>
+          <button class="chip" onclick="renderImpact(1)">2. 財產損失</button>
+          <button class="chip" onclick="renderImpact(2)">3. 法律責任</button>
+          <button class="chip" onclick="renderImpact(3)">4. 利潤損失</button>
+        </div>
+        <div id="impactDetailBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">損失類別快速辨識挑戰</span>
+        <h3 style="font-size:20.5px;margin:8px 0 10px" id="impQuizTitle">指出下列情況涉及哪種損失（共 4 題）</h3>
+        <div id="impQuizQ" style="font-size:17px;font-weight:700;padding:18px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:14px"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <button class="btn" onclick="checkImpQuiz('人命傷亡')">人命傷亡</button>
+          <button class="btn btn-teal" onclick="checkImpQuiz('財產損失')">財產損失</button>
+          <button class="btn btn-green" onclick="checkImpQuiz('法律責任')">法律責任</button>
+          <button class="btn btn-outline" onclick="checkImpQuiz('利潤損失')">利潤損失</button>
+        </div>
+        <div id="impQuizFb" style="margin-top:14px;font-size:16px;min-height:52px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 2. 風險種類與可保風險五條件 ==================== -->
+<section class="view" id="sec-types">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元二：風險的種類（純風險 vs 投機風險 ＆ 可保風險 vs 不可保風險）</span>
+      <h1>純風險的三種分類、投機風險與可保風險必須滿足的五個條件</h1>
+      <p>風險可分類為純風險（只有損失或沒有損失兩種機會，再分為人身風險、財產風險和責任風險）和投機風險（同時有損失和獲利機會），這取決於當中是否有獲利的可能。所有投機風險都是不可保風險；風險必須滿足五個條件才是可保風險。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('typ', 0, this)">純風險（三小類）與投機風險</button>
+      <button onclick="switchSub('typ', 1, this)">可保風險五個條件檢核與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 2A：純風險（三小類）與投機風險 -->
+  <div class="sub-view active" id="typ-sub-0">
+    <div class="sidebar-layout">
+      <div class="nav-list" id="riskTypeNavList"></div>
+      <div class="card" id="riskTypeDetailCard" style="margin-bottom:0"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 2B：可保風險五個條件檢核與練習 -->
+  <div class="sub-view" id="typ-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">可保風險的特徵</span>
+        <h3 style="font-size:20.5px;margin:8px 0 6px">可保風險 (Insurable Risk) 五個條件互動檢核儀</h3>
+        <p style="font-size:15px;color:var(--ink-sec);margin:0 0 8px"><b>保險定義：</b>個人或企業（受保人／投保人）透過支付費用（保費），把損失的風險轉嫁給保險公司（承保人）的方法；當受保人蒙受保單涵蓋的損失時，承保人須向受保人或受益人作出經濟賠償，<b>賠償金額上限等於保額（保障限額）</b>。點選以下事件檢核五個條件：</p>
+        <div class="chips" id="insCheckChips">
+          <button class="chip active" onclick="renderInsCheck(0)">1. 漏電引致貨倉火災</button>
+          <button class="chip" onclick="renderInsCheck(1)">2. 競爭劇烈引致營運虧損 / 油價匯率變動</button>
+          <button class="chip" onclick="renderInsCheck(2)">3. 洗碗工場餐具頻頻破損 / 店鋪失竊</button>
+          <button class="chip" onclick="renderInsCheck(3)">4. 戰爭或大規模毀滅性地震</button>
+          <button class="chip" onclick="renderInsCheck(4)">5. 東主蓄意縱火燒毀自己倉庫</button>
+        </div>
+        <div id="insCheckBox" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">風險分類與可保性判斷挑戰</span>
+        <h3 style="font-size:20.5px;margin:8px 0 10px">分辨純風險與投機風險及判斷陳述正誤（共 6 題）</h3>
+        <p id="typeQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute);margin:0 0 10px"></p>
+        <div id="typeQuizQ" style="font-size:16.5px;font-weight:700;padding:16px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:12px"></div>
+        <div id="typeQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="typeQuizFb" style="margin-top:12px;font-size:15.5px;min-height:48px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 3. 四大風險管理策略與排雷 ==================== -->
+<section class="view" id="sec-strategies">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元三：風險控制（四種主要風險管理策略與選擇注意事項）</span>
+      <h1>風險迴避、風險承擔、風險減少（避免損失 vs 減少損失）與風險轉移</h1>
+      <p>控制風險的四種主要策略包括：風險迴避、風險承擔（風險自留／自我承保）、風險減少和風險轉移，這些策略同時適用於管理純風險和投機風險。企業不應只依賴單一的風險管理策略，而應在不同的風險管理策略之間取得平衡。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('str', 0, this)">四種風險管理策略與風險分散</button>
+      <button onclick="switchSub('str', 1, this)">選擇注意事項、個案排雷與練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 3A：四種主要風險管理策略與風險分散 -->
+  <div class="sub-view active" id="str-sub-0">
+    <div class="sidebar-layout">
+      <div class="nav-list" id="stratNavList"></div>
+      <div class="card" id="stratDetailCard" style="margin-bottom:0"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 3B：選擇策略注意事項、個案排雷器與練習 -->
+  <div class="sub-view" id="str-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">選擇策略注意事項與答題錦囊</span>
+        <h3 style="font-size:20.5px;margin:8px 0 6px">選擇風險管理策略須注意的事項與「個案審題排雷器」</h3>
+        <p style="font-size:15px;color:var(--ink-sec);margin:0 0 8px">
+          <b>三大注意事項：</b>(1) 企業不能總是迴避風險（某些風險不能迴避，或只能透過不參與主要業務來迴避，實際上不可行）；(2) 應保留只會導致輕微損失的風險以節省控制成本；(3) 不應只依賴一種策略。點擊以下個案查看排雷拆解：
+        </p>
+        <div class="chips" id="trapCaseChips">
+          <button class="chip active" onclick="renderTrapCase(0)">個案 A：雜貨店小額失竊 / 洗碗工場餐具破損</button>
+          <button class="chip" onclick="renderTrapCase(1)">個案 B：餐廳面對廚房發生火災的風險</button>
+          <button class="chip" onclick="renderTrapCase(2)">個案 C：鐘錶店拓展海外市場的投機風險</button>
+          <button class="chip" onclick="renderTrapCase(3)">個案 D：飯盒商供應水果沙律引致食物中毒</button>
+        </div>
+        <div id="trapCaseBox" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">風險管理策略配對挑戰</span>
+        <h3 style="font-size:20.5px;margin:8px 0 10px">指出企業措施所使用的風險管理策略及判斷正誤（共 7 題）</h3>
+        <p id="stratQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute);margin:0 0 10px"></p>
+        <div id="stratQuizQ" style="font-size:16.5px;font-weight:700;padding:16px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:12px"></div>
+        <div id="stratQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="stratQuizFb" style="margin-top:12px;font-size:15.5px;min-height:48px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 4. 適用於企業的保險保障 ==================== -->
+<section class="view" id="sec-insurance">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-blue">單元四：適用於企業的保險保障</span>
+      <h1>汽車保險、員工誠信保險、責任保險（公眾責任 vs 僱員賠償）與綜合保單</h1>
+      <p>購買保險是最常見的風險轉移方法。企業普遍使用的保險產品包括：(1) 汽車保險（汽車第三者責任保險和綜合保險）、(2) 員工誠信保險（不屬於責任保險）、(3) 責任保險（公眾責任保險和法定的僱員賠償保險）、(4) 綜合保單 以及 (5) 人壽保險和醫療保險。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchSub('ins', 0, this)">五大類企業常見保險保障詳解</button>
+      <button onclick="switchSub('ins', 1, this)">跨行業保險顧問室與配對練習</button>
+    </div>
+  </div>
+
+  <!-- 子分頁 4A：五大類企業常見保險保障詳解 -->
+  <div class="sub-view active" id="ins-sub-0">
+    <div class="sidebar-layout">
+      <div class="nav-list" id="insProdNavList"></div>
+      <div class="card" id="insProdDetailCard" style="margin-bottom:0"></div>
+    </div>
+  </div>
+
+  <!-- 子分頁 4B：跨行業保險顧問室與配對練習 -->
+  <div class="sub-view" id="ins-sub-1">
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-blue">企業全方位保險顧問室</span>
+        <h3 style="font-size:20.5px;margin:8px 0 8px">點選不同行業的企業，查看它們應如何購買各種保險轉移風險</h3>
+        <div class="chips" id="advInsChips">
+          <button class="chip active" onclick="renderAdvIns(0)">1. 擴充車隊與增聘司機的本地運輸公司</button>
+          <button class="chip" onclick="renderAdvIns(1)">2. 經常有大量市民進場的室內溜冰場</button>
+          <button class="chip" onclick="renderAdvIns(2)">3. 已購兩項法定保險的安全駕駛學院</button>
+        </div>
+        <div id="advInsBox" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <span class="badge b-teal">企業保險保障配對挑戰</span>
+        <h3 style="font-size:20.5px;margin:8px 0 10px">針對以下每項風險，向企業建議最合適的保險名稱（共 6 題）</h3>
+        <p id="insQuizProg" style="font-size:14.5px;font-weight:600;color:var(--mute);margin:0 0 10px"></p>
+        <div id="insQuizQ" style="font-size:16.5px;font-weight:700;padding:16px;background:var(--surface);border-radius:12px;border:1px solid var(--line);margin-bottom:12px"></div>
+        <div id="insQuizBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="insQuizFb" style="margin-top:12px;font-size:15.5px;min-height:48px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 5. 論點建構問答工作坊 (12題) ==================== -->
+<section class="view" id="sec-builder">
+  <div class="sec-banner">
+    <div>
+      <span class="badge b-amber">實戰寫作訓練</span>
+      <h1>「一段一個獨立重點」論點建構工作坊</h1>
+      <p>收錄 4 道短答題（2 步建構 · 2 分）及 8 道進階論述題（3 步建構 · 3 分）。請選擇題目並逐步點選最準確的商業論述。</p>
+    </div>
+    <div class="sub-nav">
+      <button class="active" onclick="switchBuilderCat('short', this)">短答題訓練 (4題)</button>
+      <button onclick="switchBuilderCat('essay', this)">進階論述題訓練 (8題)</button>
+    </div>
+  </div>
+
+  <details class="guide-Collapsible">
+    <summary>查看「一段一個重點」建構結構指南（點擊展開 / 收起）</summary>
+    <div class="grid2" style="margin-top:14px;font-size:16px">
+      <div style="background:var(--primary-light);padding:14px 18px;border-radius:10px">
+        <b style="color:var(--primary)">短答題／個案題模式（每段滿分 2 分 — 2 步建構）</b><br>
+        <span class="hl-s1">第 1 步 (1分)</span> 準確寫出單一風險分類、不可保原因、風險管理策略或保險名稱<br>
+        <span class="hl-s2">第 2 步 (1分)</span> 結合題目企業背景說明原因或具體做法
+      </div>
+      <div style="background:var(--teal-light);padding:14px 18px;border-radius:10px">
+        <b style="color:var(--teal)">進階論述題模式（每段滿分 3 分 — 3 步深度建構）</b><br>
+        <span class="hl-s1">第 1 步 (1分)</span> 指出單一核心概念、可保條件、保險或策略名稱並界定其核心含義<br>
+        <span class="hl-s2">第 2 步 (1分)</span> 針對題目行業（如專線小巴營辦商、航空公司、運輸公司、電動遊戲店）設定具體例子<br>
+        <span class="hl-s3">第 3 步 (1分)</span> 深化推論該風險、條件或措施如何影響企業的財務賠償、損失頻率與嚴重程度或營運穩定性
+      </div>
+    </div>
+  </details>
+
+  <div class="card" style="padding:18px 22px;margin-bottom:18px">
+    <div style="font-size:15px;color:var(--mute);font-weight:700;margin-bottom:8px" id="builderCatLabel">選擇短答題（每題滿分 2 分）：</div>
+    <div class="chips" id="questionChips" style="margin:0"></div>
+  </div>
+
+  <div id="builderWorkspace"></div>
+</section>
+
+<script>
+  // Main Tab Switching
+  document.querySelectorAll('#mainTabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#mainTabs button').forEach(b => b.classList.remove('on'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+      btn.classList.add('on');
+      document.getElementById(btn.dataset.tab).classList.add('on');
+    });
+  });
+
+  // Sub-view Switching
+  function switchSub(prefix, idx, btn) {
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll(`[id^="${prefix}-sub-"]`).forEach((el, i) => {
+      el.classList.toggle('active', i === idx);
+    });
+  }
+
+  // ====== 1. 風險管理過程與動態 2D 風險矩陣 ======
+  function setMatrixPreset(freq, sev, idx) {
+    [0,1,2,3].forEach(i => document.getElementById('matPre'+i).classList.toggle('active', i === idx));
+    document.getElementById('matFreq').value = freq;
+    document.getElementById('matSev').value = sev;
+    updateMatrixSim();
+  }
+
+  function updateMatrixSim() {
+    const freq = +document.getElementById('matFreq').value;
+    const sev = +document.getElementById('matSev').value;
+
+    const fTxt = freq >= 50 ? `${freq}% (高頻率)` : `${freq}% (低頻率)`;
+    const sTxt = sev >= 50 ? `${sev}% (高嚴重程度)` : `${sev}% (低嚴重程度)`;
+    document.getElementById('lblMatFreq').textContent = fTxt;
+    document.getElementById('lblMatSev').textContent = sTxt;
+
+    const px = 65 + (freq / 100) * 420;
+    const py = 215 - (sev / 100) * 190;
+
+    let quadName = '', stratRec = '', quadCol = '';
+    if (freq >= 50 && sev >= 50) {
+      quadName = "右上象限：高損失頻率 ＋ 高損失嚴重程度";
+      stratRec = "<b>首選策略：風險迴避 (Risk Avoidance)</b><br>潛在損失過於龐大且發生的概率很高（如收購牽涉巨額財務損失訴訟的企業、採用受瘋牛症污染地區的進口牛肉），企業應<b>完全不參與可能導致損失的活動</b>，從而徹底消除風險。";
+      quadCol = "#be123c";
+    } else if (freq < 50 && sev >= 50) {
+      quadName = "左上象限：低損失頻率 ＋ 高損失嚴重程度";
+      stratRec = "<b>首選策略：風險轉移 (Risk Transfer) ＋ 風險減少（減少損失）</b><br>發生頻率較低，但一旦發生會招致巨大財務損失（如廚房嚴重火災、貨車嚴重車禍）。企業應<b>購買保險</b>把風險轉移至保險公司，並安裝自動灑水系統以減低損失嚴重程度。";
+      quadCol = "#0369a1";
+    } else if (freq >= 50 && sev < 50) {
+      quadName = "右下象限：高損失頻率 ＋ 低損失嚴重程度";
+      stratRec = "<b>首選策略：風險減少（避免損失）＋ 風險承擔 (Risk Assumption)</b><br>時有發生但每次損失金額不高（如店鋪失竊、餐具破損），保險公司一般不承保。企業應安裝閉路電視或提供培訓以<b>減低損失頻率（風險減少）</b>，並預留一筆資金<b>自行承擔損失（風險承擔）</b>。";
+      quadCol = "#b45309";
+    } else {
+      quadName = "左下象限：低損失頻率 ＋ 低損失嚴重程度";
+      stratRec = "<b>首選策略：風險承擔／風險自留 (Risk Assumption)</b><br>潛在損失輕微且極少發生，實施成本高昂的控制措施並不划算，企業應<b>預留一筆資金自我承保</b>，有助大幅減少風險控制的成本。";
+      quadCol = "#065f46";
+    }
+
+    document.getElementById('matrixSvgBox').innerHTML = `
+      <svg viewBox="0 0 510 245" style="width:100%;height:auto;background:var(--card);border-radius:12px;border:1.5px solid var(--line)">
+        <rect x="65" y="25" width="210" height="95" fill="#f0f9ff" opacity="0.85"/>
+        <rect x="275" y="25" width="210" height="95" fill="#fff1f2" opacity="0.85"/>
+        <rect x="65" y="120" width="210" height="95" fill="#ecfdf5" opacity="0.85"/>
+        <rect x="275" y="120" width="210" height="95" fill="#fffbeb" opacity="0.85"/>
+
+        <line x1="275" y1="25" x2="275" y2="215" stroke="#94a3b8" stroke-dasharray="4 4"/>
+        <line x1="65" y1="120" x2="485" y2="120" stroke="#94a3b8" stroke-dasharray="4 4"/>
+        <line x1="65" y1="20" x2="65" y2="215" stroke="#0f1f18" stroke-width="2"/>
+        <line x1="65" y1="215" x2="490" y2="215" stroke="#0f1f18" stroke-width="2"/>
+
+        <text x="170" y="50" font-size="12" font-weight="bold" fill="#0369a1" text-anchor="middle">低頻率・高嚴重程度</text>
+        <text x="170" y="68" font-size="11.5" fill="#0369a1" text-anchor="middle">宜用：風險轉移 (買保險)</text>
+
+        <text x="380" y="50" font-size="12" font-weight="bold" fill="#be123c" text-anchor="middle">高頻率・高嚴重程度</text>
+        <text x="380" y="68" font-size="11.5" fill="#be123c" text-anchor="middle">宜用：風險迴避 (不參與)</text>
+
+        <text x="170" y="150" font-size="12" font-weight="bold" fill="#065f46" text-anchor="middle">低頻率・低嚴重程度</text>
+        <text x="170" y="168" font-size="11.5" fill="#065f46" text-anchor="middle">宜用：風險承擔 (自我承保)</text>
+
+        <text x="380" y="150" font-size="12" font-weight="bold" fill="#b45309" text-anchor="middle">高頻率・低嚴重程度</text>
+        <text x="380" y="168" font-size="11.5" fill="#b45309" text-anchor="middle">宜用：風險減少 ＋ 風險承擔</text>
+
+        <text x="15" y="120" font-size="12" font-weight="bold" fill="#0f1f18" transform="rotate(-90 22,120)" text-anchor="middle">損失嚴重程度 (幅度)</text>
+        <text x="275" y="238" font-size="12" font-weight="bold" fill="#0f1f18" text-anchor="middle">損失頻率 (發生次數 / 可能性) ➔</text>
+
+        <line x1="${px}" y1="25" x2="${px}" y2="215" stroke="${quadCol}" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="65" y1="${py}" x2="485" y2="${py}" stroke="${quadCol}" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <circle cx="${px}" cy="${py}" r="9" fill="${quadCol}" stroke="#fff" stroke-width="2.5"/>
+      </svg>
+      <div style="margin-top:8px;padding:12px 14px;border-radius:10px;background:var(--surface);border-left:4px solid ${quadCol};font-size:14.5px">
+        <b style="color:${quadCol}">${quadName}</b><br>${stratRec}
+      </div>`;
+  }
+  updateMatrixSim();
+
+  const impactData = [
+    { num: 1, title: "1. 人命傷亡", desc: "這包括<b>僱員和東主生病、受傷以至死亡</b>。<br>• <b>對企業的影響</b>：人命傷亡可能會導致企業的<b>生產力下降</b>或重要的僱員無法處理關鍵的工作（例如餐廳一名受傷的廚師需要請病假），繼而影響企業的表現，甚至有可能<b>導致企業解散</b>（例如合夥中任何一名普通合夥人死亡，都會導致合夥解散）。" },
+    { num: 2, title: "2. 財產損失", desc: "這包括<b>企業財產遭毀壞或盜竊</b>。<br>• <b>對企業的影響</b>：財產的損失可用金錢計算。例如，如果一輛汽車在交通意外中損毀，或餐廳廚房發生火災，直接損失便可按<b>維修費用</b>計算。" },
+    { num: 3, title: "3. 法律責任", desc: "這包括企業因<b>毀壞他人財產，或導致僱員、顧客，以至其他人受傷時所支付的經濟賠償</b>（除了經濟賠償外，若企業在訴訟中敗訴，有機會被要求支付勝方的法律費用）。<br>• <b>對企業的影響</b>：例如食客在店內進食不潔食物後食物中毒，餐廳須作出經濟賠償；或產品缺陷引致的責任風險可招致巨額賠償損失。" },
+    { num: 4, title: "4. 利潤損失", desc: "企業或會因為不幸事件而<b>暫停營業，導致失去本來可以賺取的利潤</b>。<br>• <b>對企業的影響</b>：例如某街道因附近的建築地盤發生火災而被封鎖，街上的店鋪被迫暫時停業，因而損失利潤；或餐廳出現病毒群組爆發後被勒令停業進行清潔消毒，失去停業期間的利潤。" }
+  ];
+  function renderImpact(idx) {
+    document.querySelectorAll('#impactChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const it = impactData[idx];
+    document.getElementById('impactDetailBox').innerHTML = `<div style="background:var(--surface);padding:16px 20px;border-radius:12px;border:1.5px solid var(--primary);font-size:16px;line-height:1.75"><h4 style="color:var(--primary);font-size:18px;margin-bottom:6px">${it.title}</h4>${it.desc}</div>`;
+  }
+  renderImpact(0);
+
+  const impQuizList = [
+    { q: "情況 (a) 及 (b)：一名廚房助理在操作攪拌機時受傷；或一名合夥人因腦癌死亡。", ans: "人命傷亡", exp: "正確。僱員或東主生病、受傷或死亡屬於「人命傷亡」（可能導致生產力下降甚至合夥解散）。" },
+    { q: "情況 (c)：一家米商的存貨因暴雨引發的水災而損毀。", ans: "財產損失", exp: "正確。企業自身的場所、設備或存貨遭毀壞或盜竊，屬於「財產損失」。" },
+    { q: "情況 (d)：一名酒店接待員遺失顧客存放於櫃台的貴重物品，顧客向酒店索償。", ans: "法律責任", exp: "正確。企業因毀壞或遺失他人（顧客）財產而在法律上須支付的經濟賠償，屬於「法律責任」。" },
+    { q: "情況 (e)：某街道因附近建築地盤發生火災而被封鎖，街上店鋪被迫暫時停業。", ans: "利潤損失", exp: "正確。因不幸事件被迫暫停營業而失去本來可以賺取的利潤，屬於「利潤損失」。" }
+  ];
+  let curImpQ = 0;
+  function renderImpQuiz() {
+    document.getElementById('impQuizTitle').textContent = `指出下列情況涉及哪種損失（題目 ${curImpQ+1} / ${impQuizList.length}）`;
+    document.getElementById('impQuizQ').textContent = impQuizList[curImpQ].q;
+    document.getElementById('impQuizFb').innerHTML = '';
+  }
+  function checkImpQuiz(choice) {
+    const it = impQuizList[curImpQ];
+    const fb = document.getElementById('impQuizFb');
+    if (choice === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="padding:5px 12px;font-size:14px;margin-left:8px" onclick="curImpQ=(curImpQ+1)%impQuizList.length;renderImpQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確，正確類別是【${it.ans}】。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderImpQuiz();
+
+  // ====== 2. 風險種類與可保風險五條件 ======
+  const riskTypeCatalog = [
+    {
+      title: "1A. 純風險：人身風險 (Personal Risk)",
+      badge: "純風險・沒有獲利可能",
+      def: "「純風險」指只有損失或沒有損失兩種機會的風險（完全沒有獲利的機會，所有意外和災難的風險都屬於純風險）。根據潛在損失的性質，第一類是「人身風險」——指個人生病、受傷或死亡的可能性。",
+      detail: `
+        <p style="margin:0"><b>企業所面對的人身風險例子包括：</b><br>
+        • <b>(i) 合夥人或關鍵僱員死亡</b>；以及<br>
+        • <b>(ii) 工人受傷</b>。</p>
+      `
+    },
+    {
+      title: "1B. 純風險：財產風險 (Property Risk)",
+      badge: "純風險・沒有獲利可能",
+      def: "指企業的財產遭毀壞或盜竊的可能性（只有損失或沒有損失兩種機會）。",
+      detail: `
+        <p style="margin:0"><b>企業所面對的財產風險例子包括：</b><br>
+        • <b>(i) 經營場所或存貨被水災（或火災）破壞</b>；<br>
+        • <b>(ii) 車輛或貨車在交通意外中損毀</b>；以及<br>
+        • <b>(iii) 現金或貴重資產被盜</b>。</p>
+      `
+    },
+    {
+      title: "1C. 純風險：責任風險 (Liability Risk)",
+      badge: "純風險・沒有獲利可能",
+      def: "指企業毀壞他人財產或導致他人受傷（或生病、死亡），因而在法律上須承擔賠償責任的可能性。",
+      detail: `
+        <p style="margin:0"><b>企業所面對的責任風險例子包括：</b><br>
+        • <b>(i) 私家醫院或須就其醫療人員因疏忽導致患者死亡而作出賠償</b>；<br>
+        • <b>(ii) 智能手機生產商或須向因手機電池爆炸而受傷的顧客作出賠償</b>；以及<br>
+        • <b>(iii) 建築承辦商或須就工人在工地事故中受傷而作出賠償</b>。</p>
+      `
+    },
+    {
+      title: "2. 投機風險 (Speculative Risk)",
+      badge: "同時有損失和獲利機會・不可保風險",
+      def: "投機風險指同時有損失和獲利機會的風險（金融投資大多涉及投機風險；所有投機風險都是不可保風險）。有別於純風險，有些人和企業會願意且主動承受投機風險，因為這意味他們有獲利的機會（例如研發新產品）。",
+      detail: `
+        <p style="margin:0 0 8px"><b>企業面對的投機風險種類例子：</b></p>
+        <p style="margin:0">• <b>(1) 利率風險 (Interest Rate Risk)</b>：利率變動所帶來的風險。例如當銀行降低貸款利率時，以浮動利率向銀行借款的企業所支付的利息便會減少（反之加息則利息增加）。<br>
+        • <b>(2) 匯率風險 (Exchange Rate Risk)</b>：貨幣匯率變動所帶來的風險。例如同時在內地和香港營運的企業，人民幣貶值將導致企業在內地賺取的利潤（以港元計算）減少。<br>
+        • <b>(3) 公共政策風險 (Public Policy Risk)</b>：公共政策變遷所帶來的風險。例如政府就銀行審批住宅按揭貸款實施更嚴格的規定，物業價格很可能會暴跌。</p>
+      `
+    }
+  ];
+
+  function renderRiskType(idx) {
+    document.getElementById('riskTypeNavList').innerHTML = riskTypeCatalog.map((r, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderRiskType(${i})">
+        <span>${r.title}</span>
+      </button>
+    `).join('');
+    const r = riskTypeCatalog[idx];
+    document.getElementById('riskTypeDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${r.title}</h3>
+        <span class="badge b-blue">${r.badge}</span>
+      </div>
+      <p style="margin:0 0 12px;font-weight:600;font-size:17px">${r.def}</p>
+      <div class="case-box">${r.detail}</div>
+    `;
+  }
+  renderRiskType(0);
+
+  const insCheckCases = [
+    {
+      name: "事件 1：由漏電所引致的貨倉火災（可保風險 ✓）",
+      verdict: "屬於「可保風險」（滿足全部五個條件）",
+      c1: { ok: true, txt: "a. 風險必須是非投機的：火災屬純風險，結果只有損失或沒有損失，沒有獲利機會。" },
+      c2: { ok: true, txt: "b. 損失必須由意外引起和無法控制：漏電引致火災是由意外引起，且是受保人無法控制的。" },
+      c3: { ok: true, txt: "c. 不幸事故發生的概率是可估計的：保險公司可根據消防處火警統計數據估計概率及計算保費。" },
+      c4: { ok: true, txt: "d. 損失不可過於頻繁或過於微不足道：貨倉火災不常發生，且一旦發生損失金額超過一定水平。" },
+      c5: { ok: true, txt: "e. 同時蒙受損失的受保人數量不能太多：單一貨倉漏電不會令大量受保人同時索償。" }
+    },
+    {
+      name: "事件 2：競爭劇烈引致「營運虧損」／「油價或匯率變動」（不可保風險 ✗）",
+      verdict: "屬於「不可保風險」（違反多個條件）",
+      c1: { ok: false, txt: "a. 違反「風險必須是非投機的」：營運虧損、油價及匯率變動屬投機風險（同時有獲利和損失機會）；若承保，受保人便可保證從投機中獲利。" },
+      c2: { ok: false, txt: "b. 違反「損失必須由意外引起和無法控制」：營運虧損受企業自身管理決策影響（人為可控）。" },
+      c3: { ok: false, txt: "c. 違反「不幸事故發生的概率是可估計的」：保險公司難以在一定誤差範圍內估計個別企業營運虧損的概率以計算保費。" },
+      c4: { ok: true, txt: "d. 虧損金額通常較大（非微不足道）。" },
+      c5: { ok: false, txt: "e. 經濟衰退時可能導致大量受保企業同時錄得營運虧損。" }
+    },
+    {
+      name: "事件 3：洗碗工場「餐具頻頻破損」／超市「店鋪失竊」（不可保風險 ✗）",
+      verdict: "屬於「不可保風險」（違反條件 d）",
+      c1: { ok: true, txt: "a. 屬於非投機的純風險（只有損失或無損失）。" },
+      c2: { ok: true, txt: "b. 由意外引起。" },
+      c3: { ok: true, txt: "c. 可根據過往數據估計概率。" },
+      c4: { ok: false, txt: "d. 違反「損失不可過於頻繁或過於微不足道」：店鋪失竊或餐具破損時有發生，而每次招致的損失金額並不高，保險公司的行政費用可能會高於保費收入。" },
+      c5: { ok: true, txt: "e. 同時蒙受損失的受保人數量不多。" }
+    },
+    {
+      name: "事件 4：「戰爭」或大規模毀滅性「地震」所導致的損失（不可保風險 ✗）",
+      verdict: "屬於「不可保風險」（違反條件 e 及 c）",
+      c1: { ok: true, txt: "a. 屬於非投機的純風險（只有損失或無損失）。" },
+      c2: { ok: true, txt: "b. 對一般企業而言屬無法控制的事故。" },
+      c3: { ok: false, txt: "c. 戰爭或大地震發生的概率難以準確估計。" },
+      c4: { ok: true, txt: "d. 損失金額極為龐大（非微不足道）。" },
+      c5: { ok: false, txt: "e. 違反「同時蒙受損失的受保人數量不能太多」：戰爭或大地震會導致大量人命傷亡以及大範圍的嚴重破壞，在同一時間內導致大量索償，保險公司可能無力就所有索償作出賠償。" }
+    },
+    {
+      name: "事件 5：企業「蓄意縱火燒毀自己的倉庫」（不獲賠償 ✗）",
+      verdict: "不獲賠償（違反條件 b：損失必須由意外引起）",
+      c1: { ok: true, txt: "a. 火災本身屬財產風險。" },
+      c2: { ok: false, txt: "b. 違反「損失必須由意外引起和無法控制」：為避免人們利用保險圖利，事故必須不是受保人故意造成的；蓄意縱火燒毀自己倉庫，保險公司不會作出賠償。" },
+      c3: { ok: true, txt: "c. 一般火災概率可估計。" },
+      c4: { ok: true, txt: "d. 倉庫火災損失金額大。" },
+      c5: { ok: true, txt: "e. 屬單一倉庫事件。" }
+    }
+  ];
+  function renderInsCheck(idx) {
+    document.querySelectorAll('#insCheckChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    const it = insCheckCases[idx];
+    const conds = [it.c1, it.c2, it.c3, it.c4, it.c5];
+    document.getElementById('insCheckBox').innerHTML = `
+      <div style="background:var(--surface);padding:14px 16px;border-radius:12px;border:1px solid var(--line)">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+          <b style="font-size:15.5px;color:var(--ink)">${it.name}</b>
+          <span class="badge ${it.verdict.includes('可保風險」')?'b-green':'b-red'}" style="margin:0">${it.verdict}</span>
+        </div>
+        ${conds.map(c => `<div class="check-row ${c.ok?'pass':'fail'}"><span>${c.txt}</span><b style="flex-shrink:0">${c.ok?'符合':'不符合'}</b></div>`).join('')}
+      </div>`;
+  }
+  renderInsCheck(0);
+
+  const typeQuizItems = [
+    { q: "1. 分辨下列四個情況所涉及的風險是「純風險」還是「投機風險」：<br>(a) 海嘯 ｜ (b) 投注賽馬 ｜ (c) 將現金存放於保險箱 ｜ (d) 將現金存入定期存款帳戶（面對利率或通脹變動）", opts: ["A. (a) 純風險 ｜ (b) 投機風險 ｜ (c) 純風險 ｜ (d) 投機風險", "B. 四項全部屬於純風險"], ans: 0, exp: "正確。(a) 海嘯及 (c) 存放現金於保險箱只有損失或沒有損失兩種機會，屬純風險；(b) 投注賽馬及 (d) 存款面對利率與購買力變動，同時有損失和獲利機會，屬投機風險。" },
+    { q: "2. 辨別陳述是否正確：「透過購買保險，受保人把蒙受損失的風險轉移至承保人，而承保人作出的經濟賠償金額上限等於保額（保障限額）。」", opts: ["A. 正確", "B. 不正確"], ans: 0, exp: "正確。當受保人蒙受保單所涵蓋的損失時，承保人須作出經濟賠償，賠償金額上限等於保額。" },
+    { q: "3. 辨別陳述是否正確：「戰爭所導致的損失是不可保風險，因為這類損失過於頻繁和微不足道。」", opts: ["A. 正確", "B. 不正確 — 戰爭所導致的損失是不可保風險，原因是戰爭會導致大量人命傷亡以及大範圍的嚴重破壞（同時蒙受損失的受保人數量太多，保險公司無力就所有索償作出賠償）"], ans: 1, exp: "正確（陳述不正確）。店鋪失竊才是因為「過於頻繁和微不足道」；戰爭則是因為「同時蒙受損失的受保人數量太多」。" },
+    { q: "4. 辨別陳述是否正確：「保險公司只會承保保費收入大於行政成本的風險；而且保險公司一般不會承保匯率風險。」", opts: ["A. 正確", "B. 不正確"], ans: 0, exp: "正確。若損失過於頻繁微細令行政費用高於保費收入，保險公司便不會承保；而匯率風險屬投機風險，故不可保。" },
+    { q: "5. 如果某公司希望為一種「只有它才會面對的獨有風險（缺乏統計數據估計發生概率）」投保，保險公司會有甚麼反應？", opts: ["A. 由於無法準確估計事故發生的概率以計算保費和預測索償數目，保險公司可能會收取極高的保費，甚至拒絕承保", "B. 免費為該公司承保"], ans: 0, exp: "正確。可保風險要求「不幸事故發生的概率是可估計的」。" },
+    { q: "6. 智能手機生產商或須向因手機電池爆炸而受傷的顧客作出賠償。這屬於純風險中的哪一類？", opts: ["A. 責任風險 (Liability Risk)", "B. 人身風險"], ans: 0, exp: "正確。企業毀壞他人財產或導致他人受傷，因而在法律上須承擔賠償責任的可能性，屬於「責任風險」。" }
+  ];
+  let curTYQ = 0;
+  function renderTypeQuiz() {
+    const it = typeQuizItems[curTYQ];
+    document.getElementById('typeQuizProg').textContent = `題目 ${curTYQ + 1} / ${typeQuizItems.length}`;
+    document.getElementById('typeQuizQ').innerHTML = it.q;
+    document.getElementById('typeQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:11px 15px" onclick="checkTypeQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('typeQuizFb').innerHTML = '';
+  }
+  function checkTypeQuiz(idx) {
+    const it = typeQuizItems[curTYQ];
+    const fb = document.getElementById('typeQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14px" onclick="curTYQ=(curTYQ+1)%typeQuizItems.length;renderTypeQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderTypeQuiz();
+
+  // ====== 3. 四大風險管理策略與排雷 ======
+  const stratCatalog = [
+    {
+      title: "1. 風險迴避 (Risk Avoidance)",
+      badge: "徹底消除風險・減低損失頻率",
+      def: "風險迴避是指完全不參與可能導致損失的活動，從而徹底消除可能導致損失的風險。這個策略旨在減低損失頻率，通常在潛在損失過於龐大（高損失嚴重程度）或發生的概率很高（高損失頻率）的情況下採用。",
+      detail: `
+        <p style="margin:0"><b>商業例子：</b><br>
+        • 一家大企業發現收購目標牽涉一宗可能招致巨額財務損失的法律訴訟，決定<b>放棄收購</b>（或只進行局部收購，避免收購存在重大風險的業務）。<br>
+        • 若顧客未能遵守 60 天內付款的協議條款，企業拒絕向顧客交付貨物；或水果零售商決定不向顧客提供貿易賒帳，以消除壞帳風險。</p>
+      `
+    },
+    {
+      title: "2. 風險承擔 (Risk Assumption)",
+      badge: "又稱風險自留・自我承保",
+      def: "風險承擔（又稱風險自留 Risk Retention）是指透過預留一筆資金來應付潛在的損失，自行承擔可能導致損失的風險。這種情況下，企業是自我承保 (Self-insured)，即自行為損失提供保障。",
+      detail: `
+        <p style="margin:0"><b>適用情況與成本效益：</b><br>
+        • 企業通常在<b>潛在損失輕微（低損失嚴重程度）或沒有其他可行的風險管理方法</b>的情況下，才採用風險承擔這個策略。<br>
+        • 具成本效益的企業會自行承擔某些可承受的風險（如餐廳保留摔破碟子或玻璃杯的風險、雜貨店預留一筆金錢彌補被盜貨品的損失），有助<b>大幅減少風險控制的成本</b>。</p>
+      `
+    },
+    {
+      title: "3. 風險減少 (Risk Reduction)",
+      badge: "避免損失 (減頻率) vs 減少損失 (減嚴重度)",
+      def: "風險減少是指透過減低損失頻率或損失嚴重程度，從而減低可能導致損失的風險。風險減少措施可以分為兩類：",
+      detail: `
+        <p style="margin:0 0 10px">• <b>(1) 避免損失 (Loss Prevention)</b>：有助避免出現損失，即<b>減低損失頻率</b>的措施（例如商場在濕滑地板放置警告牌、企業把現金放置在夾萬以免失竊、鐵路公司在月台安裝幕門防止乘客墮軌、金飾店安裝不銹鋼防盜欄和閉路電視）。<br>
+        • <b>(2) 減少損失 (Loss Reduction)</b>：在不幸事件發生時有助<b>減低損失嚴重程度</b>的措施；減少損失措施<b>不能防止不幸事故發生</b>（例如酒店安裝自動灑水系統以減少因火災引致的損失、建築公司架設安全網以減輕工人在高空墮下所造成的傷勢、金飾店不要一次過將太多珠寶交予顧客）。</p>
+        <p style="margin:0;color:var(--primary)"><b>重要區分（風險迴避 vs 避免損失）：</b>如企業採取<b>風險迴避</b>，它會「不參與」某些活動以迴避風險；如採取<b>避免損失（風險減少）</b>，則它「仍會參與」這些活動，但會先採取措施來避免損失。</p>
+      `
+    },
+    {
+      title: "4. 風險轉移 (Risk Transfer)",
+      badge: "購買保險 或 簽訂外判合約",
+      def: "風險轉移指透過購買保險，或簽訂合約，把可能導致損失的風險轉移給他人來承擔。在此安排下，企業蒙受的部分或全數損失會轉移給另一方。",
+      detail: `
+        <p style="margin:0">• <b>(1) 購買保險</b>：最常見的風險轉移方法，讓企業把風險轉移到保險公司，在不幸事故發生後獲得經濟賠償（賠償上限等於保額）。<br>
+        • <b>(2) 外判 (Outsourcing)</b>：企業把生產工序或商業功能交給另一家企業承包（常用於需要特定技能或設備的高度專門化工作，例如建築設計公司把部分項目工作外判給另一家建築工程公司）。</p>
+      `
+    },
+    {
+      title: "5. 進階學堂：風險分散 (Risk Diversification)",
+      badge: "大型企業常用・小型企業較難採用",
+      def: "大型企業可以透過投資於不同的項目、推出不同種類的產品，或在不同國家和市場運作來達至風險分散。",
+      detail: `
+        <p style="margin:0">• 由於不同的項目能在不同時期賺取高利潤，企業透過同時投資於不同的項目，其<b>整體利潤及現金流量便會較為穩定</b>。<br>
+        • 然而，對<b>小型企業</b>來說，風險分散是相對較難採用的措施，因為它們<b>沒有足夠的資源來從事不同類型的項目</b>。</p>
+      `
+    }
+  ];
+
+  function renderStrat(idx) {
+    document.getElementById('stratNavList').innerHTML = stratCatalog.map((s, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderStrat(${i})">
+        <span>${s.title}</span>
+      </button>
+    `).join('');
+    const s = stratCatalog[idx];
+    document.getElementById('stratDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${s.title}</h3>
+        <span class="badge b-blue">${s.badge}</span>
+      </div>
+      <p style="margin:0 0 12px;font-weight:600;font-size:17px">${s.def}</p>
+      <div class="case-box">${s.detail}</div>
+    `;
+  }
+  renderStrat(2);
+
+  const trapCases = [
+    `<div style="background:var(--surface);padding:14px 16px;border-radius:12px;border:1px solid var(--line);font-size:15px;line-height:1.75">
+      <b style="color:var(--primary);font-size:16.5px">個案 A：雜貨店面對「店鋪盜竊」／洗碗工場面對「餐具頻頻破損」風險</b><br>
+      • <b>第 1 步（分析風險）</b>：雖然屬純風險，但由於時有發生且每次招致的損失金額不高，<b>並非可保風險</b>。<br>
+      • <b>第 2 步（剔除不適用策略）</b>：<br>
+      &nbsp;&nbsp;— <b>不可選「風險迴避」</b>：雜貨店或洗碗工場只能透過不參與主要業務才能迴避該風險，實際上不可行。<br>
+      &nbsp;&nbsp;— <b>不可選「風險轉移」</b>：該風險並非可保風險，且無法透過簽訂合約把風險轉移至另一方。<br>
+      • <b>可行的兩種風險管理策略</b>：<br>
+      &nbsp;&nbsp;1. <b>風險承擔</b>：預留一筆金錢彌補被盜貨品或破損餐具的損失。<br>
+      &nbsp;&nbsp;2. <b>風險減少</b>：雜貨店在店內安裝閉路電視；洗碗工場為員工提供培訓或改善清洗流程以減低破損風險。
+    </div>`,
+    `<div style="background:var(--surface);padding:14px 16px;border-radius:12px;border:1px solid var(--line);font-size:15px;line-height:1.75">
+      <b style="color:var(--primary);font-size:16.5px">個案 B：解釋一家餐廳為何「不應徹底消除（風險迴避）」廚房發生火災的風險，並建議另外兩種控制方法</b><br>
+      • <b>(a) 為何不應徹底消除（風險迴避）</b>：餐廳需要在廚房使用爐具煮食以維持日常主要業務運作；如果為了徹底消除廚房火災風險而完全不在廚房煮食（風險迴避），餐廳便不能營業及賺取回報。<br>
+      • <b>(b) 另外兩種控制廚房火災風險的方法</b>：<br>
+      &nbsp;&nbsp;1. <b>風險減少</b>：在廚房安裝自動灑水系統及滅火筒（減少損失），並定期檢查爐具及向廚師提供防火培訓（避免損失）。<br>
+      &nbsp;&nbsp;2. <b>風險轉移</b>：向保險公司購買火險（財產保險），把火災引致的損失轉移給保險公司。
+    </div>`,
+    `<div style="background:var(--surface);padding:14px 16px;border-radius:12px;border:1px solid var(--line);font-size:15px;line-height:1.75">
+      <b style="color:var(--primary);font-size:16.5px">個案 C：除風險迴避外，建議鐘錶店在處理「拓展海外市場」所帶來的投機風險時可採用的兩種策略</b><br>
+      • <b>注意</b>：拓展海外市場屬<b>投機風險（不可保風險）</b>，切勿建議向保險公司購買營運虧損保險！<br>
+      • <b>可採用的風險管理策略</b>：<br>
+      &nbsp;&nbsp;1. <b>風險減少</b>：在拓展前進行詳盡的海外市場研究、先開設小規模分店測試市場反應，以減低虧損機會與幅度。<br>
+      &nbsp;&nbsp;2. <b>風險承擔</b>：預留一筆資金來應付拓展海外業務可能帶來的初期虧損。<br>
+      &nbsp;&nbsp;3. <b>風險轉移（透過簽訂合約）</b>：透過簽訂特許經營合約或與當地企業合資經營，與合作夥伴分擔或轉移風險。
+    </div>`,
+    `<div style="background:var(--surface);padding:14px 16px;border-radius:12px;border:1px solid var(--line);font-size:15px;line-height:1.75">
+      <b style="color:var(--primary);font-size:16.5px">個案 D：學校飯盒供應商處理「出售生冷水果沙律引致食物中毒」（或快餐店應對「巴西進口瘋牛症牛肉」）的風險</b><br>
+      • <b>性質</b>：食物中毒只有損失或沒有損失兩種機會，屬於<b>純風險（責任風險）</b>。<br>
+      • <b>可採用的三種風險管理策略</b>：<br>
+      &nbsp;&nbsp;1. <b>風險迴避</b>：停止供應生冷食物如水果沙律（或停止採購巴西入口牛肉），徹底消除該項食物中毒風險。<br>
+      &nbsp;&nbsp;2. <b>風險減少</b>：改善運送餐盒的保溫冷藏程序及加強食物安全檢測，減低食物變壞引致中毒的機會。<br>
+      &nbsp;&nbsp;3. <b>風險轉移</b>：購買產品責任保險／公眾責任保險，或把餐盒運送工序外判給專業冷鏈物流公司承擔風險。
+    </div>`
+  ];
+  function renderTrapCase(idx) {
+    document.querySelectorAll('#trapCaseChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('trapCaseBox').innerHTML = trapCases[idx];
+  }
+  renderTrapCase(0);
+
+  const stratQuizItems = [
+    { q: "1. 婕玲在古董藝廊採取了三項措施：(a) 裱畫時用上具紫外線過濾功能的玻璃；(b) 在藝術品四周加設圍欄以免訪客損壞作品；(c) 為藝術品購買保險保障運送途中損毀。它們分別屬於哪種風險管理策略？", opts: ["A. (a) 風險減少 ｜ (b) 風險減少 ｜ (c) 風險轉移", "B. (a) 風險迴避 ｜ (b) 風險承擔 ｜ (c) 風險減少"], ans: 0, exp: "正確。(a) 及 (b) 減低藝術品受損的頻率，屬風險減少；(c) 購買保險屬風險轉移。" },
+    { q: "2. 金飾店東主譚先生：(1) 在店鋪安裝不銹鋼防盜欄、閉路電視及防爆玻璃陳列櫃；(2) 按承保人要求不要一次過將太多珠寶交予顧客。這兩項做法屬於哪種風險管理策略？分別屬於哪一細類？", opts: ["A. 兩者均屬於「風險減少」：(1) 屬於「避免損失（減低被搶劫的損失頻率）」；(2) 屬於「減少損失（減低一旦被搶劫時的損失嚴重程度）」", "B. 兩者均屬於「風險迴避」"], ans: 0, exp: "正確。安裝防盜設施有助避免出現損失（減低頻率）；不要一次過將太多珠寶交予顧客則在不幸被劫時減低損失嚴重程度。" },
+    { q: "3. 指出以下情況使用了哪種風險管理策略：<br>(a) 酒店購買火險，保障範圍涵蓋營業中斷造成的收入損失 ｜ (b) 建築公司向工人提供安全培訓 ｜ (c) 水果零售商決定不向顧客提供貿易賒帳以消除壞帳風險 ｜ (d) 餐廳預留一筆金錢來應付業務擴張可能帶來的損失", opts: ["A. (a) 風險轉移 ｜ (b) 風險減少 ｜ (c) 風險迴避 ｜ (d) 風險承擔", "B. (a) 風險承擔 ｜ (b) 風險轉移 ｜ (c) 風險減少 ｜ (d) 風險迴避"], ans: 0, exp: "正確。(a) 買火險屬風險轉移；(b) 安全培訓屬風險減少；(c) 不提供賒帳以徹底消除壞帳屬風險迴避；(d) 預留一筆金錢應付潛在損失屬風險承擔。" },
+    { q: "4. 建築設計公司把部分需要特定技能或設備的高度專門化項目工作「外判」給另一家建築工程公司。這屬於哪種風險管理策略？", opts: ["A. 風險承擔", "B. 風險轉移（透過簽訂外判合約把風險轉移給另一家企業）"], ans: 1, exp: "正確。除了購買保險外，企業亦可以透過外判（簽訂合約）進行風險轉移。" },
+    { q: "5. 辨別陳述是否正確：「如果企業選擇迴避所有風險，便不能賺取利潤。」", opts: ["A. 正確", "B. 不正確"], ans: 0, exp: "正確。不冒險就沒有回報，企業須要承擔風險才能賺取回報。" },
+    { q: "6. 辨別陳述是否正確：「減少損失 (Loss Reduction) 措施（如酒店安裝自動灑水系統）能預防不幸事件發生。」", opts: ["A. 正確", "B. 不正確 — 減少損失的措施不能防止不幸事故發生，只能在事故發生時減低損失嚴重程度（避免損失措施才是減低損失頻率）"], ans: 1, exp: "正確（陳述不正確）。減少損失的措施不能防止不幸事故發生，只能在事故發生時減低損失嚴重程度。" },
+    { q: "7. 辨別陳述是否正確：「風險轉移能確保企業蒙受的損失會全數由另一家企業承擔。」", opts: ["A. 正確", "B. 不正確 — 風險轉移只把部分或全數損失轉移給另一方；例如當實際損失大於保單『保額（保障限額）』時，企業便需要自行承擔剩餘的損失"], ans: 1, exp: "正確（陳述不正確）。保險賠償金額上限等於保額，當損失大於保額時，企業仍需自行承擔剩餘損失。" }
+  ];
+  let curSTQ = 0;
+  function renderStratQuiz() {
+    const it = stratQuizItems[curSTQ];
+    document.getElementById('stratQuizProg').textContent = `題目 ${curSTQ + 1} / ${stratQuizItems.length}`;
+    document.getElementById('stratQuizQ').innerHTML = it.q;
+    document.getElementById('stratQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:11px 15px" onclick="checkStratQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('stratQuizFb').innerHTML = '';
+  }
+  function checkStratQuiz(idx) {
+    const it = stratQuizItems[curSTQ];
+    const fb = document.getElementById('stratQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14px" onclick="curSTQ=(curSTQ+1)%stratQuizItems.length;renderStratQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderStratQuiz();
+
+  // ====== 4. 適用於企業的保險保障 ======
+  const insProdCatalog = [
+    {
+      title: "1. 汽車保險 (Motor Insurance)",
+      badge: "第三者（責任）保險屬香港法定強制",
+      def: "汽車保險為司機和第三者因汽車失竊或發生車禍所導致的損失提供保障。企業可根據需要購買以下兩種汽車保險：",
+      detail: `
+        <p style="margin:0 0 10px">• <b>(i) 汽車第三者（責任）保險 (Third Party Liability Insurance)</b>：當投保人駕駛汽車導致<b>第三者受傷、死亡或蒙受財產損失</b>時，受害者或受損者一方便可從第三者（責任）保險獲得賠償。<b>在香港，法例規定所有汽車司機均須為所駕駛的車輛購買第三者（責任）保險</b>。</p>
+        <p style="margin:0">• <b>(ii) 綜合保險 (Comprehensive Insurance)</b>：它的保障範圍包括<b>第三者（責任）保險所提供的保障，以及受保人的汽車因意外（例如撞車或失竊）而導致的損失或損毀</b>。</p>
+      `
+    },
+    {
+      title: "2. 員工誠信保險 (Fidelity Guarantee Insurance)",
+      badge: "保障僱員不誠實行為・不屬於責任保險",
+      def: "如果僱主因僱員的不誠實行為（如欺詐、盜竊或挪用公司資金）而損失金錢，便可以從員工誠信保險獲得賠償。",
+      detail: `
+        <p style="margin:0">• 對於那些<b>僱用職員處理巨額金錢的企業</b>來說，這種保險非常重要，因為職員欺詐或盜竊的機會較大。<br>
+        • <span style="color:var(--red)"><b>重要區分：員工誠信保險並不屬於責任保險！</b>（責任保險是當投保企業對他人造成損失遭索償時，賠款直接支付給第三者；而員工誠信保險則是賠償給受保僱主自己）。</span></p>
+      `
+    },
+    {
+      title: "3a. 責任保險：公眾責任保險",
+      badge: "保障第三者（如場所訪客）受傷或財產損失",
+      def: "責任保險為企業的責任風險提供保障（當投保企業對他人造成財產損失或人身傷害而遭到索償時，賠款通常直接支付給蒙受損失的第三者）。第一種常見的責任保險是「公眾責任保險 (Public Liability Insurance)」：",
+      detail: `
+        <p style="margin:0">• 如果企業的營運導致<b>第三者（或包括經營場所的合法訪客，例如因商場天花倒塌而受傷的訪客）受傷或蒙受財產損失</b>，公眾責任保險可以為這方面的風險提供保障，由保險公司向受傷或蒙受財產損失的第三者支付賠償。<br>
+        • 如果企業的<b>經營場所經常有大量公眾人士進出</b>（包括商場、超級市場、足球場、酒店、戲院和溜冰場等），一般都會購買公眾責任保險。</p>
+      `
+    },
+    {
+      title: "3b. 責任保險：僱員賠償保險",
+      badge: "香港《僱員補償條例》規定僱主必須購買",
+      def: "第二種常見的責任保險是「僱員賠償保險 (Employees' Compensation Insurance)」：它會就僱員因工受傷或死亡所招致的醫療費用和賠償金額作出經濟補償。",
+      detail: `
+        <p style="margin:0">• <b>在香港，法律（《僱員補償條例》）規定僱主必須購買僱員賠償保險</b>，確保僱員因工作或僱主的疏忽而受傷、死亡或患上某些職業病時，可以獲得補償。<br>
+        • <b>其他常見的責任保險</b>：包括<b>產品責任保險 (Product Liability Insurance)</b> 和 <b>專業責任保險</b>。</p>
+      `
+    },
+    {
+      title: "4. 綜合保單 ＆ 5. 人壽和醫療保險",
+      badge: "保單組合與僱員福利",
+      def: "除了單項保險外，企業亦常購買綜合保單，並為僱員購買人壽和醫療保險作為福利：",
+      detail: `
+        <p style="margin:0 0 10px">• <b>適用於企業的保單組合 — 綜合保單</b>：涵蓋企業一般所需的保單（例如財產保險和責任保險），通常可按企業的需要而度身訂造。</p>
+        <p style="margin:0">• <b>進階學堂 — 人壽保險和醫療保險（給予僱員的福利）</b>：<br>
+        &nbsp;&nbsp;(i) <b>人壽保險（生命保險／團體人壽保險）</b>：向所有僱員提供劃一的保障；一旦僱員去世，保險公司會向僱員的家庭支付賠償。<br>
+        &nbsp;&nbsp;(ii) <b>醫療保險</b>：讓保險公司向僱員賠償醫療費用；除作為給予僱員的福利外，還可<b>讓企業避免因僱員生病而遭受損失，並且能提高僱員的生產力</b>。</p>
+      `
+    }
+  ];
+
+  function renderInsProd(idx) {
+    document.getElementById('insProdNavList').innerHTML = insProdCatalog.map((p, i) => `
+      <button class="nav-item ${i===idx?'active':''}" onclick="renderInsProd(${i})">
+        <span>${p.title}</span>
+      </button>
+    `).join('');
+    const p = insProdCatalog[idx];
+    document.getElementById('insProdDetailCard').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h3 style="color:var(--primary);font-size:21px">${p.title}</h3>
+        <span class="badge b-blue">${p.badge}</span>
+      </div>
+      <p style="margin:0 0 12px;font-weight:600;font-size:17px">${p.def}</p>
+      <div class="case-box">${p.detail}</div>
+    `;
+  }
+  renderInsProd(0);
+
+  const advInsCases = [
+    `<div style="background:var(--surface);padding:14px 16px;border-radius:12px;border:1px solid var(--line);font-size:15px;line-height:1.75">
+      <b style="color:var(--primary);font-size:16.5px">1. 本地運輸公司計劃擴充車隊和聘請更多司機（可購買哪些種類的保險來轉移風險？）：</b><br>
+      • <b>(1) 汽車保險（汽車第三者責任保險 ／ 綜合保險）</b>：法例規定必須購買第三者（責任）保險，保障司機駕駛貨車導致第三者傷亡或財產損失的賠償；購買<b>綜合保險</b>更可同時保障公司新購入的貨車因撞車或失竊而導致的損毀。<br>
+      • <b>(2) 僱員賠償保險（法定強制）</b>：就司機及搬運工人因工受傷或死亡所招致的醫療費用和賠償金額作出經濟補償。<br>
+      • <b>(3) 員工誠信保險</b>：保障公司因職員（如代收貨款的司機或會計職員）欺詐或盜竊等不誠實行為而損失金錢。<br>
+      • <b>(4) 公眾責任保險 ／ 綜合保單（含財產保險）</b>：保障營運導致第三者受傷或財損的索償，以及貨倉財產因火災水災受損的風險。
+    </div>`,
+    `<div style="background:var(--surface);padding:14px 16px;border-radius:12px;border:1px solid var(--line);font-size:15px;line-height:1.75">
+      <b style="color:var(--primary);font-size:16.5px">2. 解釋一家溜冰場的東主應該購買的兩種「責任保險」：</b><br>
+      • <b>(1) 公眾責任保險 (Public Liability Insurance)</b>：溜冰場經常有大量公眾人士進出，若溜冰場的營運或場地設施導致進場溜冰的顧客（第三者）跌倒受傷或蒙受財產損失，保險公司會向第三者支付賠償。<br>
+      • <b>(2) 僱員賠償保險 (Employees' Compensation Insurance)</b>：香港法律規定僱主必須購買，確保溜冰場的僱員（如溜冰教練、駐場職員）因工作受傷或死亡時，可就醫療費用和賠償金額獲得經濟補償。
+    </div>`,
+    `<div style="background:var(--surface);padding:14px 16px;border-radius:12px;border:1px solid var(--line);font-size:15px;line-height:1.75">
+      <b style="color:var(--primary);font-size:16.5px">3. 安全駕駛學院已按法例購買「汽車第三者責任保險」和「僱員賠償保險」，還可購買哪兩種保險？</b><br>
+      • <b>(1) 汽車綜合保險</b>：原有的第三者責任保險只保障第三者的損失；購買綜合保險可同時保障駕駛學院自己的訓練車輛因學員撞車意外或失竊而導致的損失或損毀。<br>
+      • <b>(2) 公眾責任保險</b>：保障到訪駕駛學院中心或場地的學員及訪客（第三者）因場地設施問題而受傷或蒙受財產損失的索償。<br>
+      • <b>(3) 員工誠信保險</b>：保障學院因負責收取學費的職員不誠實行為（如盜竊或挪用資金）而損失金錢。
+    </div>`
+  ];
+  function renderAdvIns(idx) {
+    document.querySelectorAll('#advInsChips .chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+    document.getElementById('advInsBox').innerHTML = advInsCases[idx];
+  }
+  renderAdvIns(0);
+
+  const insQuizItems = [
+    { q: "1. 針對以下每項風險，向旅行社建議一種合適的保險：<br>(a) 一名僱員挪用公司資金 ｜ (b) 一名導遊在工作期間受傷 ｜ (c) 一名顧客在旅行社分行從破損的椅子倒地受傷", opts: ["A. (a) 員工誠信保險 ｜ (b) 僱員賠償保險 ｜ (c) 公眾責任保險", "B. (a) 公眾責任保險 ｜ (b) 員工誠信保險 ｜ (c) 汽車綜合保險"], ans: 0, exp: "正確。(a) 僱員挪用公司資金屬不誠實行為，由員工誠信保險保障；(b) 導遊因工受傷由僱員賠償保險保障；(c) 顧客在分行因設施受損受傷由公眾責任保險保障。" },
+    { q: "2. 辨別陳述是否正確：「員工誠信保險屬於責任保險的一種。」", opts: ["A. 正確", "B. 不正確 — 員工誠信保險並不屬於責任保險（它是向受保僱主賠償因僱員不誠實行為而損失的金錢，而非向第三者支付賠償）"], ans: 1, exp: "正確（陳述不正確）。員工誠信保險並不屬於責任保險。" },
+    { q: "3. 在香港，法例規定所有汽車司機（或車主）及所有僱主必須購買哪兩種法定保險？", opts: ["A. 汽車第三者（責任）保險 及 僱員賠償保險", "B. 汽車綜合保險 及 員工誠信保險"], ans: 0, exp: "正確。香港法例規定必須購買汽車第三者（責任）保險及僱員賠償保險。" },
+    { q: "4. 汽車保險中的「綜合保險」與「汽車第三者（責任）保險」有甚麼主要分別？", opts: ["A. 綜合保險除了包括第三者（責任）保險所提供的保障外，還保障『受保人的汽車』因意外（例如撞車或失竊）而導致的損失或損毀", "B. 綜合保險不保障第三者受傷"], ans: 0, exp: "正確。第三者（責任）保險只賠償受害第三者的傷亡或財損；綜合保險則同時保障受保人自己汽車的損毀或失竊。" },
+    { q: "5. 因商場天花倒塌而受傷的訪客入稟控告商場業主索取賠償。商場業主購買的哪種保險會向受傷訪客（第三者）支付賠償？", opts: ["A. 公眾責任保險 (Public Liability Insurance)", "B. 員工誠信保險"], ans: 0, exp: "正確。經常有大量公眾人士進出的商場，會購買公眾責任保險以保障營運導致第三者受傷或蒙受財產損失的責任風險。" },
+    { q: "6. 一家食品送遞公司應投保哪一種保險，以涵蓋其送遞員工在工作期間所面對的傷亡風險？", opts: ["A. 僱員賠償保險（或團體醫療保險及人壽保險）", "B. 員工誠信保險"], ans: 0, exp: "正確。僱員賠償保險就僱員因工受傷或死亡所招致的醫療費用和賠償金額作出經濟補償。" }
+  ];
+  let curINQ = 0;
+  function renderInsQuiz() {
+    const it = insQuizItems[curINQ];
+    document.getElementById('insQuizProg').textContent = `題目 ${curINQ + 1} / ${insQuizItems.length}`;
+    document.getElementById('insQuizQ').innerHTML = it.q;
+    document.getElementById('insQuizBtns').innerHTML = it.opts.map((o, i) => `<button class="opt-card" style="margin:0;padding:11px 15px" onclick="checkInsQuiz(${i})">${o}</button>`).join('');
+    document.getElementById('insQuizFb').innerHTML = '';
+  }
+  function checkInsQuiz(idx) {
+    const it = insQuizItems[curINQ];
+    const fb = document.getElementById('insQuizFb');
+    if (idx === it.ans) {
+      fb.innerHTML = `<span style="color:var(--green);font-weight:700">${it.exp}</span> <button class="btn btn-outline" style="margin-left:8px;padding:6px 14px;font-size:14px" onclick="curINQ=(curINQ+1)%insQuizItems.length;renderInsQuiz()">下一題</button>`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red);font-weight:700">答案不正確。${it.exp.replace('正確。','')}</span>`;
+    }
+  }
+  renderInsQuiz();
+
+  // ====== 5. 論點建構問答工作坊 (選項無括號自然行文・批改回饋針對作答內容直接點評) ======
+  const workshopQuestions = [
+    {
+      id: "s1", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 1：潮流時裝店（可保風險與不可保風險說明及舉例）", topic: "可保風險與不可保風險的區分與商業例子", maxMarks: 2,
+      scenario: "一家時裝店在香港經營多間門市，店東希望了解時裝店所面對的「可保風險」和「不可保風險」，以便購買合適的保險。",
+      question: "試說明何謂「不可保風險」（1分），並就該時裝店面對的「不可保風險」舉出兩個例子（1分）。（2 分）",
+      steps: [
+        { label: "第 1 步：準確說明「不可保風險」的意思（1分）", colorClass: "hl-s1", opts: [
+          { text: "不可保風險是指所有只會帶來損失而沒有獲利機會的意外事故，例如火災和漏水。", score: 0, status: "wrong", comment: "概念混淆。火災和漏水屬於只有損失或無損失機會的純風險，且滿足可保條件，屬於可保風險而非不可保風險。" },
+          { text: "不可保風險是指未能同時滿足可保風險五個條件，例如屬於同時有獲利和損失機會的投機風險、損失過於頻繁或微不足道、或事故概率無法估計，因此保險公司不會承保的風險。", score: 1, status: "best", comment: "準確界定不可保風險為未能滿足可保風險五個條件而遭保險公司拒絕承保的風險，並清楚列舉投機風險、損失過於頻繁微細及概率無法估計等原因。" },
+          { text: "不可保風險是指保費比較便宜的風險。", score: 0, status: "wrong", comment: "陳述錯誤。不可保風險是指保險公司不會承保的風險，與保費平貴無關。" }
+        ]},
+        { label: "第 2 步：針對「時裝店」舉出兩個「不可保風險」的具體例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如時裝店發生火災燒毀衣服，以及售貨員在工作期間跌傷。", score: 0, status: "wrong", comment: "例子錯配。門市火災可投保火險，售貨員因工跌傷可投保僱員賠償保險，兩者均屬於可保風險而非不可保風險。" },
+          { text: "例如新一季時裝款式不合潮流導致滯銷及營運虧損的投機風險，以及時裝店日常發生的零星店鋪失竊風險，因損失過於頻繁及每次損失金額不高，保險公司一般不會接受投保。", score: 1, status: "best", comment: "具體舉出時裝款式不合潮流引致營運虧損的投機風險，以及損失過於頻繁微細的零星店鋪失竊風險，兩個不可保風險例子均十分貼切。" },
+          { text: "例如時裝店面對很多不可保的風險。", score: 0, status: "partial", comment: "同義反覆，未有結合時裝店業務舉出如款式滯銷引致營運虧損或日常零星店鋪失竊等具體不可保風險例子。" }
+        ]}
+      ]
+    },
+    {
+      id: "s2", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 2：食品送遞公司（營運虧損屬不可保風險的原因）", topic: "可保風險的五個條件：為何「營運虧損」屬於不可保風險", maxMarks: 2,
+      scenario: "由於競爭劇烈，一家食品送遞公司欲為其「營運虧損的風險」投保。可是，保險經紀指出這風險是不可保的。",
+      question: "試以可保風險的其中一項條件為例，解釋為何「營運虧損的風險」是不可保的。（2 分）",
+      steps: [
+        { label: "第 1 步：指出營運虧損違反了可保風險的哪一項核心條件（1分）", colorClass: "hl-s1", opts: [
+          { text: "因為營運虧損屬於只有損失而沒有獲利機會的純風險。", score: 0, status: "wrong", comment: "風險分類錯誤。企業經營同時存在獲利和虧損的機會，屬於投機風險而非純風險。" },
+          { text: "因為營運虧損違反了風險必須是非投機的這項可保條件，同時損失並非由意外引起而是受管理層決策控制，且虧損發生的概率難以由保險公司估計。", score: 1, status: "best", comment: "準確指出營運虧損違反了風險必須是非投機的純風險、損失須由意外引起且無法控制，以及發生概率須可估計等可保風險條件。" },
+          { text: "因為營運虧損同時違反了五個條件。", score: 0, status: "partial", comment: "違反一段一重點原則，只籠統提及違反五個條件而未有明確指出具體違反了哪一項可保條件。" }
+        ]},
+        { label: "第 2 步：扣連「食品送遞公司經營」作具體解釋（1分）", colorClass: "hl-s2", opts: [
+          { text: "業務經營屬於投機風險，同時有獲利和蒙受營運虧損的機會；如果保險公司為投機性的營運虧損承保，受保公司便可保證從商業投機中獲利，甚至不再努力經營，因此保險公司不會承保。", score: 1, status: "best", comment: "清楚解釋業務經營屬於同時有獲利與損失機會的投機風險，若予以承保會令受保企業保證從投機中獲利，邏輯嚴密。" },
+          { text: "因為保險公司不喜歡食品送遞公司。", score: 0, status: "wrong", comment: "推論不合商業邏輯，保險公司是否承保取決於風險是否滿足可保條件，而非個人喜好。" },
+          { text: "因為營運虧損是投機風險。", score: 0, status: "partial", comment: "解釋過於簡略，必須進一步說明投機風險同時有獲利和損失的機會，若承保會令受保人保證從投機中獲利。" }
+        ]}
+      ]
+    },
+    {
+      id: "s3", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 3：中潔餐具清潔公司（餐具頻頻破損不可保原因與管理策略）", topic: "可保風險條件與不可保風險的管理策略（風險減少與風險承擔）", maxMarks: 2,
+      scenario: "「中潔」是一家為香港餐館提供餐具清潔和消毒服務的公司。常務董事白德指出公司面對「餐具頻頻破損」的問題並帶來損失，詢問可否為這風險投保，但財務經理回應說這風險是不可保的。",
+      question: "(i) 舉出一個原因解釋為何「餐具頻頻破損」的風險是不可保的（1分）；(ii) 為中潔處理上述風險建議一種合適的風險管理策略並舉例說明（1分）。（2 分）",
+      steps: [
+        { label: "第 1 步：解釋為何「餐具頻頻破損」屬於不可保風險（1分）", colorClass: "hl-s1", opts: [
+          { text: "因為餐具破損屬於同時有獲利機會的投機風險。", score: 0, status: "wrong", comment: "分類錯誤。餐具破損只有損失或無損失兩種結果，屬於純風險；其不可保是因為損失過於頻繁且每次金額微不足道。" },
+          { text: "因為可保風險規定損失不可過於頻繁或過於微不足道：餐具破損頻頻發生，且每次破損的損失金額很低，保險公司處理索償的行政費用可能會高於保費收入，令它最終蒙受損失，故不會承保。", score: 1, status: "best", comment: "準確指出餐具破損違反了損失不可過於頻繁或微不足道的條件，並說明處理索償的行政費用高於保費收入的原因。" },
+          { text: "因為打爛一隻碗會導致全香港所有保險公司同時破產。", score: 0, status: "wrong", comment: "推論荒謬，單一餐具破損金額極小，不會導致保險公司破產。" }
+        ]},
+        { label: "第 2 步：為中潔建議一種處理「餐具頻頻破損」的可行風險管理策略（1分）", colorClass: "hl-s2", opts: [
+          { text: "中潔可採用風險轉移策略，向保險公司購買餐具破損保險。", score: 0, status: "wrong", comment: "前後矛盾。第一部分已指明餐具頻頻破損屬於不可保風險，保險公司不會承保，因此不能透過購買保險轉移。" },
+          { text: "中潔可採用風險迴避策略，立即停止替任何餐館清洗餐具。", score: 0, status: "wrong", comment: "措施在商業上不可行。清洗餐具是中潔的核心業務，若停止清洗餐具便無法營業賺取收入。" },
+          { text: "中潔可採用風險減少策略，例如向洗碗及運送員工提供培訓、使用防撞保護箱運送餐具以減低破損頻率；又或者採用風險承擔策略，預留一筆資金自我承保，自行承擔賠償或更換破損餐具的損失。", score: 1, status: "best", comment: "準確避開不可行的風險迴避與購買保險，提出向員工提供培訓及使用防撞箱的風險減少策略，以及預留資金自我承保的風險承擔策略。" }
+        ]}
+      ]
+    },
+    {
+      id: "s4", cat: "short", typeBadge: "短答題（2 分 · 2 步建構）",
+      title: "短答 4：鐘錶專門店（純風險例子與拓展海外市場的投機風險策略）", topic: "純風險例子與處理投機風險的管理策略", maxMarks: 2,
+      scenario: "一家在香港經營的「鐘錶店」，正計劃拓展海外市場。管理層正審視香港門市的日常「純風險」，以及拓展海外市場所帶來的「投機風險」。",
+      question: "(i) 舉出經營鐘錶店的一個「純風險」例子（1分）；(ii) 除風險迴避外，建議鐘錶店在處理拓展海外市場所帶來的「投機風險」時可採用的一種風險管理策略並加以說明（1分）。（2 分）",
+      steps: [
+        { label: "第 1 步：舉出經營鐘錶店面對的一個「純風險」例子（1分）", colorClass: "hl-s1", opts: [
+          { text: "外幣匯率變動令進口鐘錶成本上升的風險。", score: 0, status: "wrong", comment: "風險類別錯誤。外幣匯率變動同時有機會帶來匯兌收益或匯兌損失，屬於投機風險而非純風險。" },
+          { text: "鐘錶店遭受搶劫或盜竊導致名錶損失的財產風險、店鋪發生火災或水災損毀存貨的財產風險，又或者顧客在店內滑倒受傷向店鋪索償的責任風險。", score: 1, status: "best", comment: "準確舉出名錶被劫盜、店鋪火災水災及顧客在店內受傷索償等只有損失或無損失機會的純風險例子。" },
+          { text: "新款手錶不受顧客歡迎而滯銷虧損的風險。", score: 0, status: "wrong", comment: "風險類別錯誤。新產品銷情好壞同時有獲利和損失的可能，屬於投機風險而非純風險。" }
+        ]},
+        { label: "第 2 步：除風險迴避外，建議處理「拓展海外市場投機風險」的一種風險管理策略（1分）", colorClass: "hl-s2", opts: [
+          { text: "可採用風險轉移策略，向保險公司購買海外開店虧損保險。", score: 0, status: "wrong", comment: "措施錯誤。拓展海外市場屬於投機風險，即不可保風險，保險公司不會承保營運虧損；若要轉移風險，應透過簽訂特許經營合約或與當地企業合資經營。" },
+          { text: "可採用風險減少策略，例如在拓展前先進行詳盡的海外市場研究，或先以小規模門市測試市場反應以減低虧損風險；亦可採用風險承擔策略，預留一筆資金自行承擔拓展海外業務可能帶來的初期損失。", score: 1, status: "best", comment: "準確針對拓展海外市場的投機風險，提出進行海外市場研究與小規模試業的風險減少策略，以及預留資金應付初期虧損的風險承擔策略。" },
+          { text: "可採用風險迴避策略，決定取消拓展海外市場的計劃。", score: 0, status: "wrong", comment: "審題失誤。題目已明確規定「除風險迴避外」，因此不可建議風險迴避。" }
+        ]}
+      ]
+    },
+    {
+      id: "e1", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 1：綠色專線小巴營辦商（面對的三種純風險：人身、財產、責任）", topic: "純風險的三種分類：人身風險、財產風險和責任風險", maxMarks: 3,
+      scenario: "試說明一家「綠色專線小巴營辦商」可能面對的三種純風險，並就每種純風險各舉一個例子。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以純風險中的「責任風險」為核心，結合專線小巴營辦商業務建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一純風險類別名稱與準確定義（1分）", colorClass: "hl-s1", opts: [
+          { text: "小巴營辦商同時面對人身風險、財產風險、責任風險、利率風險和油價風險。", score: 0, status: "partial", comment: "違反一段一重點原則，而且混入了利率風險和油價風險這兩項投機風險。" },
+          { text: "小巴營辦商會面對純風險中的責任風險：這是指企業毀壞他人財產或導致他人受傷甚至死亡，因而在法律上須承擔賠償責任的可能性；此外亦會面對企業財產遭毀壞或盜竊的財產風險，以及員工生病、受傷或死亡的人身風險。", score: 1, status: "best", comment: "準確指出純風險中的責任風險，並清楚界定企業因毀壞他人財產或導致他人傷亡而須在法律上承擔賠償責任的含義。" },
+          { text: "責任風險是指小巴加價後乘客增加令公司賺取巨額利潤的可能性。", score: 0, status: "wrong", comment: "概念錯誤。純風險只有損失或沒有損失兩種結果，完全沒有獲利的可能。" }
+        ]},
+        { label: "第 2 步：針對「綠色專線小巴營辦商」設定具體的責任風險例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如小巴司機在駕駛專線小巴期間不慎發生車禍，導致車上乘客、街上途人受傷，或者撞毀路上其他車輛及公物；而在財產風險與人身風險方面，則包括專線小巴在意外中損毀、車票現金被盜，以及小巴司機或維修工人在工作期間受傷。", score: 1, status: "best", comment: "緊扣專線小巴日常營運，具體舉出發生車禍導致乘客與途人受傷或撞毀其他車輛公物的責任風險例子，並補充車隊損毀與司機工傷的情況。" },
+          { text: "例如小巴公司要負上一些責任。", score: 0, status: "partial", comment: "描述空泛，未有結合專線小巴營運設定如發生車禍導致乘客、途人受傷或撞毀他人車輛財物等具體例子。" },
+          { text: "例如柴油價格大幅飆升令小巴油費開支大增。", score: 0, status: "wrong", comment: "類別混淆。柴油價格升跌同時有降低成本或推高成本的機會，屬於投機風險而非純風險。" }
+        ]},
+        { label: "第 3 步：深化論述至面對法律訴訟與經濟賠償對小巴營辦商的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "一旦發生上述車禍意外，受傷的乘客、途人或受損車主便會向專線小巴營辦商提出索償，營辦商在法律上須支付巨額的經濟賠償及相關法律費用，因此必須購買汽車第三者責任保險及僱員賠償保險以轉移風險。", score: 1, status: "best", comment: "清楚推演出車禍後受害第三者索償所帶來的巨額經濟賠償與法律費用負擔，並連貫指出購買法定保險轉移風險的必要性。" },
+          { text: "這樣小巴營辦商便面對責任風險了。", score: 0, status: "partial", comment: "同義反覆，未有說明在法律上須向受傷乘客或途人支付巨額經濟賠償及法律費用的財務影響。" },
+          { text: "這會令運輸署自動取消所有專線小巴路線。", score: 0, status: "wrong", comment: "推論不合常理。" }
+        ]}
+      ]
+    },
+    {
+      id: "e2", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 2：航空公司（航空意外風險對企業活動的影響一：法律責任與人命傷亡）", topic: "風險對企業活動的四種影響：法律責任與人命傷亡", maxMarks: 3,
+      scenario: "為了減少航空意外導致損失的風險，某航空公司決定為機師提供模擬駕駛培訓。試舉例說明航空意外的風險對航空公司帶來的影響。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以四大影響中的「法律責任」為核心，結合航空公司情境建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一負面影響類別名稱與核心含義（1分）", colorClass: "hl-s1", opts: [
+          { text: "航空意外會同時帶來人命傷亡、財產損失、法律責任及利潤損失四種影響。", score: 0, status: "partial", comment: "違反一段一重點原則，只羅列了四種負面影響的名稱而未有針對單一影響作界定。" },
+          { text: "航空意外會對航空公司帶來沉重的法律責任損失：這包括企業因毀壞他人財產，或導致僱員、顧客以至其他人受傷或死亡時，在法律上所須支付的經濟賠償及訴訟法律費用。", score: 1, status: "best", comment: "準確指出「法律責任」這項負面影響，並清楚界定因導致他人傷亡或財損而須支付經濟賠償及法律費用的含義。" },
+          { text: "航空意外會令航空公司的機票銷量立即翻倍。", score: 0, status: "wrong", comment: "陳述違背常理，航空意外會打擊乘客信心並帶來沉重損失，絕不會令機票銷量翻倍。" }
+        ]},
+        { label: "第 2 步：針對「航空公司發生航空意外」設定具體的索償情境例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如一旦航空公司的客機在升降或飛行途中發生航空意外，導致機上乘客及機組人員受傷或死亡、乘客託運的行李財物損毀，或者撞毀機場跑道設施。", score: 1, status: "best", comment: "具體結合客機在升降或飛行途中發生意外，導致機上乘客與機組人員傷亡、託運行李損毀及機場設施受損的情境。" },
+          { text: "例如飛機發生了一些意外。", score: 0, status: "partial", comment: "描述過於簡略，未有說明航空意外如何造成乘客與機組人員傷亡，或毀壞乘客行李與機場設施。" },
+          { text: "例如機師在模擬駕駛艙內進行訓練。", score: 0, status: "wrong", comment: "機師進行模擬駕駛訓練屬於航空公司的風險減少措施，並非航空意外對企業造成的負面影響。" }
+        ]},
+        { label: "第 3 步：深化論述至面對訴訟與巨額經濟賠償對航空公司的財務影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "受傷乘客、死難者家屬及受損機構會向航空公司提出訴訟索償，航空公司在法律上須支付巨額的經濟賠償，若在訴訟中敗訴更有機會被要求支付勝方的法律費用，對公司造成沉重的財務打擊。", score: 1, status: "best", comment: "清楚推演出傷亡者家屬及受損機構提出訴訟索償，令航空公司須承擔巨額經濟賠償及勝方法律費用的財務後果。" },
+          { text: "這樣航空公司便要負上法律責任。", score: 0, status: "partial", comment: "同義反覆，未有說明向受害乘客與家屬支付巨額經濟賠償及承擔訴訟法律費用的財務損失。" },
+          { text: "這會令國際燃油價格立即下跌。", score: 0, status: "wrong", comment: "推論不合邏輯，單一航空公司的意外與國際燃油價格走勢無關。" }
+        ]}
+      ]
+    },
+    {
+      id: "e3", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 3：航空公司（航空意外風險對企業活動的影響二：利潤損失與財產損失）", topic: "風險對企業活動的四種影響：利潤損失與財產損失", maxMarks: 3,
+      scenario: "承上題，某航空公司關注航空意外的風險對航空公司帶來的影響。除了人命傷亡和法律責任外，試以「利潤損失」為例，舉例說明航空意外風險對航空公司帶來的影響。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「利潤損失」為核心，結合航空公司意外後暫停航班營運情境建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出「利潤損失」的定義與核心成因（1分）", colorClass: "hl-s1", opts: [
+          { text: "航空意外會帶來嚴重的利潤損失：這是指企業因為不幸事件而暫停營業或暫停部分航班運作，導致失去本來可以賺取的利潤；同時亦會造成財產損失，昂貴客機在意外中遭毀壞須承擔高昂的維修或重置費用。", score: 1, status: "best", comment: "準確界定「利潤損失」為企業因不幸事件被迫暫停營業而失去本來可賺取的利潤，並兼顧昂貴客機損毀的財產損失。" },
+          { text: "利潤損失是指航空公司因為減價促銷機票而令毛利率微跌。", score: 0, status: "wrong", comment: "概念混淆。風險管理中的利潤損失是指因不幸事件被迫暫停營業而失去本來可賺取的利潤，而非日常減價促銷的影響。" },
+          { text: "航空意外會令公司損失利潤。", score: 0, status: "partial", comment: "表述過於簡略，必須明確指出是因為不幸事件導致「暫停營業」，從而失去停業期間本來可以賺取的利潤。" }
+        ]},
+        { label: "第 2 步：針對「航空公司發生航空意外」設定停飛調查與航班取消的具體例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如一旦旗下的客機發生航空意外，涉事客機損毀無法執飛，民航部門亦可能勒令同型號客機暫時停飛以進行全面安全檢查，導致大量定期客運及貨運航班被迫取消或暫停營運。", score: 1, status: "best", comment: "緊扣航空業實況，具體說明涉事客機損毀及同型號機隊被勒令停飛安檢，如何導致大量客貨運航班被迫取消。" },
+          { text: "例如航空公司的飛機不能飛。", score: 0, status: "partial", comment: "用詞過於口語化及單薄，應具體說明涉事客機受損及同型號客機停飛安檢導致定期航班被迫暫停營運。" },
+          { text: "例如航空公司在機艙內售賣免稅化妝品。", score: 0, status: "wrong", comment: "售賣機艙免稅品屬於日常附屬收入，與航空意外引致停飛的利潤損失無關。" }
+        ]},
+        { label: "第 3 步：深化論述至失去停飛期間本來可賺取的機票與貨運利潤的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "在客機被迫停飛及航班暫停營運期間，航空公司無法接待乘客及運送貨物，從而失去這段停業期間本來可以賺取的龐大機票及貨運利潤。", score: 1, status: "best", comment: "清楚推演出客機停飛與航班取消期間無法載客運貨，直接令航空公司失去本來可以賺取的龐大利潤。" },
+          { text: "所以航空公司會有很大的利潤損失。", score: 0, status: "partial", comment: "同義反覆，未有說明在停飛期間無法載客運貨而失去本來可賺取的機票與貨運利潤。" },
+          { text: "這會令飛機的購買價格自動減半。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e4", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 4：企業購買醫療保險（可保風險必須滿足的五個條件）", topic: "可保風險必須滿足的五個條件", maxMarks: 3,
+      scenario: "一家企業打算為所有僱員購買醫療保險作為員工福利。保險公司不會承保所有風險，試說明可保風險必須滿足的條件。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以可保風險五個條件中的「不幸事故發生的概率是可估計的」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出可保風險的單一核心條件名稱與含義（1分）", colorClass: "hl-s1", opts: [
+          { text: "可保風險必須同時滿足非投機、意外引起、概率可估計、非微不足道及受保人數量不過多五個條件。", score: 0, status: "partial", comment: "違反一段一重點原則，只羅列了五個條件的簡稱而未有針對單一可保條件作具體闡釋。" },
+          { text: "可保風險必須滿足不幸事故發生的概率是可估計的這項條件：即保險公司必須確保它能在一定的誤差範圍內，估計不幸事故發生的概率。", score: 1, status: "best", comment: "準確指出「不幸事故發生的概率是可估計的」這一可保條件，並說明保險公司須在一定誤差範圍內估算事故概率的要求。" },
+          { text: "可保風險必須是受保人可以百分百自行控制何時發生的故意行為。", score: 0, status: "wrong", comment: "條件完全顛倒。可保風險的損失必須由意外引起且是受保人無法控制的，受保人故意造成的損失不會獲得賠償。" }
+        ]},
+        { label: "第 2 步：設定保險公司運用統計數據估計概率的具體例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如保險公司在承保團體醫療保險、工業意外或火險時，可參考政府部門發放的各種統計數據，例如人口患病率、建造業工業意外宗數及火警召喚數據，從而估計某類不幸事故發生的概率；相反，若某公司希望為一種只有它才會面對的獨有風險投保，保險公司便缺乏統計數據估計概率。", score: 1, status: "best", comment: "具體結合參考人口患病率、工業意外宗數及火警統計數據來估計事故概率，並與缺乏數據的獨有風險作對比，例子清晰。" },
+          { text: "例如保險公司會自己猜測一下事故發生的機會。", score: 0, status: "partial", comment: "表述不準確，保險公司並非憑空猜測，而是根據過往的統計數據在一定誤差範圍內科學地估計不幸事故發生的概率。" },
+          { text: "例如受保員工生病後去診所看醫生。", score: 0, status: "wrong", comment: "只描述了員工求診的行為，未有解釋保險公司如何利用統計數據估計事故發生的概率。" }
+        ]},
+        { label: "第 3 步：深化論述至計算保費、預測索償數目與確保承保獲利的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "只有當保險公司能在一定誤差範圍內估計事故發生的概率，它才能計算合理的保費和預測索償數目，確保能通過承保獲利；否則保險公司便可能會收取極高的保費，甚至拒絕承保。", score: 1, status: "best", comment: "清楚推演出準確估計事故概率對計算合理保費、預測索償數目及確保保險公司通過承保獲利的決定性作用。" },
+          { text: "這樣那項風險便成為可保風險了。", score: 0, status: "partial", comment: "同義反覆，未有說明估計事故概率對於保險公司計算保費、預測索償數目及確保承保獲利的重要性。" },
+          { text: "這會令受保人永遠不會生病或發生意外。", score: 0, status: "wrong", comment: "推論不合常理，計算事故概率並不能消除疾病或意外的發生。" }
+        ]}
+      ]
+    },
+    {
+      id: "e5", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 5：本地運輸公司（擴充車隊購買保險一：汽車保險與僱員賠償保險）", topic: "適用於企業的保險保障：汽車保險與僱員賠償保險", maxMarks: 3,
+      scenario: "某本地運輸公司計劃擴充車隊和聘請更多司機。同時，公司在考慮購買各種保險，以轉移公司面對的不同風險。試解釋運輸公司可購買哪些種類的保險來轉移公司所面對的風險。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「汽車保險，包括汽車第三者責任保險及綜合保險」為核心，結合運輸公司擴充車隊情境建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一保險種類名稱與保障範圍（1分）", colorClass: "hl-s1", opts: [
+          { text: "運輸公司可同時購買汽車保險、僱員賠償保險、公眾責任保險及員工誠信保險。", score: 0, status: "partial", comment: "違反一段一重點原則，只羅列了四種保險的名稱而未有針對「汽車保險」界定其保障範圍。" },
+          { text: "運輸公司應購買汽車保險，包括汽車第三者責任保險和綜合保險：汽車保險專門為司機和第三者因汽車失竊或發生車禍所導致的損失提供保障。", score: 1, status: "best", comment: "準確指出「汽車保險」及其包含的汽車第三者責任保險與綜合保險，並說明其保障車禍與汽車失竊損失的作用。" },
+          { text: "運輸公司應購買匯率風險保險，以保障油價上升的損失。", score: 0, status: "wrong", comment: "概念錯誤。匯率與油價變動同時有獲利和損失機會，屬於不可保的投機風險，保險公司不會提供此類保險。" }
+        ]},
+        { label: "第 2 步：針對「運輸公司擴充新貨車車隊」設定具體風險轉移例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如運輸公司擴充車隊後，貨車每天在道路上行駛可能會發生車禍或失竊；購買法例規定的汽車第三者責任保險，可在司機駕駛貨車導致第三者受傷、死亡或蒙受財產損失時向受害第三者提供賠償；而購買綜合保險更可同時保障公司自己的新貨車因撞車或失竊而導致的損失或損毀。", score: 1, status: "best", comment: "緊扣運輸公司擴充貨車車隊的情境，清楚區分汽車第三者責任保險保障受害第三者傷亡財損，以及綜合保險同時保障公司自身貨車撞毀或失竊。" },
+          { text: "例如運輸公司有很多貨車，所以要買汽車保險。", score: 0, status: "partial", comment: "描述過於簡略，未有說明汽車第三者責任保險如何保障第三者傷亡財損，以及綜合保險如何保障運輸公司自身貨車的損毀與失竊。" },
+          { text: "例如運輸公司進行人力規劃招聘司機。", score: 0, status: "wrong", comment: "招聘司機屬於人力資源管理工作，與購買汽車保險轉移車禍風險無關。" }
+        ]},
+        { label: "第 3 步：深化論述至獲得經濟賠償、避免巨額維修與第三者賠款打擊財務的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "透過購買汽車綜合保險將車禍及失竊風險轉移給保險公司，一旦發生交通意外，保險公司便會在保額上限內向第三者支付賠償並賠償維修或重置貨車的費用，大幅減少運輸公司的財務損失。", score: 1, status: "best", comment: "清楚推演出把車禍及失竊風險轉移給保險公司後，在保額上限內獲得第三者賠償與貨車維修賠償對減輕財務損失的作用。" },
+          { text: "這樣運輸公司便買了汽車保險。", score: 0, status: "partial", comment: "同義反覆，未有說明發生車禍後由保險公司支付第三者賠償及貨車維修費用以減少財務損失的效果。" },
+          { text: "這會令所有貨車司機永遠不會發生任何交通意外。", score: 0, status: "wrong", comment: "概念錯誤。購買保險屬於風險轉移，作用是在事故發生後提供經濟賠償，並不能防止交通意外發生。" }
+        ]}
+      ]
+    },
+    {
+      id: "e6", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 6：本地運輸公司（擴充車隊購買保險二：員工誠信保險與公眾責任保險）", topic: "適用於企業的保險保障：員工誠信保險（或公眾責任保險／僱員賠償保險）", maxMarks: 3,
+      scenario: "承上題，某本地運輸公司計劃擴充車隊和聘請更多司機。除了汽車保險和法定的僱員賠償保險外，試解釋該運輸公司還可購買哪種保險來轉移公司面對的風險。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「員工誠信保險」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一保險種類名稱與保障範圍（1分）", colorClass: "hl-s1", opts: [
+          { text: "運輸公司可購買員工誠信保險：當僱主因僱員的不誠實行為，例如欺詐、盜竊或挪用公款而損失金錢時，便可以從員工誠信保險獲得賠償。", score: 1, status: "best", comment: "準確指出「員工誠信保險」，並清楚說明其保障僱主因僱員欺詐或盜竊等不誠實行為而損失金錢的作用。" },
+          { text: "運輸公司可購買員工誠信保險，以保障新司機在搬運貨物時扭傷腰部的醫療費用。", score: 0, status: "wrong", comment: "保險產品錯配。保障司機在搬運貨物時因工受傷的醫療費用屬於法定的「僱員賠償保險」，而非保障員工不誠實行為的員工誠信保險。" },
+          { text: "運輸公司可以買多一種保險。", score: 0, status: "partial", comment: "未有明確寫出「員工誠信保險」或「公眾責任保險」等具體保險產品名稱及其保障範圍。" }
+        ]},
+        { label: "第 2 步：針對「增聘新司機及職員處理貨款與貴重貨物」設定具體風險例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如運輸公司增聘更多新司機及收銀會計職員後，他們在日常工作中可能需要替客戶代收大額現金貨款或處理公司營運資金，存在個別職員作出欺詐、盜竊或挪用公司資金等不誠實行為的風險。", score: 1, status: "best", comment: "緊扣運輸公司增聘新司機代收現金貨款及會計職員處理公司資金的業務實況，清楚點出內部欺詐與盜竊風險。" },
+          { text: "例如有些員工可能會不誠實。", score: 0, status: "partial", comment: "描述過於空泛，未有結合運輸公司員工代收客戶貨款或處理公司資金的具體工作情境。" },
+          { text: "例如貨車在高速公路上爆胎。", score: 0, status: "wrong", comment: "貨車爆胎屬於車輛機件故障，並非僱員的不誠實欺詐或盜竊行為。" }
+        ]},
+        { label: "第 3 步：深化論述至轉移內部盜竊損失、保障公司資金安全的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "購買員工誠信保險後，一旦不幸發生僱員盜竊貨款或挪用公款事件，運輸公司便可從保險公司獲得經濟賠償，把員工不誠實行為導致金錢損失的風險轉移給承保人。", score: 1, status: "best", comment: "清楚推演出投保員工誠信保險如何在發生員工盜竊或挪用公款時獲得經濟賠償，保障公司資金安全。" },
+          { text: "這樣運輸公司便轉移了這個風險。", score: 0, status: "partial", comment: "同義反覆，未有說明在發生員工盜竊或挪用公款時從保險公司獲得經濟賠償的作用。" },
+          { text: "這會令所有新入職司機無須考取駕駛執照。", score: 0, status: "wrong", comment: "推論不合常理。" }
+        ]}
+      ]
+    },
+    {
+      id: "e7", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 7：跨國電動遊戲公司來港開店（應對開設零售店風險的管理策略一：風險減少）", topic: "風險管理策略：跨國企業應對開設新零售店風險的策略（風險減少）", maxMarks: 3,
+      scenario: "一家跨國電動遊戲公司評估在香港開設零售店的風險。試解釋該電動遊戲公司應對在香港開設零售店的風險時，可採用的風險管理策略。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「風險減少」這項策略為核心，結合電動遊戲零售店情境建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出單一風險管理策略名稱與核心機制（1分）", colorClass: "hl-s1", opts: [
+          { text: "電動遊戲公司可同時採用風險迴避、風險承擔、風險減少和風險轉移四種策略。", score: 0, status: "partial", comment: "違反一段一重點原則，只羅列了四種風險管理策略的名稱而未有針對「風險減少」界定其含義。" },
+          { text: "電動遊戲公司可採用風險減少策略：這是指透過採取避免損失措施以減低損失頻率，或採取減少損失措施以減低損失嚴重程度，從而減低可能導致損失的風險。", score: 1, status: "best", comment: "準確指出「風險減少」策略，並清楚說明透過避免損失減低損失頻率及透過減少損失減低損失嚴重程度的雙重機制。" },
+          { text: "風險減少是指把香港專門店徹底關閉，完全不進入香港市場。", score: 0, status: "wrong", comment: "策略混淆。完全不參與可能導致損失的活動以徹底消除風險，屬於「風險迴避」而非「風險減少」。" }
+        ]},
+        { label: "第 2 步：針對「在香港開設電動遊戲零售店」設定具體的風險減少措施例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如在投機風險方面，公司可在開店前先進行詳盡的香港市場研究，或先開設小規模短期體驗店測試市場反應；在純風險方面，則可在零售店內安裝閉路電視及防盜感應器以減低遊戲軟件失竊頻率，並安裝自動灑水系統以減低火災時的損失嚴重程度。", score: 1, status: "best", comment: "緊扣跨國電動遊戲公司來港開店的背景，同時舉出開店前市場研究與小規模試業，以及店內安裝閉路電視防盜與自動灑水系統的具體措施。" },
+          { text: "例如公司採取一些措施減少開店風險。", score: 0, status: "partial", comment: "只重複了策略名稱，欠缺結合電動遊戲零售店的市場研究、安裝防盜設施或防火灑水系統等具體措施例子。" },
+          { text: "例如公司向保險公司購買火險。", score: 0, status: "wrong", comment: "策略錯配。向保險公司購買火險屬於把風險轉嫁給承保人的「風險轉移」策略，而非「風險減少」。" }
+        ]},
+        { label: "第 3 步：深化論述至主動降低事故發生率與虧損幅度、保障新店順利營運的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "透過這些避免損失和減少損失措施，電動遊戲公司能在參與香港零售業務的同時，主動將新店投資失利的機會、店鋪盜竊的損失頻率，以及萬一發生火災時的損失嚴重程度降至最低。", score: 1, status: "best", comment: "清楚推演出在繼續參與香港零售業務的前提下，如何主動降低投資失利機會、失竊頻率與火災損失嚴重程度。" },
+          { text: "這樣電動遊戲公司便減少了風險。", score: 0, status: "partial", comment: "同義反覆，未有說明減低損失頻率與減低損失嚴重程度對保障新店順利營運的作用。" },
+          { text: "這會令香港的商場租金變成零元。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    },
+    {
+      id: "e8", cat: "essay", typeBadge: "進階論述題（3 分 · 3 步深度建構）",
+      title: "論述 8：跨國電動遊戲公司來港開店（應對開設零售店風險的管理策略二：風險轉移與風險承擔）", topic: "風險管理策略：跨國企業應對開設新零售店風險的策略（風險轉移與風險承擔）", maxMarks: 3,
+      scenario: "承上題，該跨國電動遊戲公司正評估在香港開設零售店的風險。除了風險減少外，試以「風險轉移」為例，解釋該公司可如何應對在香港開設零售店的風險。",
+      question: "請遵循「一段一個獨立重點」原則，單獨以「風險轉移，即購買保險及簽訂合約外判」為核心，建構一個 3 分深度論述段落（每步 1 分）：",
+      steps: [
+        { label: "第 1 步：指出「風險轉移」策略的定義與兩種主要途徑（1分）", colorClass: "hl-s1", opts: [
+          { text: "電動遊戲公司可採用風險轉移策略：即透過購買保險或簽訂外判合約，把開設及經營香港零售店可能導致損失的風險轉移給保險公司或承包商等另一方來承擔。", score: 1, status: "best", comment: "準確指出「風險轉移」策略，並清楚列明透過購買保險與簽訂合約把損失風險轉移給他人承擔的兩種主要途徑。" },
+          { text: "風險轉移是指公司預留一筆資金自我承保，自行承擔損失。", score: 0, status: "wrong", comment: "策略混淆。預留一筆資金自我承保以自行承擔損失，屬於「風險承擔」而非把風險轉嫁給他人的「風險轉移」。" },
+          { text: "公司可以把風險轉移給別人。", score: 0, status: "partial", comment: "表述過於簡略，必須明確指出是透過「購買保險」或「簽訂合約」把可能導致損失的風險轉移給另一方承擔。" }
+        ]},
+        { label: "第 2 步：針對「在香港開設電動遊戲零售店」設定買保險及簽訂合約外判的具體例子（1分）", colorClass: "hl-s2", opts: [
+          { text: "例如針對門市的可保純風險，電動遊戲公司可向保險公司購買綜合保單，涵蓋店鋪財產火險、保障進店試玩顧客受傷的公眾責任保險、法定的僱員賠償保險及收銀員的員工誠信保險；而針對店鋪裝修或本地送貨工序，則可透過簽訂合約外判給本地裝修工程公司及物流承包商負責。", score: 1, status: "best", comment: "緊扣電動遊戲零售店的營運風險，具體舉出購買涵蓋火險、公眾責任險、勞保與誠信險的綜合保單，以及外判裝修與送貨工序的例子。" },
+          { text: "例如電動遊戲公司向保險公司購買遊戲機無人購買虧損保險。", score: 0, status: "wrong", comment: "例子錯誤。遊戲機無人購買引致的營運虧損屬於投機風險，即不可保風險，保險公司不會提供此類保險。" },
+          { text: "例如電動遊戲公司把所有風險交給別人。", score: 0, status: "partial", comment: "欠缺具體說明購買哪些企業保險或將哪些工序透過合約外判給承包商。" }
+        ]},
+        { label: "第 3 步：深化論述至在不幸事故發生後獲得經濟賠償、把損失轉移給另一方的影響（1分）", colorClass: "hl-s3", opts: [
+          { text: "在此安排下，電動遊戲公司蒙受的部分或全數損失會轉移給另一方；一旦香港零售店不幸發生火災、試玩顧客受傷索償或工傷意外，公司便可在事故發生後在保額上限內從保險公司獲得經濟賠償，盡量減少公司的財務損失。", score: 1, status: "best", comment: "清楚推演出把部分或全數損失轉移給另一方後，在不幸事故發生時如何獲得保額上限內的經濟賠償以減輕財務損失。" },
+          { text: "這樣電動遊戲公司便完成了風險轉移。", score: 0, status: "partial", comment: "同義反覆，未有說明在不幸事故發生後從保險公司獲得經濟賠償以減少財務損失的具體效果。" },
+          { text: "這會令所有香港青少年每天免費獲贈遊戲機。", score: 0, status: "wrong", comment: "推論不合邏輯。" }
+        ]}
+      ]
+    }
+  ];
+
+  let curBuilderCat = 'short';
+  let curQIdx = 0;
+  let userSelections = {};
+  let isSubmitted = false;
+
+  function switchBuilderCat(cat, btn) {
+    curBuilderCat = cat;
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('builderCatLabel').textContent = cat === 'short' ? '選擇短答題（每題滿分 2 分）：' : '選擇進階論述題（每題滿分 3 分）：';
+    curQIdx = cat === 'short' ? 0 : 4;
+    userSelections = {};
+    isSubmitted = false;
+    renderQuestionChips();
+    renderWorkshop();
+  }
+
+  function renderQuestionChips() {
+    document.getElementById('questionChips').innerHTML = workshopQuestions
+      .map((q, i) => ({ q, i }))
+      .filter(x => x.q.cat === curBuilderCat)
+      .map(x => `<button class="chip ${x.i===curQIdx?'active':''}" onclick="selectWorkshopQ(${x.i})">${x.q.title}</button>`)
+      .join('');
+  }
+
+  function selectWorkshopQ(idx) {
+    curQIdx = idx;
+    userSelections = {};
+    isSubmitted = false;
+    renderQuestionChips();
+    renderWorkshop();
+  }
+
+  function pickStepOption(sIdx, oIdx) {
+    userSelections[sIdx] = oIdx;
+    isSubmitted = false;
+    renderWorkshop();
+  }
+
+  function submitConstructedAnswer() {
+    const q = workshopQuestions[curQIdx];
+    if (Object.keys(userSelections).length < q.steps.length) {
+      alert(`請先完成全部 ${q.steps.length} 個步驟的選擇，再點擊批改。`);
+      return;
+    }
+    isSubmitted = true;
+    renderWorkshop();
+  }
+
+  function fillBestChoices() {
+    const q = workshopQuestions[curQIdx];
+    q.steps.forEach((st, sIdx) => {
+      userSelections[sIdx] = st.opts.findIndex(o => o.status === 'best');
+    });
+    isSubmitted = true;
+    renderWorkshop();
+  }
+
+  function renderWorkshop() {
+    const q = workshopQuestions[curQIdx];
+    const letters = ['A', 'B', 'C'];
+
+    let totalScore = 0;
+    q.steps.forEach((st, sIdx) => {
+      if (userSelections[sIdx] !== undefined) {
+        totalScore += st.opts[userSelections[sIdx]].score;
+      }
+    });
+
+    const previewParts = q.steps.map((st, sIdx) => {
+      const selIdx = userSelections[sIdx];
+      if (selIdx === undefined) {
+        return `<span style="color:var(--mute);border-bottom:1px dashed var(--mute)">［未選擇第 ${sIdx + 1} 步］</span>`;
+      }
+      return `<span class="${st.colorClass}">${st.opts[selIdx].text}</span>`;
+    });
+
+    document.getElementById('builderWorkspace').innerHTML = `
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <div>
+            <span class="badge b-blue">${q.typeBadge}</span>
+            <span class="badge b-teal">${q.topic}</span>
+          </div>
+          <b style="color:var(--primary);font-size:16px">本段滿分：${q.maxMarks} 分</b>
+        </div>
+        <div style="background:var(--surface);padding:16px 20px;border-radius:12px;border-left:4px solid var(--primary);font-size:16.5px;margin-bottom:14px"><b>背景情境：</b>${q.scenario}</div>
+        <div style="font-size:18px;font-weight:800;color:var(--ink)">${q.question}</div>
+      </div>
+
+      ${q.steps.map((st, sIdx) => {
+        const selIdx = userSelections[sIdx];
+        return `
+          <div class="builder-stage">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <h4 style="font-size:16.5px"><span class="${st.colorClass}">${st.label}</span></h4>
+              <span style="font-size:14px;font-weight:600;color:var(--mute)">${selIdx !== undefined ? '已選 ' + letters[selIdx] : '請點選一項'}</span>
+            </div>
+            ${st.opts.map((o, oIdx) => {
+              const isSel = selIdx === oIdx;
+              let gradeCls = '';
+              if (isSubmitted && isSel) {
+                gradeCls = o.status === 'best' ? 'graded-best' : o.status === 'partial' ? 'graded-partial' : 'graded-wrong';
+              }
+              return `
+                <button class="opt-card ${isSel ? 'selected' : ''} ${gradeCls}" onclick="pickStepOption(${sIdx}, ${oIdx})">
+                  <span class="opt-letter">${letters[oIdx]}</span>
+                  <span style="flex:1">${o.text}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }).join('')}
+
+      <div class="card" style="border:2px solid var(--primary);margin-bottom:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+          <h3 style="color:var(--primary);font-size:19px">建構段落預覽</h3>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-green" onclick="submitConstructedAnswer()">批改答案</button>
+            <button class="btn btn-outline" onclick="fillBestChoices()">示範完整建構</button>
+          </div>
+        </div>
+        <div style="font-size:17px;line-height:1.85;background:var(--surface);padding:18px 22px;border-radius:12px;border:1px solid var(--line)">
+          ${previewParts.join(' ')}
+        </div>
+
+        ${isSubmitted ? `
+          <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--line)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h4 style="font-size:17.5px">分步批改回饋</h4>
+              <span class="badge ${totalScore === q.maxMarks ? 'b-green' : totalScore >= 1 ? 'b-amber' : 'b-red'}" style="font-size:15px;padding:6px 14px">
+                得分：${totalScore} / ${q.maxMarks} 分
+              </span>
+            </div>
+            ${q.steps.map((st, sIdx) => {
+              const chosen = st.opts[userSelections[sIdx]];
+              const cCls = chosen.status === 'best' ? 'c-best' : chosen.status === 'partial' ? 'c-partial' : 'c-wrong';
+              return `
+                <div class="critique-item ${cCls}">
+                  <b>第 ${sIdx + 1} 步（選項 ${letters[userSelections[sIdx]]} · ${chosen.score} 分）：</b>${chosen.comment}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  renderQuestionChips();
+  renderWorkshop();
+</script>
+</body>
+</html>
